@@ -36,20 +36,20 @@ Chmura – AWS/Azure/GCP/Chmura CISCO
 
 ## Komponenty systemu
 
-Frontend
+### Frontend
 
 Responsywne UI do obsługi bazy danych 
 
 
 
-Backend
+### Backend
 
 Moduł zarządzania użytkownikami
 
 Moduł zarządzania walorami
 
 
-Baza danych
+### Baza danych
 
 Tabele dla użytkowników, walorów 
 
