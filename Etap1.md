@@ -4,11 +4,16 @@ W ramach etapu pierwszego należy zaprezentować projekt systemu z architekturą
 technologicznego. Należy przygotować dokumentację przedstawiająca ten etap realizacji projektu.
 
 Obecni:
+
 Norbert 
+
 Kacper
-Radek
-Przemek
-Piotrek 
+
+Radosław
+
+Przemysław
+
+Piotr
 
 # Projekt Systemu
 
