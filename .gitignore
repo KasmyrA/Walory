@@ -1,0 +1,11 @@
+﻿################################################################################
+# Ten plik .gitignore został utworzony automatycznie przez Microsoft(R) Visual Studio.
+################################################################################
+
+/backend/Walory Backend/.vs/Walory Backend/FileContentIndex
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/CodeChunks.db
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/CodeChunks.db-shm
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/CodeChunks.db-wal
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/SemanticSymbols.db
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/SemanticSymbols.db-shm
+/backend/Walory Backend/.vs/Walory Backend/CopilotIndices/17.13.444.19527/SemanticSymbols.db-wal
