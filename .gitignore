@@ -22,9 +22,10 @@
 .localhistory/
 
 
-/backend/Walory Backend/.vs/
-/backend/.vs/
-/backend/Infrastracture/obj/Debug
-/backend/Walory Backend/obj
+backend/Walory Backend/.vs
+backend/.vs/
+backend/Infrastracture/obj/Debug
+backend/Walory Backend/obj
 
 
+backend/Walory Backend/.vs
