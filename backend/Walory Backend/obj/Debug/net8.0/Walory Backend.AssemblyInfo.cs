@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Walory Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+089152a43bad70c9297b3154ce90187703c86132")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+feba6cf263232cdb83aba6e6586de3310ceb4aff")]
 [assembly: System.Reflection.AssemblyProductAttribute("Walory Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Walory Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

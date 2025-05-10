@@ -35,3 +35,20 @@ C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\obj\Debug\net8
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\obj\Debug\net8.0\Walory Backend.pdb
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\obj\Debug\net8.0\Walory Backend.genruntimeconfig.cache
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\obj\Debug\net8.0\ref\Walory Backend.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Npgsql.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Infrastracture.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Walory Backend\bin\Debug\net8.0\Infrastracture.pdb

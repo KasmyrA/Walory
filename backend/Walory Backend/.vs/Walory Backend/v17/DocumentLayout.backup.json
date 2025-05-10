@@ -3,12 +3,27 @@
   "WorkspaceRootPath": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2266C992-C01C-4056-B931-CF6379EE6F58}|..\\Infrastracture\\Infrastracture.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\infrastracture\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|c:\\users\\coolm\\source\\repos\\kasmyra\\walory\\backend\\walory backend\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}|Walory Backend.csproj|solutionrelative:user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +33,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,26 +61,78 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "DataContext.cs",
+              "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Infrastracture\\DataContext.cs",
+              "RelativeDocumentMoniker": "..\\Infrastracture\\DataContext.cs",
+              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Infrastracture\\DataContext.cs*",
+              "RelativeToolTip": "..\\Infrastracture\\DataContext.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-10T08:59:04.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\appsettings.Development.json*",
+              "RelativeToolTip": "appsettings.Development.json*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-10T08:53:51.33Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "docker-compose.yml",
+              "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\docker-compose.yml",
+              "RelativeDocumentMoniker": "docker-compose.yml",
+              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\docker-compose.yml*",
+              "RelativeToolTip": "docker-compose.yml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2025-05-10T08:53:10.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\User.cs",
+              "RelativeDocumentMoniker": "User.cs",
+              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\User.cs",
+              "RelativeToolTip": "User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-10T08:47:30.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\Dockerfile",
               "RelativeDocumentMoniker": "Dockerfile",
               "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\Dockerfile",
               "RelativeToolTip": "Dockerfile",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-05-10T08:46:52.419Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\coolm\\source\\repos\\KasmyrA\\Walory\\backend\\Walory Backend\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-09T14:48:14.805Z",
               "EditorCaption": ""
