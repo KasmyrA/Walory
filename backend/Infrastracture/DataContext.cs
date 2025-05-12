@@ -6,5 +6,6 @@ namespace Infrastracture
     {
         public DataContext(DbContextOptions options) : base(options) { }
 
+        public object Users { get; set; }
     }
 }
