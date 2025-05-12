@@ -18,6 +18,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+< ItemGroup >
+  < Compile Remove = "Controllers\**" />
+  < Content Remove = "Controllers\**" />
+  < EmbeddedResource Remove = "Controllers\**" />
+  < None Remove = "Controllers\**" />
+</ ItemGroup >
     app.UseSwagger();
     app.UseSwaggerUI();
 }

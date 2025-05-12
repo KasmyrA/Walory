@@ -1,5 +1,5 @@
 ﻿
-namespace Walory_Backend
+namespace Walory_Backend.Models
 {
     public class User
     {
