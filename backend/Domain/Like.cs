@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Domain
 {
-    public class Walor
+    public class Like
     {
         public Guid Id { get; set; }
-
-        public JsonDocument Content { get; set; } // pole JSON
 
         public Guid CollectionId { get; set; }
         public Collection Collection { get; set; }
 
+        public Guid UserId { get; set; }
+        public User User { get; set; }
     }
 
 }

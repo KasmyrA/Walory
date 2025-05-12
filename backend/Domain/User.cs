@@ -1,5 +1,4 @@
-﻿
-namespace Walory_Backend.Models
+﻿namespace Domain
 {
     public class User
     {
@@ -10,9 +9,10 @@ namespace Walory_Backend.Models
 
         public string? Description { get; set; }
 
-        public string ProfilePicUrl { get; set; }
+        public ICollection<UserFriend> Friends { get; set; }
 
-        public ICollection<Walor> Collection { get; set; }
+        public ICollection<Collection> Collections { get; set; }
+
     }
 }
 
