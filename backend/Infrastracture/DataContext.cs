@@ -10,7 +10,8 @@ namespace Infrastracture
 
         public DbSet<User> Users { get; set; }
         public DbSet<Collection> Collections { get; set; }
-        public DbSet<Walor> Walors { get; set; }
+        public DbSet<WalorInstance> Walors { get; set; }
+        public DbSet<WalorTemplate> Templates { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
 
@@ -18,6 +19,8 @@ namespace Infrastracture
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserFriend>()
                 .HasKey(uf => new { uf.UserId, uf.FriendId });
 
@@ -26,15 +29,39 @@ namespace Infrastracture
                 .WithMany(u => u.Friends)
                 .HasForeignKey(uf => uf.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
                 .WithMany()
                 .HasForeignKey(uf => uf.FriendId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Walor>()
-                .Property(i => i.Content)
-                .HasColumnType("jsonb"); // PostgreSQL JSON
+            modelBuilder.Entity<WalorTemplate>()
+                .Property(t => t.Content)
+                .HasColumnType("jsonb"); 
+
+            modelBuilder.Entity<WalorTemplate>()
+                .HasOne(t => t.Author)
+                .WithMany(u => u.Templates) 
+                .HasForeignKey(t => t.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WalorInstance>()
+                .Property(i => i.Data)
+                .HasColumnType("jsonb");
+
+
+            modelBuilder.Entity<WalorInstance>()
+                .HasOne(i => i.Template)
+                .WithMany() 
+                .HasForeignKey(i => i.TemplateId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<WalorInstance>()
+                .HasOne(i => i.Collection)
+                .WithMany(c => c.Walors)
+                .HasForeignKey(i => i.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Author)
@@ -60,24 +87,20 @@ namespace Infrastracture
                 .HasForeignKey(l => l.CollectionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Walor>()
-                .HasOne(w => w.Collection)
-                .WithMany(c => c.Walors)
-                .HasForeignKey(w => w.CollectionId)
-                .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Collection>()
                 .HasOne(c => c.Owner)          
                 .WithMany(u => u.Collections)  
                 .HasForeignKey(c => c.OwnerId)  
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<Collection>()
-                .HasMany(c => c.Walors)         
-                .WithOne(w => w.Collection)      
-                .HasForeignKey(w => w.CollectionId) 
-                .OnDelete(DeleteBehavior.Cascade); 
+                .HasMany(c => c.Walors)
+                .WithOne(w => w.Collection)
+                .HasForeignKey(w => w.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<Collection>()

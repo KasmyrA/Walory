@@ -14,14 +14,15 @@ namespace Domain
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public Visibility Visibility { get; set; }  
+        public Visibility Visibility { get; set; }
 
         public Guid OwnerId { get; set; }
         public User Owner { get; set; }
 
-        public ICollection<Walor> Walors { get; set; }
-        public ICollection<Comment> Comments { get; set; }
-        public ICollection<Like> Likes { get; set; }
+        public ICollection<WalorInstance> Walors { get; set; } = new List<WalorInstance>();
+
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 
 }

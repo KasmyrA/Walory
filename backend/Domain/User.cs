@@ -15,6 +15,7 @@ namespace Domain
 
         public ICollection<Collection> Collections { get; set; }
 
+        public ICollection<WalorTemplate> Templates { get; set; }
     }
 }
 

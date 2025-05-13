@@ -8,16 +8,17 @@ using System.Xml.Linq;
 
 namespace Domain
 {
-    public class Walor
+    public class WalorInstance
     {
         public Guid Id { get; set; }
-        public string Category { get; set; }
 
-        public JsonDocument Content { get; set; } // pole JSON
+        public JsonDocument Data { get; set; } 
+
+        public Guid TemplateId { get; set; }
+        public WalorTemplate Template { get; set; }
 
         public Guid CollectionId { get; set; }
         public Collection Collection { get; set; }
-
     }
 
 }
