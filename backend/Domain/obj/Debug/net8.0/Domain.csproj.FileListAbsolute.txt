@@ -10,3 +10,4 @@ C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Domain\obj\Debug\net8.0\Domai
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Domain\obj\Debug\net8.0\refint\Domain.dll
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Domain\obj\Debug\net8.0\Domain.pdb
 C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Domain\obj\Debug\net8.0\ref\Domain.dll
+C:\Users\coolm\source\repos\KasmyrA\Walory\backend\Domain\obj\Debug\net8.0\Domain.csproj.AssemblyReference.cache

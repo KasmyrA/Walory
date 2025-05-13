@@ -11,6 +11,7 @@ namespace Domain
     public class Walor
     {
         public Guid Id { get; set; }
+        public string Category { get; set; }
 
         public JsonDocument Content { get; set; } // pole JSON
 

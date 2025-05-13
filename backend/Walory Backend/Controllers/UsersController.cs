@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Infrastracture;
-using Walory_Backend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,7 +28,6 @@ namespace Walory_Backend.Controllers
                     Name = u.Name,
                     Email = u.Email,
                     Description = u.Description,
-                    ProfilePicUrl = u.ProfilePicUrl
                 })
                 .ToListAsync();
         }
