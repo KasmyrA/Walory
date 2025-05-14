@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Domain.Notificaiton
 {
     public class Notification
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }          
+        public Guid UserId { get; set; }
         public User User { get; set; }
 
         public NotificationType Type { get; set; }
