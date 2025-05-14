@@ -14,6 +14,7 @@ namespace Infrastracture
         public DbSet<WalorTemplate> Templates { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<UserFriend> UserFriends { get; set; }
 
@@ -87,7 +88,13 @@ namespace Infrastracture
                 .HasForeignKey(l => l.CollectionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany()
+                .HasForeignKey(n => n.UserId);
 
+            modelBuilder.Entity<Notification>()
+                .HasIndex(n => n.CreatedAt); //Podobno usuwanie bedzie szybsze czy cos tam
 
             modelBuilder.Entity<Collection>()
                 .HasOne(c => c.Owner)          
