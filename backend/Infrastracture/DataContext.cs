@@ -95,6 +95,12 @@ namespace Infrastracture
                 .HasForeignKey(c => c.OwnerId)  
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Collection>()
+                .HasOne(c => c.WalorTemplate)
+                .WithMany()
+                .HasForeignKey(c => c.WalorTemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Collection>()
                 .HasMany(c => c.Walors)
