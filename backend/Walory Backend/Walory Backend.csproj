@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\FriendController.cs" />
+    <Compile Include="Controllers\NotificaitonController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WalorsController.cs" />
   </ItemGroup>
@@ -31,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastracture\Infrastracture.csproj" />
   </ItemGroup>
 

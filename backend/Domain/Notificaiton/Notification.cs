@@ -17,6 +17,7 @@ namespace Domain.Notificaiton
 
         public bool IsRead { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public Guid? ReferenceId { get; set; }
     }
     public enum NotificationType
     {

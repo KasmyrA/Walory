@@ -1,8 +1,11 @@
+using Application.CQRS.FriendsLogic;
+using Application.Services;
 using Domain;
 using Infrastracture;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 builder.Services.AddAuthorization();
+builder.Services.AddMediatR(cfg =>
+cfg.RegisterServicesFromAssembly(typeof(SendFriendRequest.Handler).Assembly));
+builder.Services.AddHostedService<NotificationCleanupService>();
 
 builder.Services.AddControllers();
 

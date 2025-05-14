@@ -19,6 +19,7 @@ namespace Infrastracture
 
         public DbSet<UserFriend> UserFriends { get; set; }
 
+        public DbSet<FriendRequest> FriendRequests { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -128,6 +129,19 @@ namespace Infrastracture
                 .WithOne(l => l.Collection)     
                 .HasForeignKey(l => l.CollectionId)  
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Sender)
+                .WithMany()
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany()
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Walory_Backend.DTO
+﻿namespace Application.DTO
 {
     public class RegisterDto
     {

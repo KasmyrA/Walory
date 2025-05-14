@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.DTO;
+using Domain;
 using Infrastracture;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Net;
 using System.Security.Claims;
-using Walory_Backend.DTO;
 
 namespace Walory_Backend.Security
 {

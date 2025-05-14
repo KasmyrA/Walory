@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Walory Backend", "Walory Backend.csproj", "{E5AD161D-99C7-4CFF-B486-F86D340CC5B3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2266C992-C01C-4056-B931-CF6379EE6F58} = {2266C992-C01C-4056-B931-CF6379EE6F58}
+		{EA8BB705-70E5-436C-959A-69620A029A55} = {EA8BB705-70E5-436C-959A-69620A029A55}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastracture", "..\Infrastracture\Infrastracture.csproj", "{2266C992-C01C-4056-B931-CF6379EE6F58}"
