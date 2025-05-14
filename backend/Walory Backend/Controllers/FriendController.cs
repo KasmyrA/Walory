@@ -22,5 +22,11 @@ namespace Walory_Backend.Controllers
             if (result.isSuccess) return Ok();
             return BadRequest(result.Error);
         }
+        [HttpDelete("friends/remove/{friendId}")]
+        public async Task<IActionResult> Remove(Guid friendId)
+        {
+            var result = await Mediator.Send(new RemoveFriend.Command { FriendId = friendId });
+            return result.isSuccess ? Ok() : BadRequest(result.Error);
+        }
     }
 }
