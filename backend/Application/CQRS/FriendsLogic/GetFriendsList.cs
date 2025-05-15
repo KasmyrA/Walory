@@ -43,7 +43,7 @@ namespace Application.CQRS.FriendsLogic
                         Email = f.Friend.Email,
                         FullName = f.Friend.Name
                     })
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 return Result<List<FriendDTO>>.Success(friends);
             }

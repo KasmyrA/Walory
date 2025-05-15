@@ -21,7 +21,6 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\FriendController.cs" />
     <Compile Include="Controllers\NotificaitonController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WalorsController.cs" />
   </ItemGroup>
 

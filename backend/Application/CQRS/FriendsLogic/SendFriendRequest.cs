@@ -60,7 +60,7 @@ namespace Application.CQRS.FriendsLogic
 
                 await _context.SaveChangesAsync();
 
-                _context.Notifications.Add(new Notification
+                _context.Notifications.Add(new Domain.Notificaiton.Notification
                 {
                     UserId = receiver.Id,
                     Type = NotificationType.FriendRequest,

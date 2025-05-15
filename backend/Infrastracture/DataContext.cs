@@ -108,7 +108,7 @@ namespace Infrastracture
                 .HasOne(c => c.WalorTemplate)
                 .WithMany()
                 .HasForeignKey(c => c.WalorTemplateId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             modelBuilder.Entity<Collection>()

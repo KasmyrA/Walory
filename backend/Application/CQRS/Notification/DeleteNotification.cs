@@ -32,7 +32,7 @@ namespace Application.CQRS.Notification
 
                 if (notification == null)
                 {
-                    throw new Exception("Notifcation not found");
+                    return Result<Unit>.Failure("Notifcation not found");
                 }
 
 

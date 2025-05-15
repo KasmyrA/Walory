@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Infrastracture\Infrastracture.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\LikeAndSubscribe\" />
+    <Folder Include="CQRS\Chat\" />
+  </ItemGroup>
+
 </Project>

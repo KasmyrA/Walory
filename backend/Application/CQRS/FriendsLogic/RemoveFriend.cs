@@ -45,7 +45,7 @@ namespace Application.CQRS.FriendsLogic
                 if (entries.Count == 0) return Result<Unit>.Failure("You aren't friends!");
 
                 _context.UserFriends.RemoveRange(entries);
-                var result = await _context.SaveChangesAsync() > 0;
+                var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
                 return result ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Your relation will be eternal");
             }
