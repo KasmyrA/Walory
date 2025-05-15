@@ -1,0 +1,70 @@
+﻿using Application.CQRS.LikeAndSubscribe;
+using Cars.API.Controllers;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using static Application.CQRS.LikeAndSubscribe.AddComment;
+using static Application.CQRS.LikeAndSubscribe.AddLike;
+using static Application.CQRS.LikeAndSubscribe.DeleteCommand;
+using static Application.CQRS.LikeAndSubscribe.GetComments;
+using static Application.CQRS.LikeAndSubscribe.GetLikes;
+
+namespace Walory_Backend.Controllers
+{
+    public class CollectionIteractionController
+    {
+        [ApiController]
+        [Route("api/collections/{collectionId}/interactions")]
+        public class CollectionInteractionsController : BaseApiController
+        {
+
+            [HttpPost("comments")]
+            public async Task<IActionResult> AddComment(Guid collectionId, [FromBody] AddCommentCommand command)
+            {
+                command.CollectionId = collectionId;
+                var result = await _mediator.Send(command);
+                return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            }
+
+            [HttpDelete("comments/{commentId}")]
+            public async Task<IActionResult> DeleteComment(Guid collectionId, Guid commentId)
+            {
+                var command = new DeleteCommentCommand { CommentId = commentId };
+                var result = await _mediator.Send(command);
+                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+            }
+
+            [HttpPost("likes")]
+            public async Task<IActionResult> AddLike(Guid collectionId)
+            {
+                var command = new AddLikeCommand { CollectionId = collectionId };
+                var result = await _mediator.Send(command);
+                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+            }
+
+            [HttpDelete("likes")]
+            public async Task<IActionResult> RemoveLike(Guid collectionId)
+            {
+                var command = new RemoveLikeCommand { CollectionId = collectionId };
+                var result = await _mediator.Send(command);
+                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+            }
+
+            [HttpGet("comments")]
+            public async Task<IActionResult> GetComments(Guid collectionId)
+            {
+                var query = new GetCommentsQuery { CollectionId = collectionId };
+                var comments = await _mediator.Send(query);
+                return Ok(comments);
+            }
+
+            [HttpGet("likes/count")]
+            public async Task<IActionResult> GetLikesCount(Guid collectionId)
+            {
+                var query = new GetLikesCountQuery { CollectionId = collectionId };
+                var count = await _mediator.Send(query);
+                return Ok(count);
+            }
+        }
+
+    }
+}

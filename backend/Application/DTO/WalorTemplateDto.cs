@@ -3,17 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class CollectionDTO
+    public class WalorTemplateDto
     {
-        public Guid CollectionId { get; set; }
-        public string Title { get; set; }
+        public Guid Id { get; set; }
         public string Category { get; set; }
-        public string Description { get; set; }
+        public JsonDocument Content { get; set; }
         public Visibility Visibility { get; set; }
-        public Guid WalorTemplateId { get; set; }
+        public AuthorDto Author { get; set; }
     }
+
 }
