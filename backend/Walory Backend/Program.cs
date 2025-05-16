@@ -19,6 +19,18 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
 
+try{
+        var context = services.GetRequiredService<DataContext>();
+
+        await context.Database.MigrateAsync();
+        await Seed.SeedData(context);
+    }
+catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occured");
+    }
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
