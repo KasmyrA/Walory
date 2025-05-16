@@ -1,6 +1,7 @@
 ﻿using Infrastracture;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +10,52 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class NotificationCleanupService : BackgroundService
+    public class NotificationCleanupService : IHostedService, IDisposable
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _scopeFactory;
+        private Timer _timer;
 
-        public NotificationCleanupService(IServiceProvider serviceProvider)
+        public NotificationCleanupService( IServiceScopeFactory scopeFactory)
         {
-            _serviceProvider = serviceProvider;
+            _scopeFactory = scopeFactory;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task StartAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            _timer = new Timer(DoWorkAsync, null, TimeSpan.Zero, TimeSpan.FromHours(12)); 
+            return Task.CompletedTask;
+        }
+
+        private async void DoWorkAsync(object state)
+        {
+          
+
+            using (var scope = _scopeFactory.CreateScope())
             {
-                //using var scope = _serviceProvider.CreateScope();
-                //var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+                try
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<Infrastracture.DataContext>();
+                    var cutoffDate = DateTime.UtcNow.AddDays(-7);
+                    var oldNotifications = dbContext.Notifications.Where(n => n.CreatedAt < cutoffDate).ToList();
+                    dbContext.Notifications.RemoveRange(oldNotifications);
+                    await dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
 
-                //var threshold = DateTime.UtcNow.AddDays(-14);
-                //var oldNotifications = db.Notifications.Where(n => n.CreatedAt < threshold);
-
-                //db.Notifications.RemoveRange(oldNotifications);
-                //await db.SaveChangesAsync(stoppingToken);
-
-                //await Task.Delay(TimeSpan.FromHours(24), stoppingToken); //24 interval
+                }
             }
+        }
+
+        public Task StopAsync(CancellationToken stoppingToken)
+        {
+            _timer?.Change(Timeout.Infinite, 0);
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
         }
     }
 
