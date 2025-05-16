@@ -15,7 +15,7 @@ namespace Domain
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Guid? CollectionId { get; set; }
+        public Guid CollectionId { get; set; }
         public Collection Collection { get; set; }
         // MOZNA POTEM ZMIENIC NA WZOR POWIADOMIEN         public Guid? ReferenceId { get; set; }
         //ALE NIE WIEM CZY JEST SENS

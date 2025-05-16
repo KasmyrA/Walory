@@ -1,5 +1,9 @@
-﻿using MediatR;
+﻿using Domain;
+using Infrastracture;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,29 +21,30 @@ namespace Application.CQRS.Walor
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
             private readonly IHttpContextAccessor _http;
 
-            public Handler(AppDbContext context, IHttpContextAccessor http)
+            public Handler(DataContext context, UserManager<User> userManager, IHttpContextAccessor http)
             {
                 _context = context;
+                _userManager = userManager;
                 _http = http;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var userId = _http.HttpContext.User.GetUserId();
-                var template = await _context.WalorTemplates
-                    .Include(t => t.Collections)
+                var user = await _userManager.GetUserAsync(_http.HttpContext.User);
+                var template = await _context.Templates
                     .FirstOrDefaultAsync(t => t.Id == request.TemplateId);
 
-                if (template == null || template.AuthorId != userId)
-                    return Result<Unit>.Failure("Szablon nie istnieje lub brak dostępu.");
+                if (template == null || template.AuthorId != user.Id)
+                    return Result<Unit>.Failure("Template Not Found");
 
-                if (template.Collections.Any())
-                    return Result<Unit>.Failure("Nie można usunąć szablonu, który jest używany przez kolekcje.");
+                if (_context.Collections.Where(t => t.WalorTemplateId == request.TemplateId).Any())
+                    return Result<Unit>.Failure("Template used by any collection");
 
-                _context.WalorTemplates.Remove(template);
+                _context.Templates.Remove(template);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<Unit>.Success(Unit.Value);
             }

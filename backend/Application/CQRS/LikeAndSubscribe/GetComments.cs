@@ -1,5 +1,10 @@
 ﻿using Application.DTO;
+using Domain;
+using Infrastracture;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,36 +15,40 @@ namespace Application.CQRS.LikeAndSubscribe
 {
     public class GetComments
     {
-        public class GetCommentsQuery : IRequest<List<CommentDto>>
+        public class GetCommentsQuery : IRequest<List<CommentDTO>>
         {
             public Guid CollectionId { get; set; }
         }
 
-        public class GetCommentsHandler : IRequestHandler<GetCommentsQuery, List<CommentDto>>
+        public class GetCommentsHandler : IRequestHandler<GetCommentsQuery, List<CommentDTO>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
+            private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public GetCommentsHandler(AppDbContext context)
+            public GetCommentsHandler(DataContext context, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
             {
                 _context = context;
+                _userManager = userManager;
+                _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<List<CommentDto>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
+            public async Task<List<CommentDTO>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
             {
                 return await _context.Comments
                     .Where(c => c.CollectionId == request.CollectionId)
                     .Include(c => c.Author)
                     .OrderByDescending(c => c.CreatedAt)
-                    .Select(c => new CommentDto
+                    .Select(c => new CommentDTO
                     {
-                        Id = c.Id,
+                        CommentId = c.Id,
                         Content = c.Content,
                         CreatedAt = c.CreatedAt,
                         Author = new AuthorDto
                         {
                             Id = c.Author.Id,
                             Email = c.Author.Email,
-                            FullName = c.Author.FullName
+                            Name = c.Author.Name
                         }
                     })
                     .ToListAsync(cancellationToken);

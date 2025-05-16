@@ -1,24 +1,21 @@
-﻿using MediatR;
+﻿using Application.CQRS.Walor;
+using Cars.API.Controllers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Walory_Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class WalorInstancesController : ControllerBase
+    public class WalorInstancesController : BaseApiController
     {
-        private readonly IMediator _mediator;
 
-        public WalorInstancesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWalorInstance.Command command)
         {
-            var result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            var result = await Mediator.Send(command);
+            return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
         [HttpPut("{id}")]
@@ -27,23 +24,17 @@ namespace Walory_Backend.Controllers
             if (id != command.WalorInstanceId)
                 return BadRequest("ID mismatch.");
 
-            var result = await _mediator.Send(command);
-            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+            var result = await Mediator.Send(command);
+            return result.isSuccess ? NoContent() : BadRequest(result.Error);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _mediator.Send(new DeleteWalorInstance.Command { WalorInstanceId = id });
-            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+            var result = await Mediator.Send(new DeleteWalorInstance.Command { WalorInstanceId = id });
+            return result.isSuccess ? NoContent() : BadRequest(result.Error);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var result = await _mediator.Send(new GetWalorInstanceById.Query { WalorInstanceId = id });
-            return result != null ? Ok(result) : NotFound();
-        }
     }
 
 }

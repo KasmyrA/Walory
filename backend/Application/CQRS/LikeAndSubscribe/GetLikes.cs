@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Infrastracture;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +18,9 @@ namespace Application.CQRS.LikeAndSubscribe
 
         public class GetLikesCountHandler : IRequestHandler<GetLikesCountQuery, int>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
 
-            public GetLikesCountHandler(AppDbContext context)
+            public GetLikesCountHandler(DataContext context)
             {
                 _context = context;
             }

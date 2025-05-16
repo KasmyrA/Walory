@@ -42,6 +42,7 @@ namespace Application.CQRS.Collection
                     Visibility = request.CollectionDTO.Visibility,
                     WalorTemplateId = request.CollectionDTO.WalorTemplateId,
                     OwnerId = user.Id,
+                    Owner = user,
                 };
 
                 _context.Collections.Add(collection);

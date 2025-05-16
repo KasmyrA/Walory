@@ -1,5 +1,7 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,42 +13,40 @@ namespace Application.CQRS.Walor
 {
     public class CreateWalorInstance
     {
-        public class Command : IRequest<Result<Guid>>
+        public class Command : IRequest<Result<Unit>>
         {
             public Guid CollectionId { get; set; }
             public JsonDocument Data { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Guid>>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
 
-            public Handler(AppDbContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }
 
-            public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var collection = await _context.Collections
                     .Include(c => c.WalorTemplate)
                     .FirstOrDefaultAsync(c => c.Id == request.CollectionId);
 
                 if (collection == null)
-                    return Result<Guid>.Failure("Kolekcja nie istnieje");
+                    return Result<Unit>.Failure("Kolekcja nie istnieje");
 
                 var walor = new WalorInstance
                 {
-                    Id = Guid.NewGuid(),
                     CollectionId = collection.Id,
                     TemplateId = collection.WalorTemplateId,
                     Data = request.Data
                 };
 
-                _context.WalorInstances.Add(walor);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return Result<Guid>.Success(walor.Id);
+                _context.Walors.Add(walor);
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
+                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
         }
     }

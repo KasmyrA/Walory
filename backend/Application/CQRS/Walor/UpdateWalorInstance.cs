@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Infrastracture;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,24 +19,24 @@ namespace Application.CQRS.Walor
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
 
-            public Handler(AppDbContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var walor = await _context.WalorInstances.FindAsync(request.WalorInstanceId);
+                var walor = await _context.Walors.FindAsync(request.WalorInstanceId);
 
                 if (walor == null)
-                    return Result<Unit>.Failure("Walor nie znaleziony");
+                    return Result<Unit>.Failure("Walor not found");
 
                 walor.Data = request.Data;
 
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
-                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Nie udało się zaktualizować");
+                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Walor Not updated");
             }
         }
     }

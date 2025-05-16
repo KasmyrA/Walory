@@ -1,6 +1,8 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,29 +23,30 @@ namespace Application.CQRS.Walor
 
         public class Handler : IRequestHandler<Command, Result<Guid>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
             private readonly IHttpContextAccessor _http;
 
-            public Handler(AppDbContext context, IHttpContextAccessor http)
+            public Handler(DataContext context, UserManager<User> userManager, IHttpContextAccessor http)
             {
                 _context = context;
+                _userManager = userManager;
                 _http = http;
             }
 
             public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var userId = _http.HttpContext.User.GetUserId();
+                var user = await _userManager.GetUserAsync(_http.HttpContext.User);
 
                 var template = new WalorTemplate
                 {
-                    Id = Guid.NewGuid(),
                     Category = request.Category,
                     Content = request.Content,
                     Visibility = request.Visibility,
-                    AuthorId = userId
+                    AuthorId = user.Id
                 };
 
-                _context.WalorTemplates.Add(template);
+                _context.Templates.Add(template);
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return Result<Guid>.Success(template.Id);

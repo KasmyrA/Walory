@@ -1,5 +1,9 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,29 +21,30 @@ namespace Application.CQRS.LikeAndSubscribe
 
         public class AddLikeHandler : IRequestHandler<AddLikeCommand, Result<Unit>>
         {
-            private readonly AppDbContext _context;
-            private readonly IUserContextService _userContext;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
+            private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public AddLikeHandler(AppDbContext context, IUserContextService userContext)
+            public AddLikeHandler(DataContext context, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
             {
                 _context = context;
-                _userContext = userContext;
+                _userManager = userManager;
+                _httpContextAccessor = httpContextAccessor;
             }
 
             public async Task<Result<Unit>> Handle(AddLikeCommand request, CancellationToken cancellationToken)
             {
-                var userId = _userContext.UserId;
+                var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var existingLike = await _context.Likes
-                    .FirstOrDefaultAsync(l => l.CollectionId == request.CollectionId && l.UserId == userId, cancellationToken);
+                    .FirstOrDefaultAsync(l => l.CollectionId == request.CollectionId && l.UserId == user.Id, cancellationToken);
 
                 if (existingLike != null)
                     return Result<Unit>.Failure("Polubienie już istnieje");
 
                 var like = new Like
                 {
-                    Id = Guid.NewGuid(),
                     CollectionId = request.CollectionId,
-                    UserId = userId
+                    UserId = user.Id
                 };
 
                 _context.Likes.Add(like);

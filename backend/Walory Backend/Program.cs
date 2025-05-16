@@ -14,10 +14,11 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     options.SignIn.RequireConfirmedEmail = true;
     options.Password.RequireDigit = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; //DO PRZECZYTANIA JUTRO 
+    options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

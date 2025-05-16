@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Infrastracture;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +17,22 @@ namespace Application.CQRS.Walor
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
 
-            public Handler(AppDbContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var walor = await _context.WalorInstances.FindAsync(request.WalorInstanceId);
-                if (walor == null) return Result<Unit>.Failure("Nie znaleziono waloru");
+                var walor = await _context.Walors.FindAsync(request.WalorInstanceId);
+                if (walor == null) return Result<Unit>.Failure("Walor not found");
 
-                _context.WalorInstances.Remove(walor);
+                _context.Walors.Remove(walor);
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Nie udało się usunąć");
+                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Couldn't delete walor");
             }
         }
     }

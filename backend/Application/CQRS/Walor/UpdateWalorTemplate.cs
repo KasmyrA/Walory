@@ -1,6 +1,8 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,22 +24,24 @@ namespace Application.CQRS.Walor
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            private readonly AppDbContext _context;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
             private readonly IHttpContextAccessor _http;
 
-            public Handler(AppDbContext context, IHttpContextAccessor http)
+            public Handler(DataContext context, UserManager<User> userManager, IHttpContextAccessor http)
             {
                 _context = context;
+                _userManager = userManager;
                 _http = http;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var userId = _http.HttpContext.User.GetUserId();
-                var template = await _context.WalorTemplates.FindAsync(request.TemplateId);
+                var user = await _userManager.GetUserAsync(_http.HttpContext.User);
+                var template = await _context.Templates.FindAsync(request.TemplateId);
 
-                if (template == null || template.AuthorId != userId)
-                    return Result<Unit>.Failure("Szablon nie istnieje lub brak dostępu.");
+                if (template == null || template.AuthorId != user.Id)
+                    return Result<Unit>.Failure("Template not found");
 
                 template.Category = request.Category;
                 template.Content = request.Content;

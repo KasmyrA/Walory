@@ -21,39 +21,39 @@ namespace Walory_Backend.Controllers
             public async Task<IActionResult> AddComment(Guid collectionId, [FromBody] AddCommentCommand command)
             {
                 command.CollectionId = collectionId;
-                var result = await _mediator.Send(command);
-                return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+                var result = await Mediator.Send(command);
+                return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
             }
 
             [HttpDelete("comments/{commentId}")]
             public async Task<IActionResult> DeleteComment(Guid collectionId, Guid commentId)
             {
                 var command = new DeleteCommentCommand { CommentId = commentId };
-                var result = await _mediator.Send(command);
-                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+                var result = await Mediator.Send(command);
+                return result.isSuccess ? Ok() : BadRequest(result.Error);
             }
 
             [HttpPost("likes")]
             public async Task<IActionResult> AddLike(Guid collectionId)
             {
                 var command = new AddLikeCommand { CollectionId = collectionId };
-                var result = await _mediator.Send(command);
-                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+                var result = await Mediator.Send(command);
+                return result.isSuccess ? Ok() : BadRequest(result.Error);
             }
 
             [HttpDelete("likes")]
             public async Task<IActionResult> RemoveLike(Guid collectionId)
             {
                 var command = new RemoveLikeCommand { CollectionId = collectionId };
-                var result = await _mediator.Send(command);
-                return result.IsSuccess ? Ok() : BadRequest(result.Error);
+                var result = await Mediator.Send(command);
+                return result.isSuccess ? Ok() : BadRequest(result.Error);
             }
 
             [HttpGet("comments")]
             public async Task<IActionResult> GetComments(Guid collectionId)
             {
                 var query = new GetCommentsQuery { CollectionId = collectionId };
-                var comments = await _mediator.Send(query);
+                var comments = await Mediator.Send(query);
                 return Ok(comments);
             }
 
@@ -61,7 +61,7 @@ namespace Walory_Backend.Controllers
             public async Task<IActionResult> GetLikesCount(Guid collectionId)
             {
                 var query = new GetLikesCountQuery { CollectionId = collectionId };
-                var count = await _mediator.Send(query);
+                var count = await Mediator.Send(query);
                 return Ok(count);
             }
         }

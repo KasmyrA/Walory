@@ -12,8 +12,6 @@ namespace Application.DTO
         public Guid Id { get; set; }
         public JsonDocument Data { get; set; }
         public Guid TemplateId { get; set; }
-        public Guid CollectionId { get; set; }
-        public AuthorDto Author { get; set; }
     }
 
 }

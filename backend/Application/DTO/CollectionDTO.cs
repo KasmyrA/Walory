@@ -11,9 +11,10 @@ namespace Application.DTO
     {
         public Guid CollectionId { get; set; }
         public string Title { get; set; }
-        public string Category { get; set; }
         public string Description { get; set; }
         public Visibility Visibility { get; set; }
         public Guid WalorTemplateId { get; set; }
+        public AuthorDto Author { get; set; }
+        public List<WalorInstanceDto> WalorInstance { get; set; } 
     }
 }

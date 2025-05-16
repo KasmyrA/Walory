@@ -1,5 +1,8 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,39 +13,41 @@ namespace Application.CQRS.LikeAndSubscribe
 {
     public class AddComment
     {
-        public class AddCommentCommand : IRequest<Result<Guid>>
+        public class AddCommentCommand : IRequest<Result<Unit>>
         {
             public Guid CollectionId { get; set; }
             public string Content { get; set; }
         }
 
-        public class AddCommentHandler : IRequestHandler<AddCommentCommand, Result<Guid>>
+        public class AddCommentHandler : IRequestHandler<AddCommentCommand, Result<Unit>>
         {
-            private readonly AppDbContext _context;
-            private readonly IUserContextService _userContext;
+            private readonly DataContext _context;
+            private readonly UserManager<User> _userManager;
+            private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public AddCommentHandler(AppDbContext context, IUserContextService userContext)
+            public AddCommentHandler(DataContext context, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
             {
                 _context = context;
-                _userContext = userContext;
+                _userManager = userManager;
+                _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<Result<Guid>> Handle(AddCommentCommand request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(AddCommentCommand request, CancellationToken cancellationToken)
             {
-                var userId = _userContext.UserId;
+                var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var comment = new Comment
                 {
-                    Id = Guid.NewGuid(),
                     CollectionId = request.CollectionId,
-                    AuthorId = userId,
+                    AuthorId = user.Id,
                     Content = request.Content,
                     CreatedAt = DateTime.UtcNow
                 };
 
                 _context.Comments.Add(comment);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return Result<Guid>.Success(comment.Id);
+                var success = await _context.SaveChangesAsync() > 0;
+                return success
+                    ? Result<Unit>.Success(Unit.Value)
+                    : Result<Unit>.Failure("Not Added Comment");
             }
         }
 
