@@ -32,7 +32,7 @@
 
 backend/Walory Backend/.vs
 
-
-
-
-
+/backend/Application/bin
+/backend/Application/obj
+/backend/Domain/bin
+/backend/Domain/obj
