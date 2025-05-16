@@ -31,7 +31,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssembly(typeof(SendFriendRequest.Handler).Assembly));
-builder.Services.AddHostedService<NotificationCleanupService>();
+
 
 builder.Services.AddControllers();
 

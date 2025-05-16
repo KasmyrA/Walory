@@ -14,12 +14,12 @@ namespace Application.CQRS.Walor
 {
     public class CopyWalorTemplate
     {
-        public class Command : IRequest<Result<Unit>>
+        public class CopyWalorTemplateCommand : IRequest<Result<Unit>>
         {
             public Guid TemplateId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<CopyWalorTemplateCommand, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -32,7 +32,7 @@ namespace Application.CQRS.Walor
                 _http = http;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(CopyWalorTemplateCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
                 var original = await _context.Templates.FindAsync(request.TemplateId);

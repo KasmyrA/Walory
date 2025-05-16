@@ -10,12 +10,12 @@ namespace Application.CQRS.Walor
 {
     public class DeleteWalorInstance
     {
-        public class Command : IRequest<Result<Unit>>
+        public class DeleteWalorInstanceCommand : IRequest<Result<Unit>>
         {
             public Guid WalorInstanceId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<DeleteWalorInstanceCommand, Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -24,7 +24,7 @@ namespace Application.CQRS.Walor
                 _context = context;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(DeleteWalorInstanceCommand request, CancellationToken cancellationToken)
             {
                 var walor = await _context.Walors.FindAsync(request.WalorInstanceId);
                 if (walor == null) return Result<Unit>.Failure("Walor not found");

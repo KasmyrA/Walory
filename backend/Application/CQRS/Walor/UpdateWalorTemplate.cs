@@ -14,7 +14,7 @@ namespace Application.CQRS.Walor
 {
     public class UpdateWalorTemplate
     {
-        public class Command : IRequest<Result<Unit>>
+        public class UpdateWalorTemplateCommand : IRequest<Result<Unit>>
         {
             public Guid TemplateId { get; set; }
             public string Category { get; set; }
@@ -22,7 +22,7 @@ namespace Application.CQRS.Walor
             public Visibility Visibility { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<UpdateWalorTemplateCommand, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -35,7 +35,7 @@ namespace Application.CQRS.Walor
                 _http = http;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(UpdateWalorTemplateCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
                 var template = await _context.Templates.FindAsync(request.TemplateId);

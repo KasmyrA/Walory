@@ -14,14 +14,14 @@ namespace Application.CQRS.Walor
 {
     public class CreateWalorTemplate
     {
-        public class Command : IRequest<Result<Guid>>
+        public class CreateWalorTemplateCommand : IRequest<Result<Guid>>
         {
             public string Category { get; set; }
             public JsonDocument Content { get; set; }
             public Visibility Visibility { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Guid>>
+        public class Handler : IRequestHandler<CreateWalorTemplateCommand, Result<Guid>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -34,7 +34,7 @@ namespace Application.CQRS.Walor
                 _http = http;
             }
 
-            public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Guid>> Handle(CreateWalorTemplateCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
 

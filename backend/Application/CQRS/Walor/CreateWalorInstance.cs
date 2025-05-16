@@ -13,13 +13,13 @@ namespace Application.CQRS.Walor
 {
     public class CreateWalorInstance
     {
-        public class Command : IRequest<Result<Unit>>
+        public class CreateWalorInstanceCommand : IRequest<Result<Unit>>
         {
             public Guid CollectionId { get; set; }
             public JsonDocument Data { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<CreateWalorInstanceCommand, Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -28,7 +28,7 @@ namespace Application.CQRS.Walor
                 _context = context;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(CreateWalorInstanceCommand request, CancellationToken cancellationToken)
             {
                 var collection = await _context.Collections
                     .Include(c => c.WalorTemplate)

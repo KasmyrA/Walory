@@ -11,13 +11,13 @@ namespace Application.CQRS.Walor
 {
     public class UpdateWalorInstance
     {
-        public class Command : IRequest<Result<Unit>>
+        public class UpdateWalorInstanceCommand : IRequest<Result<Unit>>
         {
             public Guid WalorInstanceId { get; set; }
             public JsonDocument Data { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<UpdateWalorInstanceCommand, Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -26,7 +26,7 @@ namespace Application.CQRS.Walor
                 _context = context;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(UpdateWalorInstanceCommand request, CancellationToken cancellationToken)
             {
                 var walor = await _context.Walors.FindAsync(request.WalorInstanceId);
 

@@ -12,14 +12,14 @@ namespace Walory_Backend.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateWalorTemplate.Command command)
+        public async Task<IActionResult> Create([FromBody] CreateWalorTemplate.CreateWalorTemplateCommand command)
         {
             var result = await Mediator.Send(command);
             return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorTemplate.Command command)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorTemplate.UpdateWalorTemplateCommand command)
         {
             if (id != command.TemplateId)
                 return BadRequest("ID mismatch.");
@@ -31,14 +31,14 @@ namespace Walory_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await Mediator.Send(new DeleteWalorTemplate.Command { TemplateId = id });
+            var result = await Mediator.Send(new DeleteWalorTemplate.DeleteWalorTemplateCommand { TemplateId = id });
             return result.isSuccess ? NoContent() : BadRequest(result.Error);
         }
 
         [HttpPost("{id}/import")]
         public async Task<IActionResult> Import(Guid id)
         {
-            var result = await Mediator.Send(new CopyWalorTemplate.Command { TemplateId = id });
+            var result = await Mediator.Send(new CopyWalorTemplate.CopyWalorTemplateCommand { TemplateId = id });
             return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
     }

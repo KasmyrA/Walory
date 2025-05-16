@@ -12,14 +12,14 @@ namespace Walory_Backend.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateWalorInstance.Command command)
+        public async Task<IActionResult> Create([FromBody] CreateWalorInstance.CreateWalorInstanceCommand command)
         {
             var result = await Mediator.Send(command);
             return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorInstance.Command command)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorInstance.UpdateWalorInstanceCommand command)
         {
             if (id != command.WalorInstanceId)
                 return BadRequest("ID mismatch.");
@@ -31,7 +31,7 @@ namespace Walory_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await Mediator.Send(new DeleteWalorInstance.Command { WalorInstanceId = id });
+            var result = await Mediator.Send(new DeleteWalorInstance.DeleteWalorInstanceCommand { WalorInstanceId = id });
             return result.isSuccess ? NoContent() : BadRequest(result.Error);
         }
 
