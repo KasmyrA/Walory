@@ -22,16 +22,16 @@ namespace Application.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _serviceProvider.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+                //using var scope = _serviceProvider.CreateScope();
+                //var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-                var threshold = DateTime.UtcNow.AddDays(-14);
-                var oldNotifications = db.Notifications.Where(n => n.CreatedAt < threshold);
+                //var threshold = DateTime.UtcNow.AddDays(-14);
+                //var oldNotifications = db.Notifications.Where(n => n.CreatedAt < threshold);
 
-                db.Notifications.RemoveRange(oldNotifications);
-                await db.SaveChangesAsync(stoppingToken);
+                //db.Notifications.RemoveRange(oldNotifications);
+                //await db.SaveChangesAsync(stoppingToken);
 
-                await Task.Delay(TimeSpan.FromHours(24), stoppingToken); //24 interval
+                //await Task.Delay(TimeSpan.FromHours(24), stoppingToken); //24 interval
             }
         }
     }
