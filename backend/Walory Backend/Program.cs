@@ -19,18 +19,19 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
 
-try{
-        var context = services.GetRequiredService<DataContext>();
 
-        await context.Database.MigrateAsync();
-        await Seed.SeedData(context);
-    }
+try
+{
+    var context = builder.Services.BuildServiceProvider().GetRequiredService<DataContext>();
+
+    await context.Database.MigrateAsync();
+    await Seed.SeedData(context);
+}
 catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occured");
-    }
-
+{
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred");
+}
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -44,10 +45,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssembly(typeof(SendFriendRequest.Handler).Assembly));
 
-
 builder.Services.AddControllers();
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -65,7 +64,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAuthentication();
 app.UseAuthorization();

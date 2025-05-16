@@ -1,11 +1,13 @@
+using Domain;
+using Infrastracture;
+
 public static class Seed
 {
     public static async Task SeedData(DataContext context)
     {
         if (!context.Users.Any())
         {
-            context.Users.Add(new User { UserName = "admin", Email = "admin@example.com" });
-            // Dodaj inne dane testowe wed³ug potrzeb
+            context.Users.Add(new User { Name = "administrator", Email = "skn.404@polsl.pl", Password = "Zaq12wsx" });
             await context.SaveChangesAsync();
         }
     }
