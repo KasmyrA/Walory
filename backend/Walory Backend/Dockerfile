@@ -1,30 +1,36 @@
-# Zobacz https://aka.ms/customizecontainer, aby dowiedzieć się, jak dostosować kontener debugowania i jak program Visual Studio używa tego pliku Dockerfile do kompilowania obrazów w celu szybszego debugowania.
-
-# Ten etap jest używany podczas uruchamiania z programu VS w trybie szybkim (domyślnie dla konfiguracji debugowania)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# Ten etap służy do kompilowania projektu usługi
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Walory Backend.csproj", "."]
-RUN dotnet restore "./Walory Backend.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./Walory Backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Ten etap służy do publikowania projektu usługi do skopiowania do etapu końcowego
+# Kopiuj pliki projektów - ścieżki względem kontekstu (katalog nadrzędny)
+COPY ["Walory Backend/WaloryBackend.csproj", "Walory Backend/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Infrastracture/Infrastracture.csproj", "Infrastracture/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+
+# Przywróć zależności
+RUN dotnet restore "Walory Backend/WaloryBackend.csproj"
+
+# Kopiuj wszystkie pliki źródłowe
+COPY ["Walory Backend/", "Walory Backend/"]
+COPY ["Application/", "Application/"]
+COPY ["Infrastracture/", "Infrastracture/"]
+COPY ["Domain/", "Domain/"]
+
+# Ustaw katalog roboczy na projekt główny
+WORKDIR "/src/Walory Backend"
+RUN dotnet build "WaloryBackend.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Walory Backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "WaloryBackend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Ten etap jest używany w środowisku produkcyjnym lub w przypadku uruchamiania z programu VS w trybie regularnym (domyślnie, gdy nie jest używana konfiguracja debugowania)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Walory Backend.dll"]
+ENTRYPOINT ["dotnet", "WaloryBackend.dll"]
