@@ -30,7 +30,6 @@ namespace Walory_Backend.Security
         {
             var user = new User
             {
-                UserName = dto.Email,
                 Email = dto.Email,
                 Name = dto.Name
             };

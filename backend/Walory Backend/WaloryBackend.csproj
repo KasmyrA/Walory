@@ -24,6 +24,7 @@
     <Compile Include="Controllers\CollectionIteractionController.cs" />
     <Compile Include="Controllers\FriendController.cs" />
     <Compile Include="Controllers\NotificaitonController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WalorInstanceController.cs" />
     <Compile Include="Controllers\WalorTemplatesController.cs" />
   </ItemGroup>
