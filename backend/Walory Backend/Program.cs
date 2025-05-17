@@ -57,6 +57,8 @@ builder.Services
             builder.Configuration["EmailSettings:SmtpPass"]),
         EnableSsl = true
     });
+builder.Services.AddScoped<EmailService>();
+
 
 var app = builder.Build();
 
