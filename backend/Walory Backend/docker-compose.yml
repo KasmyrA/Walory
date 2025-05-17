@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 # Znajdujesz się w katalogu "Walory Backend"
 # a projekty Application i Infrastracture są w katalogu nadrzędnym
 services:
