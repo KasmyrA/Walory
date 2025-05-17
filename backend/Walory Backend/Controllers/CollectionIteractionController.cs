@@ -2,6 +2,7 @@
 using Cars.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Walory_Backend.Security;
 using static Application.CQRS.LikeAndSubscribe.AddComment;
 using static Application.CQRS.LikeAndSubscribe.AddLike;
 using static Application.CQRS.LikeAndSubscribe.DeleteCommand;
@@ -10,6 +11,7 @@ using static Application.CQRS.LikeAndSubscribe.GetLikes;
 
 namespace Walory_Backend.Controllers
 {
+   [RequireConfirmedEmail]
     public class CollectionIteractionController
     {
         [ApiController]

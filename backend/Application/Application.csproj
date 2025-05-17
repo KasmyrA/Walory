@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
@@ -16,10 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastracture\Infrastracture.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CQRS\Chat\" />
   </ItemGroup>
 
 </Project>

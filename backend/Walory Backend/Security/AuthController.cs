@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using Application.Services;
 using Domain;
 using Infrastracture;
 using Microsoft.AspNetCore.Authentication;
@@ -18,14 +19,16 @@ namespace Walory_Backend.Security
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly EmailService _emailService;
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, EmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             var user = new User
@@ -44,11 +47,12 @@ namespace Walory_Backend.Security
             var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
             Console.WriteLine($"Reset link: {confirmationLink}");
-            //TU DODAJEMY EMAIL
+            await _emailService.SendEmailAsync(dto.Email, "Regiser", confirmationLink);
             return Ok("Registered, check email to confirm");
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: true, lockoutOnFailure: false);
@@ -59,6 +63,7 @@ namespace Walory_Backend.Security
         }
 
         [HttpPost("logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -78,6 +83,7 @@ namespace Walory_Backend.Security
         }
 
         [HttpPost("forgot-password")]
+        [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -89,7 +95,7 @@ namespace Walory_Backend.Security
             var link = $"{Request.Scheme}://{Request.Host}/auth/reset-password?userId={user.Id}&token={encodedToken}";
 
             Console.WriteLine($"Reset link: {link}");
-            //TU DODAJEMY EMAIL
+            await _emailService.SendEmailAsync(user.Email, "Forgot", link);
             return Ok("Password reset link generated");
         }
 
@@ -116,6 +122,43 @@ namespace Walory_Backend.Security
             if (!result.Succeeded) return BadRequest(result.Errors);
 
             return Ok("Password changed");
+        }
+
+        [Authorize]
+        [HttpPost("request-email-change")]
+        public async Task<IActionResult> RequestEmailChange([FromBody] string newEmail)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+            var encodedToken = WebUtility.UrlEncode(token);
+
+            var confirmationLink = Url.Action("ConfirmEmailChange", "Auth", new
+            {
+                userId = user.Id,
+                newEmail,
+                token = encodedToken
+            }, Request.Scheme);
+
+            await _emailService.SendEmailAsync(newEmail, "Change", confirmationLink);
+            return Ok("Link potwierdzający został wysłany");
+        }
+
+        [HttpGet("confirm-email-change")]
+        public async Task<IActionResult> ConfirmEmailChange(string userId, string newEmail, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return BadRequest("Nie znaleziono użytkownika");
+
+            var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+            if (!result.Succeeded) return BadRequest("Nie udało się zmienić adresu email");
+
+            // jeśli login == email, zaktualizuj także UserName
+            user.UserName = newEmail;
+            await _userManager.UpdateAsync(user);
+
+            return Ok("Adres e-mail został zmieniony.");
         }
     }
 }

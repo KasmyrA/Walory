@@ -52,8 +52,7 @@ namespace Application.CQRS.Walor
 
                             if (validationErrors.Any())
                             {
-                                var errors = string.Join(", ", validationErrors.Select(error => $"{error.Kind}: {error.Path} - {error.Message}"));
-                                return Result<Unit>.Failure($"Walor data does not match the template: {errors}");
+                                return Result<Unit>.Failure($"Walor data does not match the template");
                             }
 
                             walor.Data = request.Data;

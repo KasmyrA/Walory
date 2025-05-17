@@ -3,11 +3,12 @@ using Application.DTO;
 using Cars.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Walory_Backend.Security;
 
 namespace Walory_Backend.Controllers
 {
-    [ApiController]
     [Route("collection")]
+    [RequireConfirmedEmail]
     public class CollectionsController : BaseApiController
     {
 

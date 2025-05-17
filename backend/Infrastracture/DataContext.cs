@@ -20,6 +20,8 @@ namespace Infrastracture
 
         public DbSet<UserFriend> UserFriends { get; set; }
 
+        public DbSet<ChatMessage> Messages { get; set; }
+
         public DbSet<FriendRequest> FriendRequests { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -143,6 +145,12 @@ namespace Infrastracture
                 .WithMany()
                 .HasForeignKey(fr => fr.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(c => c.Sender).WithMany().HasForeignKey(c => c.SenderId);
+
+            modelBuilder.Entity<ChatMessage>()
+    .HasOne(c => c.Receiver).WithMany().HasForeignKey(c => c.ReceiverId);
         }
     }
 }
