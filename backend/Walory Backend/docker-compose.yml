@@ -3,6 +3,7 @@
 # a projekty Application i Infrastracture są w katalogu nadrzędnym
 services:
   app:
+    container_name: walory-backend
     build:
       context: ..
       dockerfile: ./Walory Backend/Dockerfile
@@ -16,6 +17,7 @@ services:
       - db
 
   db:
+    container_name: walory-postgreSQL
     image: postgres:15
     environment:
       POSTGRES_DB: walorydb
