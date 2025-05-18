@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Net;
 using Walory_Backend;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,11 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddHostedService<NotificationCleanupService>();
 
+ServicePointManager.ServerCertificateValidationCallback =
+    delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    {
+        return true;
+    }; // Ryzykowne 
 builder.Services
     .AddFluentEmail(
         builder.Configuration["EmailSettings:FromEmail"],
@@ -56,7 +63,10 @@ builder.Services
             builder.Configuration["EmailSettings:SmtpUser"],
             builder.Configuration["EmailSettings:SmtpPass"]),
         EnableSsl = true
-    });
+    }
+
+    );
+
 builder.Services.AddScoped<EmailService>();
 
 

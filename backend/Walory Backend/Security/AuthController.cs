@@ -34,35 +34,38 @@ namespace Walory_Backend.Security
             var user = new User
             {
                 Email = dto.Email,
+                UserName = dto.Email,
                 Name = dto.Name,
-                UserName = dto.Email
+                EmailConfirmed = false,
+                EmailConfirmationCode = Guid.NewGuid().ToString()
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var encodedToken = WebUtility.UrlEncode(token);
+            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email?userId={user.Id}&code={user.EmailConfirmationCode}";
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email?userId={user.Id}&token={encodedToken}";
+            await _emailService.SendEmailAsync(dto.Email, "Confirm your email", confirmationLink);
 
-            await _emailService.SendEmailAsync(dto.Email, "Regiser", confirmationLink);
-            return Ok("Registered, check email to confirm");
+            return Ok("Registered successfully. Please check your email to confirm your account.");
         }
-
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+            if (user == null)
                 return Unauthorized("Invalid login");
 
-            if (!await _userManager.IsEmailConfirmedAsync(user))
+            if (!user.EmailConfirmed)
                 return Unauthorized("Email not confirmed");
 
-            await _signInManager.SignInAsync(user, isPersistent: true);
+            var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: true, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+                return Unauthorized("Invalid password");
+
             return Ok("Logged in");
         }
 
@@ -73,17 +76,27 @@ namespace Walory_Backend.Security
             await _signInManager.SignOutAsync();
             return Ok("Logged out");
         }
-
         [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string token)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string code)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            if (user == null) return NotFound("User not found");
+            if (user == null)
+                return NotFound("User not found");
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (!result.Succeeded) return BadRequest("Invalid token");
+            if (user.EmailConfirmed)
+                return BadRequest("Email already confirmed");
 
-            return Ok("Email confirmed");
+            if (user.EmailConfirmationCode != code)
+                return BadRequest("Invalid confirmation code");
+
+            user.EmailConfirmed = true;
+            user.EmailConfirmationCode = null;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest("Failed to confirm email");
+
+            return Ok("Email confirmed successfully");
         }
 
         [HttpPost("forgot-password")]
@@ -91,28 +104,44 @@ namespace Walory_Backend.Security
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+            if (user == null || !user.EmailConfirmed)
                 return BadRequest("User not found or email not confirmed");
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var encodedToken = WebUtility.UrlEncode(token);
-            var link = $"{Request.Scheme}://{Request.Host}/auth/reset-password?userId={user.Id}&token={encodedToken}";
+            user.PasswordResetCode = Guid.NewGuid().ToString();
+            user.PasswordResetExpiry = DateTime.UtcNow.AddHours(1); // ważny 1h
 
-            Console.WriteLine($"Reset link: {link}");
-            await _emailService.SendEmailAsync(user.Email, "Forgot", link);
-            return Ok("Password reset link generated");
+            await _userManager.UpdateAsync(user);
+
+            var resetLink = $"{Request.Scheme}://{Request.Host}/auth/reset-password?userId={user.Id}&code={user.PasswordResetCode}";
+
+            await _emailService.SendEmailAsync(email, "Reset Password", resetLink);
+
+            return Ok("Password reset link sent to your email.");
         }
 
+
         [HttpPost("reset-password")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
             var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
-            if (user == null) return NotFound("User not found");
+            if (user == null)
+                return NotFound("User not found");
 
-            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+            if (user.PasswordResetCode != dto.Code || user.PasswordResetExpiry < DateTime.UtcNow)
+                return BadRequest("Invalid or expired reset code");
 
-            return Ok("Password has been reset");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            // Wyczyść token resetu po udanym restarcie
+            user.PasswordResetCode = null;
+            user.PasswordResetExpiry = null;
+            await _userManager.UpdateAsync(user);
+
+            return Ok("Password has been reset successfully.");
         }
 
         [HttpPost("change-password")]
@@ -135,31 +164,33 @@ namespace Walory_Backend.Security
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
-            var encodedToken = WebUtility.UrlEncode(token);
+            user.EmailChangeCode = Guid.NewGuid().ToString();
+            user.PendingNewEmail = newEmail;
+            await _userManager.UpdateAsync(user);
 
-            var confirmationLink = Url.Action("ConfirmEmailChange", "Auth", new
-            {
-                userId = user.Id,
-                newEmail,
-                token = encodedToken
-            }, Request.Scheme);
+            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}&newEmail={WebUtility.UrlEncode(newEmail)}";
 
-            await _emailService.SendEmailAsync(newEmail, "Change", confirmationLink);
+            await _emailService.SendEmailAsync(newEmail, "Confirm email change", confirmationLink);
             return Ok("Link sent");
         }
 
         [HttpGet("confirm-email-change")]
-        public async Task<IActionResult> ConfirmEmailChange(string userId, string newEmail, string token)
+        public async Task<IActionResult> ConfirmEmailChange([FromQuery] Guid userId, [FromQuery] string token, [FromQuery] string newEmail)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null) return BadRequest("User not found");
 
-            var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+            if (user.EmailChangeCode != token || user.PendingNewEmail != newEmail)
+                return BadRequest("Invalid token or email");
 
+            user.Email = newEmail;
             user.UserName = newEmail;
-           var result2 = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded && !result2.Succeeded) return BadRequest("Not changed");
+            user.EmailChangeCode = null;
+            user.PendingNewEmail = null;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return BadRequest("Could not update email");
+
             return Ok("Email changed");
         }
     }

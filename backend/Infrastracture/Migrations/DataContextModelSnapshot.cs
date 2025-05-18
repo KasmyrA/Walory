@@ -216,6 +216,12 @@ namespace Infrastracture.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<string>("EmailChangeCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmailConfirmationCode")
+                        .HasColumnType("text");
+
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
@@ -238,6 +244,15 @@ namespace Infrastracture.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordResetCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetExpiry")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PendingNewEmail")
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
