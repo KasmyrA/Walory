@@ -34,7 +34,8 @@ namespace Walory_Backend.Security
             var user = new User
             {
                 Email = dto.Email,
-                Name = dto.Name
+                Name = dto.Name,
+                UserName = dto.Email
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -46,7 +47,6 @@ namespace Walory_Backend.Security
 
             var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
-            Console.WriteLine($"Reset link: {confirmationLink}");
             await _emailService.SendEmailAsync(dto.Email, "Regiser", confirmationLink);
             return Ok("Registered, check email to confirm");
         }
@@ -55,10 +55,14 @@ namespace Walory_Backend.Security
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: true, lockoutOnFailure: false);
-            if (!result.Succeeded)
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
                 return Unauthorized("Invalid login");
 
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+                return Unauthorized("Email not confirmed");
+
+            await _signInManager.SignInAsync(user, isPersistent: true);
             return Ok("Logged in");
         }
 
@@ -142,23 +146,21 @@ namespace Walory_Backend.Security
             }, Request.Scheme);
 
             await _emailService.SendEmailAsync(newEmail, "Change", confirmationLink);
-            return Ok("Link potwierdzający został wysłany");
+            return Ok("Link sent");
         }
 
         [HttpGet("confirm-email-change")]
         public async Task<IActionResult> ConfirmEmailChange(string userId, string newEmail, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return BadRequest("Nie znaleziono użytkownika");
+            if (user == null) return BadRequest("User not found");
 
             var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
-            if (!result.Succeeded) return BadRequest("Nie udało się zmienić adresu email");
 
-            // jeśli login == email, zaktualizuj także UserName
             user.UserName = newEmail;
-            await _userManager.UpdateAsync(user);
-
-            return Ok("Adres e-mail został zmieniony.");
+           var result2 = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded && !result2.Succeeded) return BadRequest("Not changed");
+            return Ok("Email changed");
         }
     }
 }

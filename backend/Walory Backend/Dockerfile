@@ -15,6 +15,7 @@ COPY ["Domain/Domain.csproj", "Domain/"]
 
 # Przywróć zależności
 RUN dotnet restore "Walory Backend/WaloryBackend.csproj"
+RUN apt-get update && apt-get install -y ca-certificates
 
 # Kopiuj wszystkie pliki źródłowe
 COPY ["Walory Backend/", "Walory Backend/"]

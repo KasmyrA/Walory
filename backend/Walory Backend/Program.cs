@@ -76,9 +76,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-
-//Tutaj seed potem!
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    db.Database.Migrate(); 
+}
 
 app.Run();
