@@ -38,8 +38,8 @@ namespace Walory_Backend.Controllers
         [HttpPut("description")]
         public async Task<IActionResult> GetDescription([FromBody] UpdateDescriptionCommand command )
         {
-            var result = await Mediator.Send(new GetDescription.GetDescriptionUserQuery());
-            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
+            var result = await Mediator.Send(new UpdateDescription.UpdateDescriptionCommand());
+            return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
     }
 

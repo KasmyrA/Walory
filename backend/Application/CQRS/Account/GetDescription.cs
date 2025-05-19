@@ -30,7 +30,7 @@ namespace Application.CQRS.Account
             {
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
                 if (user == null) return Result<string>.Failure("User not found");
-
+                Console.WriteLine(user.Description);
                 return Result<string>.Success(user.Description);
             }
         }
