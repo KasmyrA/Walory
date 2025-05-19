@@ -18,7 +18,7 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> AcceptFriendRequest()
         {
             var result = await Mediator.Send(new GetFriendsList.Query());
-            if (result.isSuccess) return Ok(result);
+            if (result.isSuccess) return Ok(result.Value);
             return BadRequest(result.Error);
         }
 

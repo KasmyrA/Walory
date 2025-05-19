@@ -35,8 +35,11 @@ namespace Application.CQRS.FriendsLogic
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+                var notifcation = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == request.RequestId);
+                if (notifcation == null)
+                    return Result<Unit>.Failure("Not found");
                 var friendRequest = await _context.FriendRequests
-                    .FirstOrDefaultAsync(fr => fr.Id == request.RequestId && fr.ReceiverId == user.Id);
+                    .FirstOrDefaultAsync(fr => fr.Id == request.RequestId && fr.ReceiverId == notifcation.ReferenceId);
 
                 if (friendRequest == null)
                     return Result<Unit>.Failure("Not found");
