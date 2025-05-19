@@ -47,8 +47,8 @@ namespace Application.CQRS.Walor
                 template.Content = request.Content;
                 template.Visibility = request.Visibility;
 
-                await _context.SaveChangesAsync(cancellationToken);
-                return Result<Unit>.Success(Unit.Value);
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
+                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
         }
     }

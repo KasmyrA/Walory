@@ -40,9 +40,9 @@ namespace Application.CQRS.LikeAndSubscribe
                 return Result<Unit>.Failure("Liked not found");
 
             _context.Likes.Remove(like);
-            await _context.SaveChangesAsync(cancellationToken);
 
-            return Result<Unit>.Success(Unit.Value);
+            var success = await _context.SaveChangesAsync(cancellationToken) > 0;
+            return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
         }
     }
 

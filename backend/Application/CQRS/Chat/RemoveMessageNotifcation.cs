@@ -49,8 +49,9 @@ namespace Application.CQRS.Chat
                 if (!notifications.Any()) return Result<Unit>.Success(Unit.Value);
 
                 _context.Notifications.RemoveRange(notifications);
-                await _context.SaveChangesAsync(cancellationToken);
-                return Result<Unit>.Success(Unit.Value);
+
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
+                return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
         }
     }
