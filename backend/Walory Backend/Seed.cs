@@ -1,7 +1,9 @@
 using Domain;
+using Domain.Notificaiton;
 using Infrastracture;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -169,7 +171,7 @@ public static class Seed
             friendships.AddRange(reciprocalFriendships);
             
             // Add friend requests (not yet accepted)
-            var friendRequests = new List<FriendRequest>
+            var pendingFriendRequests = new List<FriendRequest>
             {
                 new FriendRequest
                 {
@@ -177,7 +179,8 @@ public static class Seed
                     Sender = newUser,
                     ReceiverId = collector.Id,
                     Receiver = collector,
-                    IsAccepted = false
+                    IsAccepted = false,
+                    SentAt = DateTime.UtcNow.AddDays(-2)
                 },
                 new FriendRequest
                 {
@@ -185,7 +188,8 @@ public static class Seed
                     Sender = newUser,
                     ReceiverId = developer.Id,
                     Receiver = developer,
-                    IsAccepted = false
+                    IsAccepted = false,
+                    SentAt = DateTime.UtcNow.AddDays(-1)
                 },
                 new FriendRequest
                 {
@@ -193,13 +197,54 @@ public static class Seed
                     Sender = artist,
                     ReceiverId = admin.Id,
                     Receiver = admin,
-                    IsAccepted = false
+                    IsAccepted = false,
+                    SentAt = DateTime.UtcNow.AddHours(-12)
                 }
             };
             
+            // Add already accepted friend requests to demonstrate complete workflow
+            var acceptedFriendRequests = new List<FriendRequest>
+            {
+                new FriendRequest
+                {
+                    SenderId = user1.Id,
+                    Sender = user1,
+                    ReceiverId = creator.Id,
+                    Receiver = creator,
+                    IsAccepted = true,
+                    SentAt = DateTime.UtcNow.AddDays(-10)
+                },
+                new FriendRequest
+                {
+                    SenderId = moderator.Id,
+                    Sender = moderator,
+                    ReceiverId = admin.Id,
+                    Receiver = admin,
+                    IsAccepted = true,
+                    SentAt = DateTime.UtcNow.AddDays(-5)
+                }
+            };
+            
+            // Create notification for friend requests
+            var notifications = new List<Notification>();
+            foreach (var request in pendingFriendRequests)
+            {
+                notifications.Add(new Notification
+                {
+                    UserId = request.ReceiverId,
+                    Type = NotificationType.FriendRequest,
+                    Message = $"{request.Sender.Name} sent you a friend request",
+                    IsRead = false,
+                    CreatedAt = request.SentAt,
+                    ReferenceId = request.Id
+                });
+            }
+            
             // Save all relationships to the database
             context.UserFriends.AddRange(friendships);
-            context.FriendRequests.AddRange(friendRequests);
+            context.FriendRequests.AddRange(pendingFriendRequests);
+            context.FriendRequests.AddRange(acceptedFriendRequests);
+            context.Notifications.AddRange(notifications);
             await context.SaveChangesAsync();
         }
     }
