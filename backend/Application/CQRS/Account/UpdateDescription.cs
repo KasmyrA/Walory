@@ -3,25 +3,22 @@ using Infrastracture;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Application.CQRS.Walor
+namespace Application.CQRS.Account
 {
-    public class CreateWalorTemplate
+    public class UpdateDescription
     {
-        public class CreateWalorTemplateCommand : IRequest<Result<Unit>>
-        {
-            public string Category { get; set; }
-            public JsonDocument Content { get; set; }
-            public Visibility Visibility { get; set; }
+        public class UpdateDescriptionCommand : IRequest<Result<Unit>> {
+            public string Description { get; set; }
         }
 
-        public class Handler : IRequestHandler<CreateWalorTemplateCommand, Result<Unit>>
+        public class Handler : IRequestHandler<UpdateDescriptionCommand, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -33,20 +30,15 @@ namespace Application.CQRS.Walor
                 _userManager = userManager;
                 _http = http;
             }
+        
 
-            public async Task<Result<Unit>> Handle(CreateWalorTemplateCommand request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(UpdateDescriptionCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
+                if (user == null) return Result<Unit>.Failure("User not found");
 
-                var template = new WalorTemplate
-                {
-                    Category = request.Category,
-                    Content = request.Content,
-                    Visibility = request.Visibility,
-                    AuthorId = user.Id
-                };
+                user.Description = request.Description;
 
-                _context.Templates.Add(template);
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
                 return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
