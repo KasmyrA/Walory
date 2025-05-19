@@ -14,6 +14,13 @@ namespace Walory_Backend.Controllers
             if (result.isSuccess) return Ok();
             return BadRequest(result.Error);
         }
+        [HttpGet("friends/list")]
+        public async Task<IActionResult> AcceptFriendRequest()
+        {
+            var result = await Mediator.Send(new GetFriendsList.Query());
+            if (result.isSuccess) return Ok();
+            return BadRequest(result.Error);
+        }
 
         [HttpPost("friends/accept/{requestId}")]
         public async Task<IActionResult> AcceptFriendRequest(Guid requestId)
