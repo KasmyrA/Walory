@@ -128,8 +128,10 @@ namespace Walory_Backend.Security
             if (user == null)
                 return NotFound("User not found");
 
-            if (user.PasswordResetCode != dto.Code || user.PasswordResetExpiry < DateTime.UtcNow)
-                return BadRequest("Invalid or expired reset code");
+            if (user.PasswordResetCode != dto.Code)
+                return BadRequest("Invalid reset code");
+            if (user.PasswordResetExpiry < DateTime.UtcNow)
+                return BadRequest("Expired reset code");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
@@ -168,23 +170,23 @@ namespace Walory_Backend.Security
             user.PendingNewEmail = newEmail;
             await _userManager.UpdateAsync(user);
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}&newEmail={WebUtility.UrlEncode(newEmail)}";
+            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}}";
 
             await _emailService.SendEmailAsync(newEmail, "Confirm email change", confirmationLink);
             return Ok("Link sent");
         }
 
         [HttpGet("confirm-email-change")]
-        public async Task<IActionResult> ConfirmEmailChange([FromQuery] Guid userId, [FromQuery] string token, [FromQuery] string newEmail)
+        public async Task<IActionResult> ConfirmEmailChange([FromQuery] Guid userId, [FromQuery] string token)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null) return BadRequest("User not found");
 
-            if (user.EmailChangeCode != token || user.PendingNewEmail != newEmail)
+            if (user.EmailChangeCode != token)
                 return BadRequest("Invalid token or email");
 
-            user.Email = newEmail;
-            user.UserName = newEmail;
+            user.Email = user.PendingNewEmail;
+            user.UserName = user.PendingNewEmail;
             user.EmailChangeCode = null;
             user.PendingNewEmail = null;
 
