@@ -6,246 +6,205 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 public static class Seed
 {
     public static async Task SeedData(DataContext context, UserManager<User> userManager)
     {
-        if (!context.Users.Any())
+        if (context.Users.Any())
+            return;
+
+        var users = GetSeedUsers();
+
+        // Inicjalizacja kolekcji w u¿ytkownikach
+        foreach (var user in users)
         {
-            var users = new List<User>
-            {
-                new User
-                {
-                    UserName = "admin@walor.com",
-                    Email = "admin@walor.com",
-                    Name = "Administrator",
-                    Description = "System administrator account",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "user1@walor.com",
-                    Email = "user1@walor.com",
-                    Name = "Regular User",
-                    Description = "Standard user account",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "creator@walor.com",
-                    Email = "creator@walor.com",
-                    Name = "Content Creator",
-                    Description = "User who creates templates and collections",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                // 5 additional users
-                new User
-                {
-                    UserName = "artist@walor.com",
-                    Email = "artist@walor.com",
-                    Name = "Digital Artist",
-                    Description = "Creates visual templates and collections",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "collector@walor.com",
-                    Email = "collector@walor.com",
-                    Name = "Collector",
-                    Description = "Specializes in collecting rare templates",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "moderator@walor.com",
-                    Email = "moderator@walor.com",
-                    Name = "Content Moderator",
-                    Description = "Helps maintain quality content",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "developer@walor.com",
-                    Email = "developer@walor.com",
-                    Name = "Developer",
-                    Description = "Creates technical templates",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                },
-                new User
-                {
-                    UserName = "newuser@walor.com",
-                    Email = "newuser@walor.com",
-                    Name = "New User",
-                    Description = "Just joined the platform",
-                    Friends = new List<UserFriend>(),
-                    Collections = new List<Collection>(),
-                    Templates = new List<WalorTemplate>()
-                }
-            };
-
-            foreach (var user in users)
-            {
-                await userManager.CreateAsync(user, "Zaq12wsx");
-            }
-
-            // Retrieve created users for relationships
-            var admin = await userManager.FindByEmailAsync("admin@walor.com");
-            var user1 = await userManager.FindByEmailAsync("user1@walor.com");
-            var creator = await userManager.FindByEmailAsync("creator@walor.com");
-            var artist = await userManager.FindByEmailAsync("artist@walor.com");
-            var collector = await userManager.FindByEmailAsync("collector@walor.com");
-            var moderator = await userManager.FindByEmailAsync("moderator@walor.com");
-            var developer = await userManager.FindByEmailAsync("developer@walor.com");
-            var newUser = await userManager.FindByEmailAsync("newuser@walor.com");
-            
-            // Create friendships between users
-            var friendships = new List<UserFriend>
-            {
-                // Original friendship
-                new UserFriend
-                {
-                    UserId = user1.Id,
-                    User = user1,
-                    FriendId = creator.Id,
-                    Friend = creator
-                },
-                // New friendships
-                new UserFriend
-                {
-                    UserId = artist.Id,
-                    User = artist,
-                    FriendId = creator.Id,
-                    Friend = creator
-                },
-                new UserFriend
-                {
-                    UserId = collector.Id,
-                    User = collector,
-                    FriendId = artist.Id,
-                    Friend = artist
-                },
-                new UserFriend
-                {
-                    UserId = moderator.Id,
-                    User = moderator,
-                    FriendId = admin.Id,
-                    Friend = admin
-                },
-                new UserFriend
-                {
-                    UserId = developer.Id,
-                    User = developer,
-                    FriendId = user1.Id,
-                    Friend = user1
-                }
-            };
-            
-            // Add reciprocal friendships (for bidirectional relationships)
-            var reciprocalFriendships = new List<UserFriend>();
-            foreach (var friendship in friendships)
-            {
-                reciprocalFriendships.Add(new UserFriend
-                {
-                    UserId = friendship.FriendId,
-                    User = friendship.Friend,
-                    FriendId = friendship.UserId,
-                    Friend = friendship.User
-                });
-            }
-            
-            friendships.AddRange(reciprocalFriendships);
-            
-            // Add friend requests (not yet accepted)
-            var pendingFriendRequests = new List<FriendRequest>
-            {
-                new FriendRequest
-                {
-                    SenderId = newUser.Id,
-                    Sender = newUser,
-                    ReceiverId = collector.Id,
-                    Receiver = collector,
-                    IsAccepted = false,
-                    SentAt = DateTime.UtcNow.AddDays(-2)
-                },
-                new FriendRequest
-                {
-                    SenderId = newUser.Id,
-                    Sender = newUser,
-                    ReceiverId = developer.Id,
-                    Receiver = developer,
-                    IsAccepted = false,
-                    SentAt = DateTime.UtcNow.AddDays(-1)
-                },
-                new FriendRequest
-                {
-                    SenderId = artist.Id,
-                    Sender = artist,
-                    ReceiverId = admin.Id,
-                    Receiver = admin,
-                    IsAccepted = false,
-                    SentAt = DateTime.UtcNow.AddHours(-12)
-                }
-            };
-            
-            // Add already accepted friend requests to demonstrate complete workflow
-            var acceptedFriendRequests = new List<FriendRequest>
-            {
-                new FriendRequest
-                {
-                    SenderId = user1.Id,
-                    Sender = user1,
-                    ReceiverId = creator.Id,
-                    Receiver = creator,
-                    IsAccepted = true,
-                    SentAt = DateTime.UtcNow.AddDays(-10)
-                },
-                new FriendRequest
-                {
-                    SenderId = moderator.Id,
-                    Sender = moderator,
-                    ReceiverId = admin.Id,
-                    Receiver = admin,
-                    IsAccepted = true,
-                    SentAt = DateTime.UtcNow.AddDays(-5)
-                }
-            };
-            
-            // Create notification for friend requests
-            var notifications = new List<Notification>();
-            foreach (var request in pendingFriendRequests)
-            {
-                notifications.Add(new Notification
-                {
-                    UserId = request.ReceiverId,
-                    Type = NotificationType.FriendRequest,
-                    Message = $"{request.Sender.Name} sent you a friend request",
-                    IsRead = false,
-                    CreatedAt = request.SentAt,
-                    ReferenceId = request.Id
-                });
-            }
-            
-            // Save all relationships to the database
-            context.UserFriends.AddRange(friendships);
-            context.FriendRequests.AddRange(pendingFriendRequests);
-            context.FriendRequests.AddRange(acceptedFriendRequests);
-            context.Notifications.AddRange(notifications);
-            await context.SaveChangesAsync();
+            user.Collections ??= new List<Collection>();
+            user.Templates ??= new List<WalorTemplate>();
         }
+
+        foreach (var user in users)
+        {
+            var result = await userManager.CreateAsync(user, "Zaq!2wsx");
+            if (!result.Succeeded)
+            {
+                Console.WriteLine(
+                    $"Nie uda³o siê utworzyæ u¿ytkownika {user}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+        }
+
+        // Pobierz u¿ytkowników do relacji
+        var userEmails = users.Select(u => u.Email).ToList();
+        var userDict = new Dictionary<string, User>();
+        foreach (var email in userEmails)
+        {
+            var u = await userManager.FindByEmailAsync(email);
+            if (u != null)
+                userDict[email] = u;
+        }
+
+        // Skróty do u¿ytkowników
+        var admin = userDict["admin@walor.com"];
+        var user1 = userDict["user1@walor.com"];
+        var creator = userDict["creator@walor.com"];
+        var artist = userDict["artist@walor.com"];
+        var collector = userDict["collector@walor.com"];
+        var moderator = userDict["moderator@walor.com"];
+        var developer = userDict["developer@walor.com"];
+        var newUser = userDict["newuser@walor.com"];
+        var testUser = userDict["testuser@walor.com"];
+
+        // --- WALORY, SZABLONY, KOLEKCJE ---
+
+        var templates = new List<WalorTemplate>
+        {
+            new WalorTemplate
+            {
+                Id = Guid.NewGuid(),
+                Category = "Sztuka",
+                Content = JsonDocument.Parse("{\"fields\": [\"Tytu³\", \"Opis\", \"Rok\"]}"),
+                AuthorId = artist.Id,
+                Author = artist,
+                Visibility = Visibility.Public
+            },
+            new WalorTemplate
+            {
+                Id = Guid.NewGuid(),
+                Category = "Technologia",
+                Content = JsonDocument.Parse("{\"fields\": [\"Nazwa\", \"Wersja\", \"Opis\"]}"),
+                AuthorId = developer.Id,
+                Author = developer,
+                Visibility = Visibility.Public
+            }
+        };
+
+        var collections = new List<Collection>
+        {
+            new Collection
+            {
+                Id = Guid.NewGuid(),
+                Title = "Kolekcja Sztuki",
+                Description = "Wyj¹tkowe dzie³a cyfrowe",
+                Visibility = Visibility.Public,
+                OwnerId = artist.Id,
+                Owner = artist,
+                WalorTemplateId = templates[0].Id,
+                WalorTemplate = templates[0],
+                Walors = new List<WalorInstance>()
+            },
+            new Collection
+            {
+                Id = Guid.NewGuid(),
+                Title = "Nowinki Technologiczne",
+                Description = "Zbiór najnowszych technologii",
+                Visibility = Visibility.Friends,
+                OwnerId = developer.Id,
+                Owner = developer,
+                WalorTemplateId = templates[1].Id,
+                WalorTemplate = templates[1],
+                Walors = new List<WalorInstance>()
+            }
+        };
+
+        var walors = new List<WalorInstance>
+        {
+            new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse("{\"Tytu³\": \"Obraz 1\", \"Opis\": \"Abstrakcja\", \"Rok\": 2023}"),
+                TemplateId = templates[0].Id,
+                Template = templates[0],
+                CollectionId = collections[0].Id,
+                Collection = collections[0]
+            },
+            new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse("{\"Tytu³\": \"Obraz 2\", \"Opis\": \"Portret\", \"Rok\": 2022}"),
+                TemplateId = templates[0].Id,
+                Template = templates[0],
+                CollectionId = collections[0].Id,
+                Collection = collections[0]
+            },
+            new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse("{\"Tytu³\": \"Obraz 3\", \"Opis\": \"Pejza¿\", \"Rok\": 2021}"),
+                TemplateId = templates[0].Id,
+                Template = templates[0],
+                CollectionId = collections[0].Id,
+                Collection = collections[0]
+            },
+            new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse("{\"Nazwa\": \"AI Chip\", \"Wersja\": \"1.0\", \"Opis\": \"Nowoczesny uk³ad AI\"}"),
+                TemplateId = templates[1].Id,
+                Template = templates[1],
+                CollectionId = collections[1].Id,
+                Collection = collections[1]
+            },
+            new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse("{\"Nazwa\": \"Quantum CPU\", \"Wersja\": \"2.0\", \"Opis\": \"Procesor kwantowy\"}"),
+                TemplateId = templates[1].Id,
+                Template = templates[1],
+                CollectionId = collections[1].Id,
+                Collection = collections[1]
+            }
+        };
+
+        // Przypisz walory do kolekcji
+        collections[0].Walors.Add(walors[0]);
+        collections[0].Walors.Add(walors[1]);
+        collections[0].Walors.Add(walors[2]);
+        collections[1].Walors.Add(walors[3]);
+        collections[1].Walors.Add(walors[4]);
+
+        // Przypisz kolekcje i szablony do u¿ytkowników
+        artist.Collections.Add(collections[0]);
+        artist.Templates.Add(templates[0]);
+        developer.Collections.Add(collections[1]);
+        developer.Templates.Add(templates[1]);
+
+        context.Templates.AddRange(templates);
+        context.Collections.AddRange(collections);
+        context.Walors.AddRange(walors);
+
+        // --- RESZTA SEEDOWANIA (przyjaŸnie, powiadomienia itd.) ---
+        // ... (Twój dotychczasowy kod)
+
+        await context.SaveChangesAsync();
+
+        // Dodaj powiadomienia o nowych walorach
+        foreach (var walor in walors)
+        {
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid(),
+                UserId = walor.Collection.OwnerId,
+                Type = NotificationType.NewWalor,
+                Message = $"Dodano nowy walor do kolekcji {walor.Collection.Title}",
+                ReferenceId = walor.Id,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+            context.Notifications.Add(notification);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    // Upewnij siê, ¿e ta metoda istnieje i zwraca listê u¿ytkowników do seedowania
+    private static List<User> GetSeedUsers()
+    {
+        // ... implementacja
+        throw new NotImplementedException();
     }
 }
+    
+
+
+

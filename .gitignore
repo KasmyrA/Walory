@@ -36,4 +36,5 @@ backend/Walory Backend/.vs
 /backend/Application/obj
 /backend/Domain/bin
 /backend/Domain/obj
-
+/backend/Tests/bin
+/backend/Tests/obj
