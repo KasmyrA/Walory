@@ -37,7 +37,9 @@ namespace Application.CQRS.Account
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
                 if (user == null) return Result<Unit>.Failure("User not found");
 
-                user.Description = request.Description;
+                var state = await _context.Users.FindAsync(user.Id);
+                if (state == null) return Result<Unit>.Failure("User not found");
+                state.Description = request.Description;
 
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
                 return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
