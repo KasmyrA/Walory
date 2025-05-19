@@ -15,7 +15,7 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> Send([FromBody] SendMessage.Command command)
         {
             var result = await Mediator.Send(command);
-            return result.isSuccess ? Ok() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpGet("messages/{friendId}")]
@@ -28,14 +28,14 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> MarkAsRead(Guid friendId)
         {
             var result = await Mediator.Send(new MarkMessagesAsRead.Command { FriendId = friendId });
-            return result.isSuccess ? Ok() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpPost("remove-message-notifications/{friendId}")]
         public async Task<IActionResult> RemoveMessageNotifications(Guid friendId)
         {
             var result = await Mediator.Send(new RemoveMessageNotifications.Command { FriendId = friendId });
-            return result.isSuccess ? Ok() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
     }

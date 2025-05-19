@@ -18,7 +18,7 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> AcceptFriendRequest()
         {
             var result = await Mediator.Send(new GetFriendsList.Query());
-            if (result.isSuccess) return Ok();
+            if (result.isSuccess) return Ok(result);
             return BadRequest(result.Error);
         }
 
@@ -26,14 +26,14 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> AcceptFriendRequest(Guid requestId)
         {
             var result = await Mediator.Send(new AcceptFriendRequest.Command { RequestId = requestId });
-            if (result.isSuccess) return Ok();
+            if (result.isSuccess) return Ok(result);
             return BadRequest(result.Error);
         }
         [HttpDelete("friends/remove/{friendId}")]
         public async Task<IActionResult> Remove(Guid friendId)
         {
             var result = await Mediator.Send(new RemoveFriend.Command { FriendId = friendId });
-            return result.isSuccess ? Ok() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
     }
 }

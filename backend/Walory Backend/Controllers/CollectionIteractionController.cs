@@ -33,7 +33,7 @@ namespace Walory_Backend.Controllers
             {
                 var command = new DeleteCommentCommand { CommentId = commentId };
                 var result = await Mediator.Send(command);
-                return result.isSuccess ? Ok() : BadRequest(result.Error);
+                return result.isSuccess ? Ok(result) : BadRequest(result.Error);
             }
 
             [HttpPost("likes")]
@@ -41,7 +41,7 @@ namespace Walory_Backend.Controllers
             {
                 var command = new AddLikeCommand { CollectionId = collectionId };
                 var result = await Mediator.Send(command);
-                return result.isSuccess ? Ok() : BadRequest(result.Error);
+                return result.isSuccess ? Ok(result) : BadRequest(result.Error);
             }
 
             [HttpDelete("likes")]
@@ -49,7 +49,7 @@ namespace Walory_Backend.Controllers
             {
                 var command = new RemoveLikeCommand { CollectionId = collectionId };
                 var result = await Mediator.Send(command);
-                return result.isSuccess ? Ok() : BadRequest(result.Error);
+                return result.isSuccess ? Ok(result) : BadRequest(result.Error);
             }
 
             [HttpGet("comments")]

@@ -15,7 +15,7 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> Create([FromBody] CreateWalorInstance.CreateWalorInstanceCommand command)
         {
             var result = await Mediator.Send(command);
-            return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpPut("{id}")]
@@ -25,14 +25,14 @@ namespace Walory_Backend.Controllers
                 return BadRequest("ID mismatch.");
 
             var result = await Mediator.Send(command);
-            return result.isSuccess ? NoContent() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await Mediator.Send(new DeleteWalorInstance.DeleteWalorInstanceCommand { WalorInstanceId = id });
-            return result.isSuccess ? NoContent() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
     }

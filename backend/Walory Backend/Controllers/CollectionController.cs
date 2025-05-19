@@ -25,14 +25,14 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> Update(Guid id, CollectionDTO collectionDTO)
         {
             var result = await Mediator.Send(new UpdateCollection.Command { CollectionDTO = collectionDTO});
-            return result.isSuccess ? NoContent() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await Mediator.Send(new DeleteCollection.DeleteCollectionCommand { CollectionId = id });
-            return result.isSuccess ? NoContent() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         //    [HttpGet]

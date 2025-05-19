@@ -90,6 +90,30 @@ public static class Seed
             Comments = new List<Comment>(),
             Likes = new List<Like>()
         };
+        var collection2 = new Collection
+        {
+            Id = Guid.NewGuid(),
+            Title = "My Friends",
+            Description = "Sample description",
+            Visibility = Visibility.Friends,
+            OwnerId = user2.Id,
+            WalorTemplateId = templateFriends.Id,
+            Walors = new List<WalorInstance>(),
+            Comments = new List<Comment>(),
+            Likes = new List<Like>()
+        };
+        var collection3 = new Collection
+        {
+            Id = Guid.NewGuid(),
+            Title = "My Private",
+            Description = "Sample description",
+            Visibility = Visibility.Private,
+            OwnerId = user3.Id,
+            WalorTemplateId = templatePrivate.Id,
+            Walors = new List<WalorInstance>(),
+            Comments = new List<Comment>(),
+            Likes = new List<Like>()
+        };
 
         for (int i = 0; i < 3; i++)
         {
@@ -107,7 +131,41 @@ public static class Seed
                 Collection = collection
             });
         }
-        context.Collections.Add(collection);
+
+        for (int i = 0; i < 3; i++)
+        {
+            collection2.Walors.Add(new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse($$"""
+                {
+                  "price": {{i * 100 + 50}},
+                  "productionDate": "2024-01-{{(i + 1):D2}}",
+                  "name": "Walor #{{i + 1}}"
+                }
+                """),
+                TemplateId = templatePublic.Id,
+                Collection = collection
+            });
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            collection3.Walors.Add(new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse($$"""
+                {
+                  "price": {{i * 100 + 50}},
+                  "productionDate": "2024-01-{{(i + 1):D2}}",
+                  "name": "Walor #{{i + 1}}"
+                }
+                """),
+                TemplateId = templatePublic.Id,
+                Collection = collection
+            });
+        }
+        context.Collections.AddRange(collection,collection2,collection3);
 
         // === Like ===
         context.Likes.Add(new Like
@@ -115,6 +173,12 @@ public static class Seed
             Id = Guid.NewGuid(),
             CollectionId = collection.Id,
             UserId = user3.Id
+        });
+        context.Likes.Add(new Like
+        {
+            Id = Guid.NewGuid(),
+            CollectionId = collection.Id,
+            UserId = user4.Id
         });
 
         // === Comment ===
@@ -154,6 +218,14 @@ public static class Seed
                 UserId = user3.Id,
                 Message = "Nowa wiadomoœæ",
                 Type = NotificationType.MessageSent,
+                IsRead = false
+            },
+                        new Notification
+            {
+                Id = Guid.NewGuid(),
+                UserId = user2.Id,
+                Message = "Przyjaciel dodaj wiadomoœæ",
+                Type = NotificationType.FriendRequest,
                 IsRead = false
             }
         });
