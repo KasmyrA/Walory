@@ -170,7 +170,7 @@ namespace Walory_Backend.Security
             user.PendingNewEmail = newEmail;
             await _userManager.UpdateAsync(user);
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}}";
+            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}";
 
             await _emailService.SendEmailAsync(newEmail, "Confirm email change", confirmationLink);
             return Ok("Link sent");

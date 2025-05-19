@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Walory_Backend.Security;
 using static Application.CQRS.LikeAndSubscribe.AddComment;
 using static Application.CQRS.LikeAndSubscribe.AddLike;
+using static Application.CQRS.LikeAndSubscribe.ChecIfLiked;
 using static Application.CQRS.LikeAndSubscribe.DeleteCommand;
 using static Application.CQRS.LikeAndSubscribe.GetComments;
 using static Application.CQRS.LikeAndSubscribe.GetLikes;
@@ -63,6 +64,13 @@ namespace Walory_Backend.Controllers
             public async Task<IActionResult> GetLikesCount(Guid collectionId)
             {
                 var query = new GetLikesCountQuery { CollectionId = collectionId };
+                var count = await Mediator.Send(query);
+                return Ok(count);
+            }
+            [HttpGet("check-if-liked")]
+            public async Task<IActionResult> Check_if_liked(Guid collectionId)
+            {
+                var query = new ChecIfLikedCommand { CollectionId = collectionId };
                 var count = await Mediator.Send(query);
                 return Ok(count);
             }
