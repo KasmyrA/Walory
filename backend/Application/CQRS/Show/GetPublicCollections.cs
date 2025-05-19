@@ -56,6 +56,7 @@ namespace Application.CQRS.Show
                        CollectionId = c.Id,
                        Title = c.Title,
                        Description = c.Description,
+                       Category = c.WalorTemplate.Category,
                        Visibility = c.Visibility,
                        Author = new AuthorDto
                        {

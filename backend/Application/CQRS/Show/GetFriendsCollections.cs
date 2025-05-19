@@ -47,6 +47,7 @@ namespace Application.CQRS.Show
                 var query = _context.Collections
                     .Include(c => c.Owner)
                     .Include(c => c.Walors).
+                    Include(c=> c.WalorTemplate).
                     Where(c => c.Visibility == Visibility.Friends && friendIds.Contains(c.OwnerId))
                     .AsQueryable();
 
@@ -68,6 +69,7 @@ namespace Application.CQRS.Show
                         CollectionId = c.Id,
                         Title = c.Title,
                         Description = c.Description,
+                        Category =c.WalorTemplate.Category,
                         Visibility = c.Visibility,
                         Author = new AuthorDto
                         {

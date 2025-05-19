@@ -23,13 +23,13 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
             var result = await Mediator.Send(new MarkNotificationAsRead.Command { NotificationId = id });
-            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
+            return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
         [HttpDelete("notifcation/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await Mediator.Send(new DeleteNotification.Command { NotificationId = id });
-            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
+            return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
     }
 

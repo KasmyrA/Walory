@@ -41,7 +41,8 @@ namespace Application.CQRS.Show
                 var user = await _userManager.GetUserAsync(_http.HttpContext.User);
 
                 var query = _context.Collections
-                    .Include(c => c.Walors).
+                    .Include(c => c.Walors).Include(c=>c.WalorTemplate).
+                
                     Where(c => c.Owner.Id == user.Id)
                     .AsQueryable();
 
@@ -63,6 +64,7 @@ namespace Application.CQRS.Show
                         CollectionId = c.Id,
                         Title = c.Title,
                         Description = c.Description,
+                        Category = c.WalorTemplate.Category,
                         Visibility = c.Visibility,
                         Author = new AuthorDto
                         {
