@@ -89,7 +89,11 @@ app.MapHub<ChatHub>("/chatHub");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate(); 
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    db.Database.Migrate();
+
+    await Seed.SeedData(db,userManager);
 }
 
 app.Run();
+public partial class Program { }

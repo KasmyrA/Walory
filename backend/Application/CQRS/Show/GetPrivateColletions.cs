@@ -17,7 +17,7 @@ namespace Application.CQRS.Show
     {
         public class Query : IRequest<PaginatedList<CollectionDTO>>
         {
-            public string Category { get; set; }
+            public string? Category { get; set; }
             public string SortOrder { get; set; } = "asc";
             public int PageNumber { get; set; } = 1;
             public int PageSize { get; set; } = 10;
