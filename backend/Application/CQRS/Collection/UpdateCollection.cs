@@ -14,7 +14,7 @@ namespace Application.CQRS.Collection
 {
     public class UpdateCollection
     {
-        public class Command : IRequest<Result<Unit>>
+        public class UpdateCollectionCommand : IRequest<Result<Unit>>
         {
             public Guid CollectionId { get; set; } 
             public string Title { get; set; }
@@ -22,7 +22,7 @@ namespace Application.CQRS.Collection
             public Visibility Visibility { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<UpdateCollectionCommand, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -36,7 +36,7 @@ namespace Application.CQRS.Collection
                 _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(UpdateCollectionCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var collection = await _context.Collections.FindAsync(request.CollectionId);
