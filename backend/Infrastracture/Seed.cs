@@ -45,6 +45,18 @@ public static class Seed
           "required": ["price", "productionDate", "name"]
         }
         """;
+        var schemaJson2 = """
+        {
+          "type": "object",
+          "properties": {
+            "price": { "type": "number" },
+            "factoryName": { "type": "string"},
+            "Surname": { "type": "string" },
+            "BigPrice": { "type": "number" }
+          },
+          "required": ["price", "productionDate", "name"]
+        }
+        """;
 
         var content = JsonDocument.Parse(schemaJson);
 
@@ -55,6 +67,15 @@ public static class Seed
             AuthorId = user2.Id,
             Category = "CategoryA",
             Content = content,
+            Visibility = Visibility.Public
+        };
+
+        var templatePublic2 = new WalorTemplate
+        {
+            Id = Guid.NewGuid(),
+            AuthorId = user2.Id,
+            Category = "CategoryA",
+            Content = JsonDocument.Parse(schemaJson2),
             Visibility = Visibility.Public
         };
 
@@ -76,7 +97,7 @@ public static class Seed
             Visibility = Visibility.Friends
         };
 
-        context.Templates.AddRange(templatePublic, templatePrivate, templateFriends);
+        context.Templates.AddRange(templatePublic, templatePrivate, templateFriends,templatePublic2);
 
         var collection = new Collection
         {
@@ -114,6 +135,18 @@ public static class Seed
             Comments = new List<Comment>(),
             Likes = new List<Like>()
         };
+        var collection4 = new Collection
+        {
+            Id = Guid.NewGuid(),
+            Title = "My Collection2",
+            Description = "Sample description",
+            Visibility = Visibility.Public,
+            OwnerId = user2.Id,
+            WalorTemplateId = templatePublic2.Id,
+            Walors = new List<WalorInstance>(),
+            Comments = new List<Comment>(),
+            Likes = new List<Like>()
+        };
 
         for (int i = 0; i < 3; i++)
         {
@@ -145,10 +178,27 @@ public static class Seed
                 }
                 """),
                 TemplateId = templatePublic.Id,
-                Collection = collection
+                Collection = collection2
             });
         }
 
+        for (int i = 0; i < 3; i++)
+        {
+            collection4.Walors.Add(new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse($$"""
+                {
+                  "price": {{i * 100 + 50}},
+                  "factoryName": "Factory #{{i + 1}}", 
+                  "Surname": "Walor #{{i + 1}}",
+                  "BigPrice": {{i * 10 - 3}}
+                }
+                """),
+                TemplateId = templatePublic2.Id,
+                Collection = collection4
+            });
+        }
         for (int i = 0; i < 3; i++)
         {
             collection3.Walors.Add(new WalorInstance
@@ -162,10 +212,10 @@ public static class Seed
                 }
                 """),
                 TemplateId = templatePublic.Id,
-                Collection = collection
+                Collection = collection3
             });
         }
-        context.Collections.AddRange(collection,collection2,collection3);
+        context.Collections.AddRange(collection,collection2,collection3,collection4);
 
         // === Like ===
         context.Likes.Add(new Like

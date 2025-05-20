@@ -76,8 +76,6 @@ public class ExportCollectionsToPdf
                                 col.Item().Text($"Template Category: {collection.WalorTemplate.Category}");
                                 col.Item().Text("Walor Instances:");
 
-                                // 1. Pobierz listę pól z szablonu
-                                List<string> templateFields = ExtractFieldsFromTemplate(collection.WalorTemplate.Content);
 
                                 col.Item().Table(table =>
                                 {
@@ -94,14 +92,14 @@ public class ExportCollectionsToPdf
 
                                     table.Header(header =>
                                     {
-                                        header.Cell().Element(CellStyle).Text("Instance Id").Bold();
+                                        header.Cell().Element(CellStyle).Text("Id").Bold();
                                         foreach (var field in templateFields)
                                             header.Cell().Element(CellStyle).Text(field).Bold();
                                     });
-
+                                    int i = 1;
                                     foreach (var walor in collection.Walors)
                                     {
-                                        table.Cell().Element(CellStyle).Text(walor.Id.ToString());
+                                        table.Cell().Element(CellStyle).Text(i++.ToString());
 
                                         var data = walor.Data.RootElement;
 
