@@ -33,13 +33,13 @@ namespace Walory_Backend.Controllers
         public async Task<IActionResult> GetDescription()
         {
             var result = await Mediator.Send(new GetDescription.GetDescriptionUserQuery());
-            return result.isSuccess ? Ok() : BadRequest(result.Error);
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
         [HttpPut("description")]
         public async Task<IActionResult> GetDescription([FromBody] UpdateDescriptionCommand command )
         {
             var result = await Mediator.Send(command);
-            return result.isSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
     }
 
