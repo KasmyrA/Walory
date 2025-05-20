@@ -22,6 +22,7 @@ namespace Walory_Backend.Controllers
 
 
         [HttpPost("upload")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar)
         {
             var command = new UploadAvatarCommand { AvatarFile = avatar };

@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastracture.Migrations
 {
     /// <inheritdoc />
-    public partial class odNowa : Migration
+    public partial class Avatarimage : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace Infrastracture.Migrations
                     PasswordResetExpiry = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     EmailChangeCode = table.Column<string>(type: "text", nullable: true),
                     PendingNewEmail = table.Column<string>(type: "text", nullable: true),
+                    AvatarImage = table.Column<byte[]>(type: "bytea", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

@@ -205,6 +205,9 @@ namespace Infrastracture.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<byte[]>("AvatarImage")
+                        .HasColumnType("bytea");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");

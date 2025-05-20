@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastracture.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250520181316_Avatarimage")]
+    [Migration("20250520182236_Avatarimage")]
     partial class Avatarimage
     {
         /// <inheritdoc />
@@ -207,6 +207,9 @@ namespace Infrastracture.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
+
+                    b.Property<byte[]>("AvatarImage")
+                        .HasColumnType("bytea");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
