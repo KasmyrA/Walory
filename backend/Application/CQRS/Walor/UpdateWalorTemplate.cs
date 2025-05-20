@@ -44,13 +44,24 @@ namespace Application.CQRS.Walor
                     return Result<Unit>.Failure("Template not found");
 
                 template.Category = request.Category;
-                template.Content = request.Content;
+                template.Content = EnsureParsedJson(request.Content);
                 template.Visibility = request.Visibility;
 
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
                 return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
+            private static JsonDocument EnsureParsedJson(JsonDocument doc)
+            {
+                if (doc.RootElement.ValueKind == JsonValueKind.String)
+                {
+                    var rawJson = doc.RootElement.GetString();
+                    return JsonDocument.Parse(rawJson!);
+                }
+
+                return doc;
+            }
         }
+
     }
 
 }

@@ -56,6 +56,10 @@ namespace Infrastracture
                 .Property(i => i.Data)
                 .HasColumnType("jsonb");
 
+            modelBuilder.Entity<WalorTemplate>()
+    .Property(i => i.Content)
+    .HasColumnType("jsonb");
+
 
             modelBuilder.Entity<WalorInstance>()
                 .HasOne(i => i.Template)

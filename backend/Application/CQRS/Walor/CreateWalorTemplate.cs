@@ -41,7 +41,7 @@ namespace Application.CQRS.Walor
                 var template = new WalorTemplate
                 {
                     Category = request.Category,
-                    Content = request.Content,
+                    Content = EnsureParsedJson(request.Content),
                     Visibility = request.Visibility,
                     AuthorId = user.Id
                 };
@@ -50,6 +50,16 @@ namespace Application.CQRS.Walor
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
                 return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Error");
             }
+        }
+        private static JsonDocument EnsureParsedJson(JsonDocument doc)
+        {
+            if (doc.RootElement.ValueKind == JsonValueKind.String)
+            {
+                var rawJson = doc.RootElement.GetString();
+                return JsonDocument.Parse(rawJson!);
+            }
+
+            return doc;
         }
     }
 }
