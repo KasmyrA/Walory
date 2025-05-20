@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastracture\Infrastracture.csproj" />
+    <ProjectReference Include="..\Walory Backend\WaloryBackend.csproj" />
   </ItemGroup>
 
   <ItemGroup>

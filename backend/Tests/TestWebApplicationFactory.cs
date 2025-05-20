@@ -13,8 +13,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Infrastracture;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
-public class TestWebApplicationFactory : WebApplicationFactory<Program>
+public class TestWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _dbContainer;
 
@@ -30,58 +31,34 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureServices(async services =>
+        builder.ConfigureServices(services =>
         {
-            await _dbContainer.StartAsync();
 
-            // Usuń domyślny kontekst
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<DataContext>));
             if (descriptor != null) services.Remove(descriptor);
 
-            // Dodaj testowy kontekst
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(_dbContainer.GetConnectionString()));
-
-            // Build i seed
-            var sp = services.BuildServiceProvider();
-            using var scope = sp.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-            await db.Database.EnsureCreatedAsync();
-            await SeedTestDataAsync(db);
         });
+
+        builder.UseEnvironment("Testing");
     }
 
-    private static async Task SeedTestDataAsync(DataContext db)
+    public async Task InitializeAsync()
     {
-        var testUser = new User
-        {
-            Id = Guid.NewGuid(),
-            UserName = "test@test.com",
-            Email = "test@test.com"
-        };
+        await _dbContainer.StartAsync();
 
-        db.Users.Add(testUser);
+        using var scope = Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-        var template = new WalorTemplate
-        {
-            Id = Guid.NewGuid(),
-            AuthorId = testUser.Id,
-            Category = "Elektronika",
-            Content = JsonDocument.Parse("""
-            {
-                "fields": [
-                    { "name": "cena", "type": "number" },
-                    { "name": "data_produkcji", "type": "date" }
-                ]
-            }
-            """),
-            Visibility = Visibility.Public
-        };
-
-        db.Templates.Add(template);
-        await db.SaveChangesAsync();
+        await context.Database.EnsureCreatedAsync();
+        await Seed.SeedData(context, userManager);
     }
 
-    public async Task StopAsync() => await _dbContainer.StopAsync();
+    public new async Task DisposeAsync()
+    {
+        await _dbContainer.DisposeAsync();
+    }
 }
