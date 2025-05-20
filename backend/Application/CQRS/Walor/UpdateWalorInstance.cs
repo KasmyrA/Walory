@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Infrastracture;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using NJsonSchema;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Application.CQRS.Walor
 
             public async Task<Result<Unit>> Handle(UpdateWalorInstanceCommand request, CancellationToken cancellationToken)
             {
-                var walor = await _context.Walors.FindAsync(request.WalorInstanceId);
+                var walor = await _context.Walors.Include(w => w.Template).FirstOrDefaultAsync(w => w.Id == request.WalorInstanceId);
 
                 if (walor == null)
                     return Result<Unit>.Failure("Walor not found");

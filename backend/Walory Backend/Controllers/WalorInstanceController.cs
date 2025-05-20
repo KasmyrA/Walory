@@ -19,7 +19,7 @@ namespace Walory_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorInstance.UpdateWalorInstanceCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateWalorInstance.UpdateWalorInstanceCommand command)
         {
             if (id != command.WalorInstanceId)
                 return BadRequest("ID mismatch.");

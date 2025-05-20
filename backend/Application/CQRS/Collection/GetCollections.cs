@@ -54,6 +54,7 @@ namespace Application.CQRS.Collection
                         Title = c.Title,
                         Description = c.Description,
                         Visibility = c.Visibility,
+                        WalorTemplateId = c.WalorTemplateId,
                     })
                     .ToListAsync(cancellationToken);
 

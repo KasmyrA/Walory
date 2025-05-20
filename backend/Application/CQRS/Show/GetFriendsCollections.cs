@@ -70,6 +70,7 @@ namespace Application.CQRS.Show
                         Title = c.Title,
                         Description = c.Description,
                         Category =c.WalorTemplate.Category,
+                        WalorTemplateId = c.WalorTemplateId,
                         Visibility = c.Visibility,
                         Author = new AuthorDto
                         {

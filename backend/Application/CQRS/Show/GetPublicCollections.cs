@@ -58,6 +58,7 @@ namespace Application.CQRS.Show
                        Description = c.Description,
                        Category = c.WalorTemplate.Category,
                        Visibility = c.Visibility,
+                       WalorTemplateId = c.WalorTemplateId,
                        Author = new AuthorDto
                        {
                            Id = c.Owner.Id,
