@@ -77,6 +77,10 @@
             "NJsonSchema": {
               "target": "Package",
               "version": "[11.3.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2025.5.0, )"
             }
           },
           "imports": [
