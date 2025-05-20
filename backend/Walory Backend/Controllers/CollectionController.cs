@@ -22,7 +22,7 @@ namespace Walory_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] UpdateCollection.Command command)
+        public async Task<IActionResult> Update([FromBody] UpdateCollection.UpdateCollectionCommand command)
         {
             var result = await Mediator.Send(command);
             return result.isSuccess ? Ok(result) : BadRequest(result.Error);
