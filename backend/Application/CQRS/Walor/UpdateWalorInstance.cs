@@ -55,7 +55,7 @@ namespace Application.CQRS.Walor
                                 return Result<Unit>.Failure($"Walor data does not match the template");
                             }
 
-                            walor.Data = request.Data;
+                            walor.Data = JsonDocument.Parse(request.Data.RootElement.GetRawText());
 
                             var success = await _context.SaveChangesAsync(cancellationToken) > 0;
                             return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Failed to update walor instance.");
