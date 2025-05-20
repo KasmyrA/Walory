@@ -1,4 +1,6 @@
-# How to run
+# Walory
+
+## How to run
 
 Install docker [Docker Desktop: The #1 Containerization Tool for Developers | Docker](https://www.docker.com/products/docker-desktop/)
 
@@ -19,12 +21,6 @@ Or
 > docker compose up --build
 
 Now you may visit [Swagger UI](http://localhost:8080/swagger/index.html) at 127.0.0.0:8080/swagger/index.html
-
-
-
-
-
-# Walory
 
 # Portal dla kolekcjonerów
 
