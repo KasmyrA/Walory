@@ -16,7 +16,10 @@ namespace Application.CQRS.Collection
     {
         public class Command : IRequest<Result<Unit>>
         {
-           public CollectionDTO CollectionDTO { get; set; }
+            public Guid CollectionId { get; set; } 
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public Visibility Visibility { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -36,14 +39,14 @@ namespace Application.CQRS.Collection
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-                var collection = await _context.Collections.FindAsync(request.CollectionDTO.CollectionId);
+                var collection = await _context.Collections.FindAsync(request.CollectionId);
 
                 if (collection == null || collection.OwnerId != user.Id)
                     return Result<Unit>.Failure("Collestion not found");
 
-                collection.Title = request.CollectionDTO.Title;
-                collection.Description = request.CollectionDTO.Description;
-                collection.Visibility = request.CollectionDTO.Visibility;
+                collection.Title = request.Title;
+                collection.Description = request.Description;
+                collection.Visibility = request.Visibility;
 
 
                 var result = await _context.SaveChangesAsync(cancellationToken) > 0;
