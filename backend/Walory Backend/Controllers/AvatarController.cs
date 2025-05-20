@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Application.CQRS.Account.GetAvatar;
 using static Application.CQRS.Account.UploadAvatar;
+using static Application.CQRS.Account.UploadAvatar.UploadAvatarHandler;
 
 namespace Walory_Backend.Controllers
 {
@@ -23,13 +24,11 @@ namespace Walory_Backend.Controllers
 
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar)
+        public async Task<IActionResult> UploadAvatar([FromForm] UploadAvatarDto dto)
         {
-            var command = new UploadAvatarCommand { AvatarFile = avatar };
+            var command = new UploadAvatarCommand { AvatarFile = dto.Avatar };
             var result = await _mediator.Send(command);
-            if (result.isSuccess)
-                return Ok();
-            return BadRequest(result.Error);
+            return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{userId}")]

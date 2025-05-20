@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,10 @@ namespace Application.CQRS.Account
                 var updateResult = await _userManager.UpdateAsync(user);
 
                 return updateResult.Succeeded ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Failed to update avatar");
+            }
+            public class UploadAvatarDto
+            {
+                public IFormFile Avatar { get; set; }
             }
         }
 
