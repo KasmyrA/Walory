@@ -15,7 +15,7 @@ namespace Application.DTO
         public string Category { get; set; }
         public Visibility Visibility { get; set; }
         public Guid WalorTemplateId { get; set; }
-        public AuthorDto Author { get; set; }
-        public List<WalorInstanceDto> WalorInstance { get; set; } 
+        public AuthorDto? Author { get; set; }
+        public List<WalorInstanceDto>? WalorInstance { get; set; } 
     }
 }
