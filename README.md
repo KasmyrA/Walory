@@ -8,17 +8,13 @@ Download this repo:
 
 > git clone github.com/KasmyrA/Walory
 
-Get into right folder inside the terminal:
+Run backend via docker compose and run docer-compose.yml with docker compose:
 
-> cd Walory\backend\Walory Backend
+> docker compose -f "Walory Backend\docker-compose.yml" up
 
-Run backend via docker compose:
+Or
 
-> docker compose up
-
-Or 
-
-> docker compose up --build
+> docker compose -f "Walory Backend\docker-compose.yml" up --build
 
 Now you may visit [Swagger UI](http://localhost:8080/swagger/index.html) at 127.0.0.0:8080/swagger/index.html
 
