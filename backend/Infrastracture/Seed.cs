@@ -45,6 +45,18 @@ public static class Seed
           "required": ["price", "productionDate", "name"]
         }
         """;
+        var schemaJson2 = """
+        {
+          "type": "object",
+          "properties": {
+            "price": { "type": "number" },
+            "factoryName": { "type": "string"},
+            "Surname": { "type": "string" },
+            "BigPrice": { "type": "number" }
+          },
+          "required": ["price", "productionDate", "name"]
+        }
+        """;
 
         var content = JsonDocument.Parse(schemaJson);
 
@@ -55,6 +67,15 @@ public static class Seed
             AuthorId = user2.Id,
             Category = "CategoryA",
             Content = content,
+            Visibility = Visibility.Public
+        };
+
+        var templatePublic2 = new WalorTemplate
+        {
+            Id = Guid.NewGuid(),
+            AuthorId = user2.Id,
+            Category = "CategoryA",
+            Content = JsonDocument.Parse(schemaJson2),
             Visibility = Visibility.Public
         };
 
@@ -76,13 +97,13 @@ public static class Seed
             Visibility = Visibility.Friends
         };
 
-        context.Templates.AddRange(templatePublic, templatePrivate, templateFriends);
+        context.Templates.AddRange(templatePublic, templatePrivate, templateFriends,templatePublic2);
 
-        var collection1 = new Collection
+        var collection = new Collection
         {
             Id = Guid.NewGuid(),
             Title = "My Collection",
-            Description = "Sample description for my collection",
+            Description = "Sample description",
             Visibility = Visibility.Public,
             OwnerId = user2.Id,
             WalorTemplateId = templatePublic.Id,
@@ -94,7 +115,7 @@ public static class Seed
         {
             Id = Guid.NewGuid(),
             Title = "My Friends",
-            Description = "Sample description for my friends",
+            Description = "Sample description",
             Visibility = Visibility.Friends,
             OwnerId = user2.Id,
             WalorTemplateId = templateFriends.Id,
@@ -106,7 +127,7 @@ public static class Seed
         {
             Id = Guid.NewGuid(),
             Title = "My Private",
-            Description = "Sample description for my private",
+            Description = "Sample description",
             Visibility = Visibility.Private,
             OwnerId = user3.Id,
             WalorTemplateId = templatePrivate.Id,
@@ -114,10 +135,22 @@ public static class Seed
             Comments = new List<Comment>(),
             Likes = new List<Like>()
         };
+        var collection4 = new Collection
+        {
+            Id = Guid.NewGuid(),
+            Title = "My Collection2",
+            Description = "Sample description",
+            Visibility = Visibility.Public,
+            OwnerId = user2.Id,
+            WalorTemplateId = templatePublic2.Id,
+            Walors = new List<WalorInstance>(),
+            Comments = new List<Comment>(),
+            Likes = new List<Like>()
+        };
 
         for (int i = 0; i < 3; i++)
         {
-            collection1.Walors.Add(new WalorInstance
+            collection.Walors.Add(new WalorInstance
             {
                 Id = Guid.NewGuid(),
                 Data = JsonDocument.Parse($$"""
@@ -128,114 +161,11 @@ public static class Seed
                 }
                 """),
                 TemplateId = templatePublic.Id,
-                Collection = collection1
+                Collection = collection
             });
         }
-        
-        var originalWalors = new[] {
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 999.99,
-                  "productionDate": "2020-12-24",
-                  "name": "Z³oty zegarek"
-                }
-                """),
-                TemplateId = templatePublic.Id,
-                Collection = collection1
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 0,
-                  "productionDate": "2010-05-01",
-                  "name": "Pami¹tkowy bilet"
-                }
-                """),
-                TemplateId = templatePublic.Id,
-                Collection = collection1
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 12345.67,
-                  "productionDate": "2022-07-15",
-                  "name": "Samochód kolekcjonerski"
-                }
-                """),
-                TemplateId = templatePublic.Id,
-                Collection = collection1
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 12.5,
-                  "productionDate": "2023-03-08",
-                  "name": "Stara moneta"
-                }
-                """),
-                TemplateId = templatePublic.Id,
-                Collection = collection2
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 500,
-                  "productionDate": "2018-11-11",
-                  "name": "Limitowana figurka"
-                }
-                """),
-                TemplateId = templateFriends.Id,
-                Collection = collection2
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 1,
-                  "productionDate": "2000-01-01",
-                  "name": "Pierwszy znaczek"
-                }
-                """),
-                TemplateId = templatePrivate.Id,
-                Collection = collection3
-            },
-            new WalorInstance
-            {
-                Id = Guid.NewGuid(),
-                Data = JsonDocument.Parse("""
-                {
-                  "price": 2500.75,
-                  "productionDate": "2019-09-30",
-                  "name": "Obraz olejny"
-                }
-                """),
-                TemplateId = templatePrivate.Id,
-                Collection = collection3
-            }
-        };
 
-                // Dodaj oryginalne walory do odpowiednich kolekcji
-                collection1.Walors.Add(originalWalors[0]);
-                collection1.Walors.Add(originalWalors[1]);
-                collection1.Walors.Add(originalWalors[2]);
-                collection2.Walors.Add(originalWalors[3]);
-                collection2.Walors.Add(originalWalors[4]);
-                collection3.Walors.Add(originalWalors[5]);
-                collection3.Walors.Add(originalWalors[6]);
-
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 3; i++)
         {
             collection2.Walors.Add(new WalorInstance
             {
@@ -248,11 +178,28 @@ public static class Seed
                 }
                 """),
                 TemplateId = templatePublic.Id,
-                Collection = collection1
+                Collection = collection2
             });
         }
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 3; i++)
+        {
+            collection4.Walors.Add(new WalorInstance
+            {
+                Id = Guid.NewGuid(),
+                Data = JsonDocument.Parse($$"""
+                {
+                  "price": {{i * 100 + 50}},
+                  "factoryName": "Factory #{{i + 1}}", 
+                  "Surname": "Walor #{{i + 1}}",
+                  "BigPrice": {{i * 10 - 3}}
+                }
+                """),
+                TemplateId = templatePublic2.Id,
+                Collection = collection4
+            });
+        }
+        for (int i = 0; i < 3; i++)
         {
             collection3.Walors.Add(new WalorInstance
             {
@@ -265,22 +212,22 @@ public static class Seed
                 }
                 """),
                 TemplateId = templatePublic.Id,
-                Collection = collection1
+                Collection = collection3
             });
         }
-        context.Collections.AddRange(collection1,collection2,collection3);
+        context.Collections.AddRange(collection,collection2,collection3,collection4);
 
         // === Like ===
         context.Likes.Add(new Like
         {
             Id = Guid.NewGuid(),
-            CollectionId = collection1.Id,
+            CollectionId = collection.Id,
             UserId = user3.Id
         });
         context.Likes.Add(new Like
         {
             Id = Guid.NewGuid(),
-            CollectionId = collection1.Id,
+            CollectionId = collection.Id,
             UserId = user4.Id
         });
 
@@ -289,7 +236,7 @@ public static class Seed
         {
             Id = Guid.NewGuid(),
             AuthorId = user3.Id,
-            CollectionId = collection1.Id,
+            CollectionId = collection.Id,
             Content = "Œwietna kolekcja!",
             CreatedAt = DateTime.UtcNow
         });
