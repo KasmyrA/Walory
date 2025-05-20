@@ -1,29 +1,3 @@
-# How to run
-
-Install docker [Docker Desktop: The #1 Containerization Tool for Developers | Docker](https://www.docker.com/products/docker-desktop/)
-
-Download this repo: 
-
-> git clone github.com/KasmyrA/Walory
-
-Get into right folder inside the terminal:
-
-> cd Walory\backend\Walory Backend
-
-Run backend via docker compose:
-
-> docker compose up
-
-Or 
-
-> docker compose up --build
-
-Now you may visit [Swagger UI](http://localhost:8080/swagger/index.html) at 127.0.0.0:8080/swagger/index.html
-
-
-
-
-
 # Walory
 
 # Portal dla kolekcjonerów
@@ -52,5 +26,7 @@ Założenia niefunkcjonalne
 
 1. Eksport danych o walorach w formacjie PDF lub xlsx.
 2. Dane gromadzone w realcyjnej bazie danych.
+
+
 
 # 
