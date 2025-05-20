@@ -2,6 +2,7 @@
 using Infrastracture;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NJsonSchema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,33 @@ namespace Application.CQRS.Walor
                 var collection = await _context.Collections
                     .Include(c => c.WalorTemplate)
                     .FirstOrDefaultAsync(c => c.Id == request.CollectionId);
-
                 if (collection == null)
-                    return Result<Unit>.Failure("Kolekcja nie istnieje");
+                    return Result<Unit>.Failure("collection not found");
+                using (var schemaDocument = collection.WalorTemplate.Content)
+                {
+                    try
+                    {
+                        var schema = await JsonSchema.FromJsonAsync(schemaDocument.RootElement.ToString());
+
+                        using (JsonDocument dataToValidate = request.Data)
+                        {
+                            var validationErrors = schema.Validate(dataToValidate.RootElement.ToString());
+
+                            if (validationErrors.Any())
+                            {
+                                return Result<Unit>.Failure($"Walor data does not match the template");
+                            }
+
+                            request.Data = JsonDocument.Parse(request.Data.RootElement.GetRawText());
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        return Result<Unit>.Failure($"Invalid JSON in walor template: {ex.Message}");
+                    }
+
+                }
+            
 
                 var walor = new WalorInstance
                 {
