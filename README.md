@@ -11,7 +11,6 @@ kolekcji. Wówczas możliwe będzie przeglądanie kolejcji osoby zaproszonej i d
 konretnymi walorami. Jako dodatkową funkcjonalność można zaimplementować komunikator pomiędzy
 znajomymi.
 
-
 Funkcjonalności
 
 1. System posiada mechanizm tworzenia konta oraz logowania.
@@ -27,3 +26,7 @@ Założenia niefunkcjonalne
 
 1. Eksport danych o walorach w formacjie PDF lub xlsx.
 2. Dane gromadzone w realcyjnej bazie danych.
+
+
+
+# 
