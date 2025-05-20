@@ -13,12 +13,10 @@ namespace Walory_Backend.Controllers
     public class AvatarController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<User> _userManager;
 
-        public AvatarController(IMediator mediator, UserManager<User> userManager)
+        public AvatarController(IMediator mediator)
         {
             _mediator = mediator;
-            _userManager = userManager;
         }
 
 
@@ -31,24 +29,12 @@ namespace Walory_Backend.Controllers
             return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetAvatar(string userId)
-        {
-            var avatarBytes = await _mediator.Send(new GetAvatarQuery { UserId = userId });
-            if (avatarBytes == null || avatarBytes.Length == 0)
-                return NotFound();
-
-            return File(avatarBytes, "image/jpeg");
-        }
 
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMyAvatar()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Unauthorized();
-
-            var avatarBytes = user.AvatarImage;
+            var avatarBytes = await _mediator.Send(new GetAvatarQuery { });
             if (avatarBytes == null || avatarBytes.Length == 0)
                 return NotFound();
 

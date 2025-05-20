@@ -1,5 +1,7 @@
 ﻿using Domain;
+using Infrastracture;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,20 +15,24 @@ namespace Application.CQRS.Account
     {
         public class GetAvatarQuery : IRequest<byte[]?>
         {
-            public string UserId { get; set; } = default!;
+           
         }
         public class GetAvatarHandler : IRequestHandler<GetAvatarQuery, byte[]?>
         {
+            private readonly DataContext _context;
+            private readonly IHttpContextAccessor _http;
             private readonly UserManager<User> _userManager;
 
-            public GetAvatarHandler(UserManager<User> userManager)
+            public GetAvatarHandler(DataContext context, IHttpContextAccessor http, UserManager<User> userManager)
             {
+                _context = context;
+                _http = http;
                 _userManager = userManager;
             }
 
             public async Task<byte[]?> Handle(GetAvatarQuery request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByIdAsync(request.UserId);
+                var user = await _userManager.GetUserAsync(_http.HttpContext.User);
                 return user?.AvatarImage;
             }
         }
