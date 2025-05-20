@@ -4,6 +4,7 @@ using Infrastracture;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,8 @@ namespace Application.CQRS.Collection
             public async Task<Result<Unit>> Handle(CreateCollectionCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+                var template = await _context.Templates.FirstOrDefaultAsync(t => t.Id == request.CollectionDTO.WalorTemplateId);
+                if (template == null || template.AuthorId != user.Id) { if (!result) return Result<Unit>.Failure("Failed to create collection"); }
                 var collection = new Domain.Collection()
                 {
                     Title = request.CollectionDTO.Title,
