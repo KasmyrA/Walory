@@ -14,12 +14,12 @@ namespace Application.CQRS.LikeAndSubscribe
 {
     public class ChecIfLiked
     {
-        public class ChecIfLikedCommand : IRequest<Result<Unit>>
+        public class ChecIfLikedCommand : IRequest<Result<bool>>
         {
             public Guid CollectionId { get; set; }
         }
 
-        public class ChecIfLikedHandler : IRequestHandler<ChecIfLikedCommand, Result<Unit>>
+        public class ChecIfLikedHandler : IRequestHandler<ChecIfLikedCommand, Result<bool>>
         {
             private readonly DataContext _context;
             private readonly UserManager<User> _userManager;
@@ -32,16 +32,16 @@ namespace Application.CQRS.LikeAndSubscribe
                 _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<Result<Unit>> Handle(ChecIfLikedCommand request, CancellationToken cancellationToken)
+            public async Task<Result<bool>> Handle(ChecIfLikedCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var like = await _context.Likes.Where(c => c.CollectionId == request.CollectionId && c.UserId == user.Id).AnyAsync();
 
                 if (like == null)
-                    return Result<Unit>.Failure("Not found");
+                    return Result<bool>.Success(false);
 
                 return
-                    Result<Unit>.Success(Unit.Value);
+                    Result<bool>.Success(true);
 
             }
         }

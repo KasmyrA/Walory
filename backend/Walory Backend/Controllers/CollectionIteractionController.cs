@@ -12,11 +12,11 @@ using static Application.CQRS.LikeAndSubscribe.GetLikes;
 
 namespace Walory_Backend.Controllers
 {
-   [RequireConfirmedEmail]
-    public class CollectionIteractionController
-    {
-        [ApiController]
-        [Route("api/collections/{collectionId}/interactions")]
+
+
+     [ApiController]
+    [RequireConfirmedEmail]
+    [Route("api/collections/{collectionId}/interactions")]
         public class CollectionInteractionsController : BaseApiController
         {
 
@@ -76,5 +76,5 @@ namespace Walory_Backend.Controllers
             }
         }
 
-    }
+    
 }

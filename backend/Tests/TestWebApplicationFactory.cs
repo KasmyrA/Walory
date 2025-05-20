@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Infrastracture;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 public class TestWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -53,5 +55,30 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>, IAsyncL
     public new async Task DisposeAsync()
     {
         await _dbContainer.DisposeAsync();
+    }
+    public async Task SetAuthenticatedUserAsync(string userEmail)
+    {
+        using var scope = Services.CreateScope();
+
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+
+        var user = await userManager.FindByEmailAsync(userEmail);
+        if (user == null) throw new Exception($"User with email {userEmail} not found.");
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id)
+        };
+
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var principal = new ClaimsPrincipal(identity);
+
+        httpContextAccessor.HttpContext = new DefaultHttpContext
+        {
+            User = principal
+        };
     }
 }
