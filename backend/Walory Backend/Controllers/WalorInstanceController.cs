@@ -18,7 +18,7 @@ namespace Walory_Backend.Controllers
             return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateWalorInstance.UpdateWalorInstanceCommand command)
         {
             var result = await Mediator.Send(command);

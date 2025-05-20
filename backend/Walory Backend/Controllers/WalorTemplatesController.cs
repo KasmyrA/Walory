@@ -18,12 +18,9 @@ namespace Walory_Backend.Controllers
             return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalorTemplate.UpdateWalorTemplateCommand command)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateWalorTemplate.UpdateWalorTemplateCommand command)
         {
-            if (id != command.TemplateId)
-                return BadRequest("ID mismatch.");
-
             var result = await Mediator.Send(command);
             return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
