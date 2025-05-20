@@ -70,7 +70,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>, IAsyncL
         {
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) // Convert Guid to string
         };
 
         var identity = new ClaimsIdentity(claims, "TestAuthType");
