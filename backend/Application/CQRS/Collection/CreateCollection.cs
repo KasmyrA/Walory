@@ -37,7 +37,7 @@ namespace Application.CQRS.Collection
             {
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var template = await _context.Templates.FirstOrDefaultAsync(t => t.Id == request.CollectionDTO.WalorTemplateId);
-                if (template == null || template.AuthorId != user.Id) { if (!result) return Result<Unit>.Failure("Failed to create collection"); }
+                if (template == null || template.AuthorId != user.Id) {  return Result<Unit>.Failure("Failed to create collection"); }
                 var collection = new Domain.Collection()
                 {
                     Title = request.CollectionDTO.Title,
