@@ -27,19 +27,23 @@ namespace Tests
             var walor = await _context.Walors.Include(w => w.Template).FirstAsync();
             var handler = new UpdateWalorInstance.Handler(_context);
 
-            var updatedJson = JsonDocument.Parse("""
-        {
-            "price": 199.99,
-            "productionDate": "2024-02-20",
-            "name": "Updated Walor"
-        }
-        """);
+            JsonDocument updatedJson = null; 
+            using (JsonDocument doc = JsonDocument.Parse("""
+{
+    "price": 199.99,
+    "productionDate": "2024-02-20",
+    "name": "Updated Walor"
+}
+"""))
+            {
+            }
 
             var command = new UpdateWalorInstance.UpdateWalorInstanceCommand
             {
                 WalorInstanceId = walor.Id,
                 Data = updatedJson
             };
+            ;
 
             // Act
             var result = await handler.Handle(command, default);

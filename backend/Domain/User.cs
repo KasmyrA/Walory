@@ -11,6 +11,7 @@ namespace Domain
         public DateTime? PasswordResetExpiry { get; set; }
         public string? EmailChangeCode { get; set; }
         public string? PendingNewEmail { get; set; }
+        public byte[]? AvatarImage { get; set; }
         public ICollection<UserFriend> Friends { get; set; }
 
         public ICollection<Collection> Collections { get; set; }
