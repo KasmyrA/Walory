@@ -42,7 +42,8 @@ public static class Seed
             "productionDate": { "type": "string", "format": "date" },
             "name": { "type": "string" }
           },
-          "required": ["price", "productionDate", "name"]
+          "required": ["price", "productionDate", "name"],
+        "additionalProperties": false
         }
         """;
         var schemaJson2 = """
@@ -54,7 +55,8 @@ public static class Seed
             "Surname": { "type": "string" },
             "BigPrice": { "type": "number" }
           },
-          "required": ["price", "productionDate", "name"]
+          "required": ["price", "productionDate", "name"],
+        "additionalProperties": false
         }
         """;
 
