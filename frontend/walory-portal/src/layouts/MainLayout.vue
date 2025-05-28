@@ -1,0 +1,92 @@
+<script setup lang="ts">
+import { ref} from 'vue'
+import { useRouter, useRoute, RouterLink } from 'vue-router'
+
+const darkMode = ref(false)
+const router = useRouter()
+const route = useRoute()
+
+function logout() {
+  localStorage.removeItem('authToken')
+  router.push({ name: 'Login' })
+}
+
+// Sidebar links data
+const links = [
+  { to: '/home', icon: 'home', label: 'Dashboard' },
+  { to: '/collection', icon: 'map', label: 'My collection' },
+  { to: '/categories', icon: 'folder', label: 'Categories' },
+  { to: '/friends', icon: 'person', label: 'Friends' },
+  { to: '/chat', icon: 'send', label: 'Chat' },
+  { to: '/settings', icon: 'menu', label: 'Settings' },
+  { to: '/export', icon: 'description', label: 'Export' }
+]
+</script>
+
+<template>
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-walory-gold flex flex-col py-6 px-4 shadow-lg">
+      <!-- Logo and Title -->
+      <div class="flex flex-col items-center mb-8">
+        <img src="../assets/logo-sb.png" alt="Logo" class="h-16 mb-2" />
+      </div>
+
+      <!-- Navigation -->
+        <nav class="flex flex-col gap-3 flex-1 font-roboto text-walory-dark text-base">
+        <RouterLink
+            v-for="link in links"
+            :key="link.to"
+            :to="link.to"
+            class="flex items-center gap-3 py-2.5 px-4 rounded-lg font-roboto text-black hover:bg-walory-gold-dark transition text-lg"
+            :class="{ 'bg-walory-gold-dark font-bold': route.path === link.to }"
+        >
+            <span class="material-symbols-outlined text-black text-xl">{{ link.icon }}</span>
+            <span class="font-roboto text-black">{{ link.label }}</span>
+        </RouterLink>
+        </nav>
+
+      <hr class="my-6 border-walory-gold-dark" />
+
+      <!-- User info and logout -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3 px-2 mb-2">
+          <img src="../assets/user-avatar.png" alt="User avatar" class="h-8 w-8 rounded-full border" />
+          <span class="font-roboto text-walory-dark text-base truncate text-black">collector01</span>
+        </div>
+        <button
+          @click="logout"
+          class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold font-roboto text-lg transition"
+        >
+          <span class="material-symbols-outlined text-black">logout</span>
+          <span class="font-roboto text-black">Log out</span>
+        </button>
+      </div>
+
+      <!-- Dark mode toggle -->
+      <div class="flex items-center justify-between mt-6 mb-2 px-2">
+        <span class="text-walory-dark font-roboto text-black">Dark mode</span>
+        <label class="inline-flex items-center cursor-pointer relative">
+          <input type="checkbox" v-model="darkMode" class="sr-only peer" />
+          <div class="w-10 h-6 bg-gray-300 rounded-full peer peer-checked:bg-gray-700 transition"></div>
+          <div
+            class="absolute w-4 h-4 bg-white rounded-full shadow -translate-y-1/2 left-1 top-1/2 transition peer-checked:translate-x-4"
+            :class="darkMode ? 'translate-x-4' : ''"
+          ></div>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 bg-walory-bg overflow-auto">
+      <router-view />
+    </main>
+  </div>
+</template>
+
+<style scoped>
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 2rem;
+}
+</style>

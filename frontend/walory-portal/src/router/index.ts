@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Import widoków bez aliasów
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: HomeView
+  path: '/',
+  component: () => import('../layouts/MainLayout.vue'),
+  children: [
+    { path: 'home', name: 'Home', component: () => import('../views/HomeView.vue') },
+    // ...other routes
+  ]
   },
   {
     path: '/login',
