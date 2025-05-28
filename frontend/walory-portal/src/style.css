@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+html, body, #app {
+  height: 100%;
+  min-height: 100vh;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --color-walory-gold: #eebc5a;
+  --color-walory-gold-dark: #dfa437;
+  --color-walory-gold-light: #f7e0b6;
+  --color-walory-silver: #ece6dd;
+  --color-walory-red: #e55a44;
+  --color-walory-green: #84ce6b;
+  --color-walory-yellow: #f5df52;
+  --color-walory-black: #000000;
+  --font-roboto: "Roboto", sans-serif; 
+}
+
