@@ -12,7 +12,8 @@ services:
       - "8081:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Host=db;Port=5432;Database=walorydb;Username=user;Password=Zaq12wsx #Lol podobno to zalatwie sprawe konfiguracji appsetting.json
+      - ConnectionStrings__Default=${CONNECTION_STRING}
+ #Lol podobno to zalatwie sprawe konfiguracji appsetting.json
     depends_on:
       - db
 
@@ -20,9 +21,9 @@ services:
     container_name: postgreSQL
     image: postgres:15
     environment:
-      POSTGRES_DB: walorydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: Zaq12wsx
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:

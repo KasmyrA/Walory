@@ -20,6 +20,7 @@
 *.nuget.targets
 
 .localhistory/
+.env
 
 
 /backend/Walory Backend/.vs
