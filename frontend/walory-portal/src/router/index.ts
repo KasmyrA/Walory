@@ -16,6 +16,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView
+  },
+  {
+  path: '/confirm-email',
+  name: 'ConfirmEmail',
+  component: () => import('../views/ConfirmEmailView.vue')
   }
 ]
 

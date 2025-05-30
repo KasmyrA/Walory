@@ -44,7 +44,7 @@ namespace Walory_Backend.Security
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email?userId={user.Id}&code={user.EmailConfirmationCode}";
+            var confirmationLink = $"localhost:5173/confirm-email?userId={user.Id}&code={user.EmailConfirmationCode}";
 
             await _emailService.SendEmailAsync(dto.Email, "Confirm your email", confirmationLink);
 

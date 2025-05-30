@@ -6,7 +6,11 @@ const darkMode = ref(false)
 const router = useRouter()
 const route = useRoute()
 
-function logout() {
+async function logout() {
+  await fetch('http://localhost:8080/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include', // Important: send cookies
+  })
   localStorage.removeItem('authToken')
   router.push({ name: 'Login' })
 }

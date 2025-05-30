@@ -141,6 +141,7 @@ const handleLogin = async () => {
     const response = await fetch(`${API_BASE}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
         email: email.value,
         password: password.value
