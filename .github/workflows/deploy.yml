@@ -16,6 +16,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install Azure CLI and Authenticate
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az login --service-principal -u "${{ secrets.AZURE_CLIENT_ID }}" -p "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+
+    - name: Register Azure Resource Provider
+      run: |
+        az provider register -n Microsoft.App --wait
+
     - name: Log in to Azure
       uses: azure/login@v1
       with:
