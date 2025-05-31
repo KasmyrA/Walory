@@ -42,7 +42,7 @@ jobs:
     - name: Deploy to Azure Container Apps
       uses: azure/container-apps-deploy-action@v1
       with:
-        image: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
+        imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
         resourceGroup: ${{ secrets.RESOURCE_GROUP }}
         containerAppName: ${{ secrets.AZURE_CONTAINER_APP }}
         environmentVariables: |
