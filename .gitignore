@@ -9,7 +9,7 @@
 .vscode/
 
 # JetBrains Rider
-.idea/
+*.idea/
 *.sln.iml
 
 # NuGet Packages
