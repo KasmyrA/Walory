@@ -39,3 +39,4 @@ backend/Walory Backend/.vs
 /backend/Domain/obj
 /backend/Tests/bin
 /backend/Tests/obj
+backend/Walory Backend/.env.env.txt
