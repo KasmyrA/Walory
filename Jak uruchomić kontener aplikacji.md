@@ -30,7 +30,7 @@ Pamiętaj aby korzystać z sudo
 
 ```bash
 # Pobranie i uruchomienie PostgreSQL
-docker run -d --name walory-db -e POSTGRES_USER=user -e POSTGRES_PASSWORD=Zaq12wsx -e POSTGRES_DB=walory -p 5432:5432 postgres:15
+sudo docker run -d --name walory-db -e POSTGRES_USER=user -e POSTGRES_PASSWORD=Zaq12wsx -e POSTGRES_DB=walory -p 5432:5432 postgres:15
 ```
 
 pamiętaj że PostgreSQL musi działać aby backend działał poprawnie

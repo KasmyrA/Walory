@@ -29,12 +29,7 @@
 ### Start the Database
 
 ```bash
-docker run -d --name walory-db \
-  -e POSTGRES_USER=user \
-  -e POSTGRES_PASSWORD=Zaq12wsx \
-  -e POSTGRES_DB=walory \
-  -p 5432:5432 \
-  postgres:15
+sudo docker run -d --name walory-db  -e POSTGRES_USER=user -e POSTGRES_PASSWORD=Zaq12wsx  -e POSTGRES_DB=walory  -p 5432:5432 postgres:15
 ```
 
 > **PostgreSQL must be running for the backend to function properly.**
@@ -42,11 +37,7 @@ docker run -d --name walory-db \
 ### Start the Backend
 
 ```bash
-sudo docker run -d --name walory-app \
-  --link walory-db:postgres \
-  -e "ConnectionStrings__Default=Host=postgres;Port=5432;Database=walory;Username=user;Password=Zaq12wsx" \
-  -p 8080:8080 \
-  kasmyr/walory
+sudo docker run -d --name walory-app  --link walory-db:postgres  -e "ConnectionStrings__Default=Host=postgres;Port=5432;Database=walory;Username=user;Password=Zaq12wsx"  -p 8080:8080   kasmyr/walory
 ```
 
 ## Basic Docker Commands
