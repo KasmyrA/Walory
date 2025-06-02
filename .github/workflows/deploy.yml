@@ -1,4 +1,4 @@
-name: Deploy to Azure
+name: Deploy to Azure Container Apps with PostgreSQL
 
 on:
   push:
@@ -10,34 +10,38 @@ on:
 
 env:
   IMAGE_NAME: walory-backend
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+      
     - name: Install Azure CLI and Authenticate
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
         az login --service-principal -u "${{ secrets.AZURE_CLIENT_ID }}" -p "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-
-    - name: Register Azure Resource Provider
+        
+    - name: Register Azure Resource Providers
       run: |
         az provider register -n Microsoft.App --wait
-
+        az provider register -n Microsoft.OperationalInsights --wait
+        
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-
+      
     - name: Login to Azure Container Registry
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
         registry: ${{ secrets.ACR_LOGIN_SERVER }}
-
+        
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
@@ -45,16 +49,175 @@ jobs:
         file: ./backend/Walory Backend/Dockerfile
         push: true
         tags: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
-
-    - name: Deploy to Azure Container Apps
-      uses: azure/container-apps-deploy-action@v1
-      with:
-        imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
-        resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-        containerAppName: ${{ secrets.AZURE_CONTAINER_APP }}
-        environmentVariables: |
-          ASPNETCORE_ENVIRONMENT=${{ secrets.ENVIRONMENT }}
-          ConnectionStrings__DefaultConnection=${{ secrets.POSTGRES_CONNECTION }}
-        registryUrl: ${{ secrets.ACR_LOGIN_SERVER }}
-        registryUsername: ${{ secrets.ACR_USERNAME }}
-        registryPassword: ${{ secrets.ACR_PASSWORD }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Create Container App Environment (if not exists)
+      run: |
+        # Check if environment exists
+        if ! az containerapp env show --name ${{ secrets.CONTAINER_APP_ENV }} --resource-group ${{ secrets.RESOURCE_GROUP }} &>/dev/null; then
+          echo "Creating Container App Environment..."
+          az containerapp env create \
+            --name ${{ secrets.CONTAINER_APP_ENV }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --location ${{ secrets.AZURE_LOCATION }}
+        else
+          echo "Container App Environment already exists"
+        fi
+        
+    - name: Deploy Container App with PostgreSQL
+      run: |
+        # Create or update the container app with both containers
+        az containerapp create \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --environment ${{ secrets.CONTAINER_APP_ENV }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest \
+          --registry-server ${{ secrets.ACR_LOGIN_SERVER }} \
+          --registry-username ${{ secrets.ACR_USERNAME }} \
+          --registry-password ${{ secrets.ACR_PASSWORD }} \
+          --target-port 8080 \
+          --ingress external \
+          --min-replicas 1 \
+          --max-replicas 3 \
+          --cpu 1.0 \
+          --memory 2.0Gi \
+          --env-vars \
+            ASPNETCORE_ENVIRONMENT=${{ secrets.ENVIRONMENT }} \
+            ASPNETCORE_URLS=http://+:8080 \
+            "ConnectionStrings__Default=Host=localhost;Port=5432;Database=${{ env.POSTGRES_DB }};Username=${{ env.POSTGRES_USER }};Password=${{ env.POSTGRES_PASSWORD }}" \
+          --yaml ./container-app-config.yaml || \
+        az containerapp update \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest \
+          --set-env-vars \
+            ASPNETCORE_ENVIRONMENT=${{ secrets.ENVIRONMENT }} \
+            ASPNETCORE_URLS=http://+:8080 \
+            "ConnectionStrings__Default=Host=localhost;Port=5432;Database=${{ env.POSTGRES_DB }};Username=${{ env.POSTGRES_USER }};Password=${{ env.POSTGRES_PASSWORD }}"
+            
+    - name: Create Container App YAML Configuration
+      run: |
+        cat > container-app-config.yaml << 'EOF'
+        properties:
+          managedEnvironmentId: /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.RESOURCE_GROUP }}/providers/Microsoft.App/managedEnvironments/${{ secrets.CONTAINER_APP_ENV }}
+          configuration:
+            ingress:
+              external: true
+              targetPort: 8080
+              allowInsecure: false
+              traffic:
+                - weight: 100
+                  latestRevision: true
+            registries:
+              - server: ${{ secrets.ACR_LOGIN_SERVER }}
+                username: ${{ secrets.ACR_USERNAME }}
+                passwordSecretRef: registry-password
+            secrets:
+              - name: registry-password
+                value: ${{ secrets.ACR_PASSWORD }}
+              - name: postgres-password
+                value: ${{ env.POSTGRES_PASSWORD }}
+          template:
+            containers:
+              - image: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
+                name: walory-app
+                env:
+                  - name: ASPNETCORE_ENVIRONMENT
+                    value: ${{ secrets.ENVIRONMENT }}
+                  - name: ASPNETCORE_URLS
+                    value: http://+:8080
+                  - name: ConnectionStrings__Default
+                    value: Host=localhost;Port=5432;Database=${{ env.POSTGRES_DB }};Username=${{ env.POSTGRES_USER }};Password=${{ env.POSTGRES_PASSWORD }}
+                resources:
+                  cpu: 1.0
+                  memory: 2.0Gi
+                probes:
+                  - type: liveness
+                    httpGet:
+                      path: /health
+                      port: 8080
+                    initialDelaySeconds: 30
+                    periodSeconds: 10
+                  - type: readiness
+                    httpGet:
+                      path: /health
+                      port: 8080
+                    initialDelaySeconds: 5
+                    periodSeconds: 5
+              - image: postgres:15-alpine
+                name: postgres-db
+                env:
+                  - name: POSTGRES_DB
+                    value: ${{ env.POSTGRES_DB }}
+                  - name: POSTGRES_USER
+                    value: ${{ env.POSTGRES_USER }}
+                  - name: POSTGRES_PASSWORD
+                    secretRef: postgres-password
+                  - name: PGDATA
+                    value: /var/lib/postgresql/data/pgdata
+                resources:
+                  cpu: 0.5
+                  memory: 1.0Gi
+                volumeMounts:
+                  - volumeName: postgres-storage
+                    mountPath: /var/lib/postgresql/data
+            scale:
+              minReplicas: 1
+              maxReplicas: 3
+            volumes:
+              - name: postgres-storage
+                storageType: EmptyDir
+        EOF
+        
+    - name: Apply Container App Configuration
+      run: |
+        az containerapp create \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --yaml container-app-config.yaml || \
+        az containerapp update \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --yaml container-app-config.yaml
+          
+    - name: Wait for deployment
+      run: |
+        echo "Waiting for deployment to complete..."
+        sleep 60
+        
+    - name: Get Container App URL
+      run: |
+        FQDN=$(az containerapp show \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --query properties.configuration.ingress.fqdn \
+          --output tsv)
+        echo "Application URL: https://$FQDN"
+        
+    - name: Health Check
+      run: |
+        FQDN=$(az containerapp show \
+          --name ${{ secrets.AZURE_CONTAINER_APP }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --query properties.configuration.ingress.fqdn \
+          --output tsv)
+        
+        echo "Performing health check..."
+        for i in {1..10}; do
+          if curl -f -s "https://$FQDN/health" >/dev/null 2>&1; then
+            echo "✅ Health check passed!"
+            break
+          elif [ $i -eq 10 ]; then
+            echo "❌ Health check failed after 10 attempts"
+            echo "Checking container logs..."
+            az containerapp logs show \
+              --name ${{ secrets.AZURE_CONTAINER_APP }} \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --tail 50
+            exit 1
+          else
+            echo "Attempt $i failed, retrying in 30 seconds..."
+            sleep 30
+          fi
+        done
