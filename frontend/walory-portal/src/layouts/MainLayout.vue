@@ -1,10 +1,34 @@
 <script setup lang="ts">
-import { ref} from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 
 const darkMode = ref(false)
 const router = useRouter()
 const route = useRoute()
+
+// Avatar logic for sidebar
+const avatarUrl = ref<string | null>(null)
+const defaultAvatar = new URL('../assets/no-profile-picture.png', import.meta.url).href
+
+async function fetchSidebarAvatar() {
+  try {
+    const response = await fetch('http://localhost:8080/api/Avatar/me', {
+      credentials: 'include'
+    })
+    if (!response.ok) throw new Error()
+    const blob = await response.blob()
+    // If the blob is empty, treat as no avatar
+    if (blob.size === 0) {
+      avatarUrl.value = defaultAvatar
+    } else {
+      avatarUrl.value = URL.createObjectURL(blob)
+    }
+  } catch {
+    avatarUrl.value = defaultAvatar
+  }
+}
+
+onMounted(fetchSidebarAvatar)
 
 async function logout() {
   await fetch('http://localhost:8080/api/auth/logout', {
@@ -37,25 +61,29 @@ const links = [
       </div>
 
       <!-- Navigation -->
-        <nav class="flex flex-col gap-3 flex-1 font-roboto text-walory-dark text-base">
+      <nav class="flex flex-col gap-3 flex-1 font-roboto text-walory-dark text-base">
         <RouterLink
-            v-for="link in links"
-            :key="link.to"
-            :to="link.to"
-            class="flex items-center gap-3 py-2.5 px-4 rounded-lg font-roboto text-black hover:bg-walory-gold-dark transition text-lg"
-            :class="{ 'bg-walory-gold-dark font-bold': route.path === link.to }"
+          v-for="link in links"
+          :key="link.to"
+          :to="link.to"
+          class="flex items-center gap-3 py-2.5 px-4 rounded-lg font-roboto text-black hover:bg-walory-gold-dark transition text-lg"
+          :class="{ 'bg-walory-gold-dark font-bold': route.path === link.to }"
         >
-            <span class="material-symbols-outlined text-black text-xl">{{ link.icon }}</span>
-            <span class="font-roboto text-black">{{ link.label }}</span>
+          <span class="material-symbols-outlined text-black text-xl">{{ link.icon }}</span>
+          <span class="font-roboto text-black">{{ link.label }}</span>
         </RouterLink>
-        </nav>
+      </nav>
 
       <hr class="my-6 border-walory-gold-dark" />
 
       <!-- User info and logout -->
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3 px-2 mb-2">
-          <img src="../assets/user-avatar.png" alt="User avatar" class="h-8 w-8 rounded-full border" />
+          <img
+            :src="avatarUrl || defaultAvatar"
+            alt="User avatar"
+            class="h-8 w-8 rounded-full border"
+          />
           <span class="font-roboto text-walory-dark text-base truncate text-black">collector01</span>
         </div>
         <button
