@@ -42,7 +42,8 @@ namespace Application.CQRS.Notification
                         Message = n.Message,
                         Type = n.Type,
                         IsRead = n.IsRead,
-                        CreatedAt = n.CreatedAt
+                        CreatedAt = n.CreatedAt,
+                        ReferenceId = n.ReferenceId
                     })
                     .ToListAsync();
 
