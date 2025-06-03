@@ -9,6 +9,7 @@ const route = useRoute()
 // Avatar logic for sidebar
 const avatarUrl = ref<string | null>(null)
 const defaultAvatar = new URL('../assets/no-profile-picture.png', import.meta.url).href
+const sidebarUsername = ref('')
 
 async function fetchSidebarAvatar() {
   try {
@@ -28,7 +29,22 @@ async function fetchSidebarAvatar() {
   }
 }
 
-onMounted(fetchSidebarAvatar)
+async function fetchSidebarUsername() {
+  try {
+    const res = await fetch('http://localhost:8080/api/account/username', {
+      credentials: 'include'
+    })
+    if (!res.ok) throw new Error()
+    sidebarUsername.value = await res.text()
+  } catch {
+    sidebarUsername.value = 'Unknown'
+  }
+}
+
+onMounted(() => {
+  fetchSidebarAvatar()
+  fetchSidebarUsername()
+})
 
 async function logout() {
   await fetch('http://localhost:8080/api/auth/logout', {
@@ -84,7 +100,7 @@ const links = [
             alt="User avatar"
             class="h-8 w-8 rounded-full border"
           />
-          <span class="font-roboto text-walory-dark text-base truncate text-black">collector01</span>
+          <span class="font-roboto text-walory-dark text-base truncate text-black">{{ sidebarUsername }}</span>
         </div>
         <button
           @click="logout"
@@ -115,10 +131,3 @@ const links = [
     </main>
   </div>
 </template>
-
-<style scoped>
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  font-size: 2rem;
-}
-</style>

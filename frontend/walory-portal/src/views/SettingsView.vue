@@ -113,7 +113,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const username = ref('collector01')
+const username = ref('')
 const email = ref('collector01@example.com')
 const avatarUrl = ref<string | null>(null)
 const selectedFile = ref<File | null>(null)
@@ -149,6 +149,18 @@ function getDaySuffix(day: number) {
 function onFileChange(e: Event) {
   const files = (e.target as HTMLInputElement).files
   selectedFile.value = files && files[0] ? files[0] : null
+}
+
+async function fetchUsername() {
+  try {
+    const res = await fetch('http://localhost:8080/api/account/username', {
+      credentials: 'include'
+    })
+    if (!res.ok) throw new Error('Could not fetch username')
+    username.value = await res.text()
+  } catch (e: any) {
+    username.value = 'Unknown'
+  }
 }
 
 async function fetchAvatar() {
@@ -201,8 +213,7 @@ async function changeUsername() {
     if (!res.ok) throw new Error('Could not change username')
     usernameMsg.value = 'Username changed!'
     newUsername.value = ''
-    // Optionally update username on page
-    // fetchUsername()
+    await fetchUsername() // Update username after change
   } catch (e: any) {
     usernameErr.value = e.message || 'Error changing username'
   }
@@ -261,6 +272,7 @@ async function deleteAccount() {
 }
 
 onMounted(() => {
+  fetchUsername()
   fetchAvatar()
   fetchDescription()
 })
