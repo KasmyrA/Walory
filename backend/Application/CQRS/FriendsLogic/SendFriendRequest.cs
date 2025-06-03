@@ -52,7 +52,7 @@ namespace Application.CQRS.FriendsLogic
 
                 var friendRequest = new FriendRequest
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     SenderId = sender.Id,
                     ReceiverId = receiver.Id
                 };
