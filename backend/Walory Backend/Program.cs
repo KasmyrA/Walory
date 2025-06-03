@@ -37,6 +37,19 @@ builder.Services.AddAuthorization();
 builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssembly(typeof(SendFriendRequest.Handler).Assembly));
 builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -73,11 +86,13 @@ builder.Services.AddScoped<EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment()) //Yes I want swager on production right now
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

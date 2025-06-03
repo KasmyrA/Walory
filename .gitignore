@@ -9,7 +9,7 @@
 .vscode/
 
 # JetBrains Rider
-.idea/
+*.idea/
 *.sln.iml
 
 # NuGet Packages
@@ -20,6 +20,7 @@
 *.nuget.targets
 
 .localhistory/
+.env
 
 
 /backend/Walory Backend/.vs
@@ -38,3 +39,4 @@ backend/Walory Backend/.vs
 /backend/Domain/obj
 /backend/Tests/bin
 /backend/Tests/obj
+backend/Walory Backend/.env.env.txt

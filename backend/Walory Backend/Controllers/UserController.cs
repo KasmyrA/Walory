@@ -41,6 +41,16 @@ namespace Walory_Backend.Controllers
             var result = await Mediator.Send(command);
             return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
+        [HttpGet("username")]
+        public IActionResult GetUsername()
+        {
+            var username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+                return NotFound("Nie znaleziono nazwy użytkownika.");
+
+            return Ok(username);
+        }
+
     }
 
 }
