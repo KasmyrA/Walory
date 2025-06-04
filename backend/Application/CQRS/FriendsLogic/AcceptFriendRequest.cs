@@ -37,12 +37,12 @@ namespace Application.CQRS.FriendsLogic
                 var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
                 var notifcation = await _context.Notifications.FirstOrDefaultAsync(n => n.ReferenceId == request.RequestId);
                 if (notifcation == null)
-                    return Result<Unit>.Failure("Not found");
+                    return Result<Unit>.Failure("Not found notification");
                 var friendRequest = await _context.FriendRequests
-                    .FirstOrDefaultAsync(fr => fr.Id == request.RequestId && fr.ReceiverId == notifcation.ReferenceId);
+                    .FirstOrDefaultAsync(fr => fr.Id == request.RequestId && fr.Id == notifcation.ReferenceId);
 
                 if (friendRequest == null)
-                    return Result<Unit>.Failure("Not found");
+                    return Result<Unit>.Failure("Not found friendrequest");
 
                 friendRequest.IsAccepted = true;
 
