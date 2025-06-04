@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 // You need to know the current user's id. Let's fetch it once on mount.
 const currentUserId = ref<string>('')
@@ -104,6 +104,7 @@ const newMessage = ref('')
 const sending = ref(false)
 const sendError = ref('')
 const messagesEnd = ref<HTMLElement | null>(null)
+const pollingInterval = ref<number | null>(null)
 
 // Date formatting
 const now = new Date()
@@ -129,19 +130,16 @@ function formatTime(timestamp: string) {
 // Fetch current user id from backend (assuming you have such endpoint)
 async function fetchCurrentUserId() {
   try {
-    const res = await fetch('http://localhost:8080/api/account/username', {
+    const res = await fetch('http://localhost:8080/api/chat/getID', {
       credentials: 'include'
     })
-    if (!res.ok) throw new Error('Could not fetch user info')
-    // If you have a userId endpoint, use it. If not, you need to add one.
-    // For now, let's assume you have /api/account/id that returns the id as plain text:
-    // currentUserId.value = await res.text()
-    // If not, hardcode for testing:
-    // currentUserId.value = 'fe63d946-28a7-4c5d-8f7e-96802f26328d'
-    // Or, if your /api/account/username returns JSON with id:
-    // const data = await res.json(); currentUserId.value = data.id
-    // For now, fallback to hardcoded for your sample:
-    currentUserId.value = 'fe63d946-28a7-4c5d-8f7e-96802f26328d'
+    if (!res.ok) throw new Error('Could not fetch user id')
+    const data = await res.json()
+    if (data.isSuccess && data.value) {
+      currentUserId.value = data.value
+    } else {
+      currentUserId.value = ''
+    }
   } catch {
     currentUserId.value = ''
   }
@@ -159,6 +157,23 @@ async function fetchFriends() {
   }
 }
 
+// Start polling for new messages every 2 seconds when a friend is selected
+async function startPolling(friendId: string) {
+  stopPolling()
+  pollingInterval.value = window.setInterval(() => {
+    fetchMessages(friendId)
+  }, 2000)
+}
+
+// Stop polling when unselecting or unmounting
+function stopPolling() {
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value)
+    pollingInterval.value = null
+  }
+}
+
+// Update selectFriend to start polling
 async function selectFriend(friend: { id: string, email: string, fullName?: string }) {
   selectedFriend.value = friend
   await fetchMessages(friend.id)
@@ -166,6 +181,7 @@ async function selectFriend(friend: { id: string, email: string, fullName?: stri
   await removeMessageNotifications(friend.id)
   await nextTick()
   scrollToBottom()
+  startPolling(friend.id)
 }
 
 async function fetchMessages(friendId: string) {
@@ -248,6 +264,12 @@ onMounted(async () => {
 
 watch(selectedFriend, () => {
   nextTick(scrollToBottom)
+})
+
+onUnmounted(stopPolling)
+
+watch(selectedFriend, (newVal) => {
+  if (!newVal) stopPolling()
 })
 </script>
 
