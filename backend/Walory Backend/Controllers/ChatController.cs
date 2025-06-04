@@ -1,4 +1,5 @@
-﻿using Application.CQRS.Chat;
+﻿using Application.CQRS.Account;
+using Application.CQRS.Chat;
 using Cars.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,12 @@ namespace Walory_Backend.Controllers
         {
             var result = await Mediator.Send(new MarkMessagesAsRead.Command { FriendId = friendId });
             return result.isSuccess ? Ok() : BadRequest(result.Error);
+        }
+        [HttpGet("getID")]
+        public async Task<IActionResult> getID(Guid friendId)
+        {
+            var result = await Mediator.Send(new getID.getIDQuery());
+            return result.isSuccess ? Ok(result) : BadRequest(result.Error);
         }
 
         [HttpPost("remove-message-notifications/{friendId}")]
