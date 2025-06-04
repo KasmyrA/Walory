@@ -11,6 +11,7 @@ const routes = [
     { path: 'home', name: 'Home', component: () => import('../views/HomeView.vue') },
     { path: 'settings', name: 'Settings', component: () => import('../views/SettingsView.vue') },
     { path: 'friends', name: 'Friends', component: () => import('../views/FriendsView.vue') },
+    { path: 'chat', name: 'Chat', component: () => import('../views/ChatView.vue') },
     // ...other routes
   ]
   },

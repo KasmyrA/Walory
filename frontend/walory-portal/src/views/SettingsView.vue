@@ -1,17 +1,17 @@
 <template>
   <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
     <!-- Header -->
-    <div class="flex justify-between items-center px-30 pt-15 pb-2">
-      <h1 class="text-2xl font-roboto">Settings</h1>
-      <span class="text-xl">
-        Today is <span class="font-roboto">{{ formattedDate }}</span>
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+      <h1 class="text-3xl font-bold font-roboto tracking-tight">Settings</h1>
+      <span class="text-xl font-roboto">
+        Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <!-- Settings Card -->
     <div class="flex flex-1 items-center justify-center pb-16">
       <div class="bg-walory-silver/80 rounded-2xl shadow-lg border border-gray-300 px-16 py-14 flex flex-row gap-16 w-[90vw] max-w-6xl">
         <!-- Left: Avatar and name -->
-        <div class="flex flex-col items-center justify-center flex-1 min-w-[320px]">
+        <div class="flex flex-col items-center justify-center flex-1 min-w-[300px]">
           <div class="text-4xl font-roboto font-normal mb-6">{{ username }}</div>
           <img
             v-if="avatarUrl"
