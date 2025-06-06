@@ -57,7 +57,7 @@ async function logout() {
 
 // Sidebar links data
 const links = [
-  { to: '/home', icon: 'home', label: 'Dashboard' },
+  { to: '/dashboard', icon: 'home', label: 'Dashboard' },
   { to: '/collection', icon: 'map', label: 'My collection' },
   { to: '/browse', icon: 'folder', label: 'Browse' },
   { to: '/friends', icon: 'person', label: 'Friends' },
