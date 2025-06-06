@@ -12,6 +12,7 @@ const routes = [
     { path: 'settings', name: 'Settings', component: () => import('../views/SettingsView.vue') },
     { path: 'friends', name: 'Friends', component: () => import('../views/FriendsView.vue') },
     { path: 'chat', name: 'Chat', component: () => import('../views/ChatView.vue') },
+    { path: 'browse', name: 'Browse', component: () => import('../views/BrowseView.vue') },
     // ...other routes
   ]
   },

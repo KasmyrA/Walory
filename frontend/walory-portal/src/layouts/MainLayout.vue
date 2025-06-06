@@ -59,7 +59,7 @@ async function logout() {
 const links = [
   { to: '/home', icon: 'home', label: 'Dashboard' },
   { to: '/collection', icon: 'map', label: 'My collection' },
-  { to: '/categories', icon: 'folder', label: 'Categories' },
+  { to: '/browse', icon: 'folder', label: 'Browse' },
   { to: '/friends', icon: 'person', label: 'Friends' },
   { to: '/chat', icon: 'send', label: 'Chat' },
   { to: '/settings', icon: 'menu', label: 'Settings' },
