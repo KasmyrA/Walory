@@ -38,7 +38,7 @@ namespace Application.CQRS.LikeAndSubscribe
                 var like = await _context.Likes.Where(c => c.CollectionId == request.CollectionId && c.UserId == user.Id).AnyAsync();
 
                 if (like == null)
-                    return Result<bool>.Success(false);
+                    return Result<bool>.Failure("Like not given");
 
                 return
                     Result<bool>.Success(true);
