@@ -202,6 +202,15 @@ const templateForm = reactive({
   visibility: 0
 })
 
+function generateGUID() {
+  // RFC4122 version 4 compliant UUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0,
+      v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
 // --- Fetch Collections & Templates ---
 async function fetchCollections() {
   const res = await fetch('http://localhost:8080/api/Browse/collections/private', { credentials: 'include' })
@@ -284,21 +293,74 @@ function resetTemplateForm() {
 
 // --- Collection CRUD ---
 async function createCollection() {
-  await fetch('http://localhost:8080/collection', {
+  const newId = generateGUID()
+  // Fetch user ID and email from backend endpoints
+  let userId = ''
+  let userEmail = ''
+  try {
+    const idRes = await fetch('http://localhost:8080/api/chat/getID', { credentials: 'include' })
+    const idJson = await idRes.json()
+    userId = idJson.value // <-- Use .value from the JSON response
+    console.log('Fetched userId:', userId)
+    const emailRes = await fetch('http://localhost:8080/api/account/username', { credentials: 'include' })
+    userEmail = await emailRes.text()
+  } catch (e) {
+    alert('Could not fetch user ID or email. Cannot create collection.')
+    return
+  }
+  // Validate GUID format (simple check)
+  const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  if (!guidRegex.test(userId)) {
+    alert('User ID is not a valid GUID. Cannot create collection.')
+    return
+  }
+  const author = {
+    id: userId,
+    email: userEmail,
+    name: "Unknown"
+  }
+
+  // Ensure walorTemplateId is null if not set
+  const walorTemplateId = collectionForm.walorTemplateId && collectionForm.walorTemplateId !== '' 
+    ? collectionForm.walorTemplateId 
+    : null
+
+  // Ensure all required fields are present and not empty
+  const payload = {
+    command: "",
+    collectionDTO: {
+      collectionId: newId,
+      title: collectionForm.title || 'Untitled',
+      description: collectionForm.description || 'No description',
+      category: collectionForm.category || 'Uncategorized',
+      visibility: collectionForm.visibility,
+      walorTemplateId,
+      author,
+      walorInstance: []
+    }
+  }
+
+  // Print the payload for backend testing
+  console.log('Collection payload:', JSON.stringify(payload, null, 2))
+
+  const res = await fetch('http://localhost:8080/collection', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({
-      collectionDTO: {
-        ...collectionForm,
-        author: {},
-        walorInstance: []
-      }
-    })
+    body: JSON.stringify(payload)
   })
+
+  if (!res.ok) {
+    const errText = await res.text()
+    console.error('Backend response:', res.status, errText)
+    alert('Failed to create collection: ' + errText)
+    return
+  }
+
   resetCollectionForm()
   fetchCollections()
 }
+
 function startEdit(col: any) {
   editingCollection.value = true
   Object.assign(collectionForm, col)
