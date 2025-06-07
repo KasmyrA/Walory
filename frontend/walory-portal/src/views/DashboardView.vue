@@ -160,9 +160,10 @@ const notifLoading = ref(false)
 async function fetchNotifications() {
   notifLoading.value = true
   try {
-    const res = await fetch('http://localhost:8080/api/notifcation', { credentials: 'include' })
+    const res = await fetch('http://localhost:8080/notifcation', { credentials: 'include' })
     if (!res.ok) throw new Error('Could not fetch notifications')
-    notifications.value = await res.json()
+    const resJson = await res.json()
+    notifications.value = Array.isArray(resJson.value) ? resJson.value : []
   } catch {
     notifications.value = []
   } finally {
@@ -171,7 +172,7 @@ async function fetchNotifications() {
 }
 
 async function markAsRead(id: string) {
-  await fetch(`http://localhost:8080/api/notifcation/mark-as-read/${id}`, {
+  await fetch(`http://localhost:8080/notifcation/mark-as-read/${id}`, {
     method: 'POST',
     credentials: 'include'
   })
@@ -179,7 +180,7 @@ async function markAsRead(id: string) {
 }
 
 async function deleteNotif(id: string) {
-  await fetch(`http://localhost:8080/api/notifcation/${id}`, {
+  await fetch(`http://localhost:8080/notifcation/${id}`, {
     method: 'DELETE',
     credentials: 'include'
   })

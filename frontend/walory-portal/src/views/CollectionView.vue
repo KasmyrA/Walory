@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">My Collection</h1>
       <span class="text-xl font-roboto">
-        Manage your collections, items, categories, and templates
+        Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <div class="flex flex-col gap-12 px-10 py-10 max-w-6xl mx-auto w-full">
@@ -176,6 +176,25 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 
+// Date formatting
+const now = new Date()
+const formattedDate = `${now.getDate()}${getDaySuffix(now.getDate())} ${now.toLocaleString('default', { month: 'long' })}, ${now.getFullYear()}`
+
+function getDaySuffix(day: number) {
+  if (day > 3 && day < 21) return 'th'
+  switch (day % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
+}
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr)
+  return date.toLocaleString()
+}
+
+
 // --- State ---
 const collections = ref<any[]>([])
 const templates = ref<any[]>([])
@@ -217,8 +236,8 @@ async function fetchCollections() {
   collections.value = await res.json()
 }
 async function fetchTemplates() {
-  // Use the new endpoint for accessible templates
-  const res = await fetch('http://localhost:8080/api/Browse/templates/accessible', { credentials: 'include' })
+  // Fetch only private templates (created by the user)
+  const res = await fetch('http://localhost:8080/api/Browse/templates/private', { credentials: 'include' })
   const data = await res.json()
   // Normalize to match the rest of the code (id -> templateId)
   templates.value = data.map((tpl: any) => ({
