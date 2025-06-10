@@ -3,7 +3,8 @@ name: Deploy to Azure Container Apps with PostgreSQL
 on:
   push:
     branches:
-      - main
+      - never-trigger-this-branch
+#      - main
     paths:
       - 'backend/**'
       - 'frontend/**'
