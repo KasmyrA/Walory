@@ -7,7 +7,7 @@
       </span>
     </div>
     <div class="flex flex-col gap-8 px-10 py-10 max-w-3xl mx-auto w-full">
-      <div class="bg-white rounded-2xl shadow-lg border border-walory-gold p-8">
+      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8">
         <h2 class="text-2xl font-bold mb-4">Export Options</h2>
         <form @submit.prevent="exportPdf" class="flex flex-col gap-4">
           <div>

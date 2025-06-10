@@ -201,7 +201,7 @@
           <div
             v-for="tpl in templates"
             :key="tpl.id"
-            class="border border-walory-gold rounded-xl p-6 bg-walory-silver/60 shadow"
+            class="border border-walory-gold rounded-xl p-6 bg-white/60 shadow"
           >
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-lg font-bold">{{ tpl.id.slice(0, 8) }}...</h3>

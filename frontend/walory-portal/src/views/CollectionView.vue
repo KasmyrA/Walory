@@ -9,7 +9,7 @@
     </div>
     <div class="flex flex-col gap-12 px-10 py-10 max-w-6xl mx-auto w-full font-roboto">
       <!-- Templates Management -->
-      <div class="bg-white rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
+      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
         <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Templates</h2>
         <button @click="openTemplateModal" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition mb-4">
           Create Template
@@ -125,7 +125,7 @@
         </div>
         <div v-if="templates.length === 0" class="text-gray-500 font-roboto">No templates yet.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6 font-roboto">
-          <div v-for="tpl in templates" :key="tpl.templateId" class="bg-walory-silver/60 rounded-xl shadow border border-walory-gold p-4 flex flex-col justify-between font-roboto">
+          <div v-for="tpl in templates" :key="tpl.templateId" class="bg-white/60 rounded-xl shadow border border-walory-gold p-4 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex items-center justify-between mb-2">
                 <div class="font-bold text-lg font-roboto">{{ tpl.category }}</div>
@@ -212,14 +212,14 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
+      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
         <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Your Collections</h2>
         <button @click="openCollectionModal" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition mb-4">
           Create Collection
         </button>
         <div v-if="collections.length === 0" class="text-gray-500 font-roboto">No collections yet.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 font-roboto">
-          <div v-for="col in collections" :key="col.collectionId" class="bg-walory-silver/60 rounded-2xl shadow border border-walory-gold p-6 flex flex-col justify-between font-roboto">
+          <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 rounded-2xl shadow border border-walory-gold p-6 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex items-center justify-between mb-2">
                 <div class="font-bold text-xl font-roboto">{{ col.title }}</div>
@@ -703,62 +703,6 @@ async function deleteItem(id: string) {
   })
   await fetchCollections()
   itemsModalCollection.value = collections.value.find(c => c.collectionId === itemsModalCollection.value.collectionId)
-}
-
-// --- Walor Instances CRUD ---
-function selectCollection(col: any) {
-  selectedCollection.value = col
-}
-async function addWalorInstance() {
-  if (!selectedCollection.value) return
-  await fetch('http://localhost:8080/api/WalorInstances', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({
-      collectionId: selectedCollection.value.collectionId,
-      data: walorInstanceForm.data
-    })
-  })
-  walorInstanceForm.data = ''
-  fetchCollections()
-  selectedCollection.value = collections.value.find(c => c.collectionId === selectedCollection.value.collectionId)
-}
-function startEditWalor(item: any) {
-  editingWalorInstance.value = true
-  walorInstanceForm.id = item.id
-  walorInstanceForm.data = item.data
-}
-async function updateWalorInstance() {
-  await fetch('http://localhost:8080/api/WalorInstances', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({
-      walorInstanceId: walorInstanceForm.id,
-      data: walorInstanceForm.data
-    })
-  })
-  editingWalorInstance.value = false
-  walorInstanceForm.id = ''
-  walorInstanceForm.data = ''
-  fetchCollections()
-  if (selectedCollection.value)
-    selectedCollection.value = collections.value.find(c => c.collectionId === selectedCollection.value.collectionId)
-}
-function cancelEditWalor() {
-  editingWalorInstance.value = false
-  walorInstanceForm.id = ''
-  walorInstanceForm.data = ''
-}
-async function deleteWalorInstance(id: string) {
-  await fetch(`http://localhost:8080/api/WalorInstances/${id}`, {
-    method: 'DELETE',
-    credentials: 'include'
-  })
-  fetchCollections()
-  if (selectedCollection.value)
-    selectedCollection.value = collections.value.find(c => c.collectionId === selectedCollection.value.collectionId)
 }
 
 const editTemplateFields = ref<{ name: string; type: string; required: boolean; format?: string }[]>([])

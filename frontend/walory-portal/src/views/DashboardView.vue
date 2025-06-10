@@ -2,7 +2,7 @@
   <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
     <!-- Header -->
     <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">Dashboard</h1>
+      <h1 class="text-3xl font-roboto font-bold tracking-tight">Dashboard</h1>
       <span class="text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
@@ -11,18 +11,18 @@
       <!-- Left Side: User Info + Notifications (40%) -->
       <div class="flex flex-col gap-7 w-[40%] min-w-[340px] max-w-[520px]">
         <!-- User Info -->
-        <div class="bg-white rounded-xl shadow border border-walory-gold p-8 flex flex-col items-center">
+        <div class="bg-walory-silver rounded-xl shadow border border-walory-gold p-8 flex flex-col items-center">
           <img
             :src="avatarUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(username || 'User')"
             class="w-32 h-32 rounded-full mb-6 border-2 border-walory-gold object-cover"
             alt="User avatar"
           />
-          <div class="font-bold text-2xl mb-2">{{ username }}</div>
+          <div class="font-roboto font-bold text-2xl mb-2">{{ username }}</div>
           <div class="text-gray-600 text-lg">{{ userEmail }}</div>
         </div>
         <!-- Notifications -->
-        <div class="bg-white rounded-xl shadow border border-walory-gold p-8 flex-1 flex flex-col min-h-[250px] max-h-[500px] overflow-y-auto">
-          <h2 class="text-2xl font-bold mb-6">Notifications</h2>
+        <div class="bg-walory-silver rounded-xl shadow border border-walory-gold p-8 flex-1 flex flex-col min-h-[250px] max-h-[500px] overflow-y-auto">
+          <h2 class="text-2xl font-roboto font-bold mb-6">Notifications</h2>
           <div v-if="notifLoading" class="text-gray-500">Loading...</div>
           <div v-else-if="notifications.length === 0" class="text-gray-500">No notifications.</div>
           <ul>
@@ -54,8 +54,8 @@
         </div>
       </div>
       <!-- Right Side: Collections (60%) -->
-      <div class="flex-1 overflow-y-auto">
-        <h2 class="text-2xl font-bold mb-8">Your Collections</h2>
+      <div class="flex-1 overflow-y-auto bg-walory-silver rounded-xl shadow border border-walory-gold p-8">
+        <h2 class="text-2xl font-roboto font-bold mb-8">Collections you can view</h2>
         <div v-if="collectionsLoading" class="text-gray-500">Loading...</div>
         <div v-else-if="allCollections.length === 0" class="text-gray-500">No collections found.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

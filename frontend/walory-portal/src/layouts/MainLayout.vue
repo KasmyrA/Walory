@@ -73,7 +73,9 @@ const links = [
     <aside class="w-64 bg-walory-gold flex flex-col py-6 px-4 shadow-lg">
       <!-- Logo and Title -->
       <div class="flex flex-col items-center mb-8">
-        <img src="../assets/logo-sb.png" alt="Logo" class="h-16 mb-2" />
+        <RouterLink to="/dashboard">
+          <img src="../assets/logo-sb.png" alt="Logo" class="h-16 mb-2 cursor-pointer" />
+        </RouterLink>
       </div>
 
       <!-- Navigation -->
