@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
       <h1 class="text-3xl font-roboto font-bold tracking-tight">Dashboard</h1>
       <span class="text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
@@ -11,41 +11,41 @@
       <!-- Left Side: User Info + Notifications (40%) -->
       <div class="flex flex-col gap-7 w-[40%] min-w-[340px] max-w-[520px]">
         <!-- User Info -->
-        <div class="bg-walory-silver rounded-xl shadow border border-walory-gold p-8 flex flex-col items-center">
+        <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 flex flex-col items-center">
           <img
             :src="avatarUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(username || 'User')"
-            class="w-32 h-32 rounded-full mb-6 border-2 border-walory-gold object-cover"
+            class="w-32 h-32 rounded-full mb-6 border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] object-cover"
             alt="User avatar"
           />
           <div class="font-roboto font-bold text-2xl mb-2">{{ username }}</div>
-          <div class="text-gray-600 text-lg">{{ userEmail }}</div>
+          <div class="text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] text-lg">{{ userEmail }}</div>
         </div>
         <!-- Notifications -->
-        <div class="bg-walory-silver rounded-xl shadow border border-walory-gold p-8 flex-1 flex flex-col min-h-[250px] max-h-[500px] overflow-y-auto">
+        <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 flex-1 flex flex-col min-h-[250px] max-h-[500px] overflow-y-auto">
           <h2 class="text-2xl font-roboto font-bold mb-6">Notifications</h2>
-          <div v-if="notifLoading" class="text-gray-500">Loading...</div>
-          <div v-else-if="notifications.length === 0" class="text-gray-500">No notifications.</div>
+          <div v-if="notifLoading" class="text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">Loading...</div>
+          <div v-else-if="notifications.length === 0" class="text-[var(--color-walory-black)] dark:text-[var(--color-walory-dark-gold-dark)]">No notifications.</div>
           <ul>
             <li
               v-for="notif in notifications"
               :key="notif.id"
-              class="flex items-center justify-between mb-4 bg-walory-gold-light/60 rounded px-4 py-3"
+              class="flex items-center justify-between mb-4 bg-[var(--color-walory-gold-light)]/60 dark:bg-[var(--color-walory-dark-gold-light)]/60 rounded px-4 py-3"
               :class="{ 'opacity-60': notif.isRead }"
             >
               <div class="flex-1">
                 <div class="text-base">{{ notif.message }}</div>
-                <div class="text-xs text-gray-500">{{ formatDate(notif.createdAt) }}</div>
+                <div class="text-xs text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">{{ formatDate(notif.createdAt) }}</div>
               </div>
               <div class="flex flex-col gap-1 ml-3">
                 <button
                   v-if="!notif.isRead"
                   @click="markAsRead(notif.id)"
-                  class="text-xs px-2 py-1 rounded bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold border border-walory-gold-dark transition"
+                  class="text-xs px-2 py-1 rounded bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold border border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] transition"
                   title="Mark as read"
                 >✓</button>
                 <button
                   @click="deleteNotif(notif.id)"
-                  class="text-xs px-2 py-1 rounded bg-walory-red hover:bg-red-700 text-white font-bold border border-walory-red transition"
+                  class="text-xs px-2 py-1 rounded bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold border border-[var(--color-walory-red)] transition"
                   title="Delete"
                 >✕</button>
               </div>
@@ -54,34 +54,34 @@
         </div>
       </div>
       <!-- Right Side: Collections (60%) -->
-      <div class="flex-1 overflow-y-auto bg-walory-silver rounded-xl shadow border border-walory-gold p-8">
+      <div class="flex-1 overflow-y-auto bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8">
         <h2 class="text-2xl font-roboto font-bold mb-8">Collections you can view</h2>
-        <div v-if="collectionsLoading" class="text-gray-500">Loading...</div>
-        <div v-else-if="allCollections.length === 0" class="text-gray-500">No collections found.</div>
+        <div v-if="collectionsLoading" class="text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">Loading...</div>
+        <div v-else-if="allCollections.length === 0" class="text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">No collections found.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div
             v-for="col in allCollections"
             :key="col.collectionId"
-            class="bg-white rounded-xl shadow border border-walory-gold p-6 flex flex-col hover:shadow-lg transition"
+            class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col hover:shadow-lg transition"
           >
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-lg font-bold">{{ col.title }}</h3>
               <span class="text-xs px-3 py-1 rounded-full"
                 :class="{
-                  'bg-walory-gold text-walory-black': col.visibility === 0,
-                  'bg-gray-300 text-gray-700': col.visibility === 1,
-                  'bg-blue-200 text-blue-900': col.visibility === 2
+                  'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': col.visibility === 0,
+                  'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': col.visibility === 1,
+                  'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': col.visibility === 2
                 }"
               >
                 {{ visibilityLabel(col.visibility) }}
               </span>
             </div>
-            <div class="text-gray-700 mb-1">{{ col.description }}</div>
-            <div class="text-xs text-gray-500 mb-1">By: {{ col.author.name }}</div>
-            <div class="text-xs text-gray-500 mb-1">
+            <div class="text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] mb-1">{{ col.description }}</div>
+            <div class="text-xs text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-silver)] mb-1">By: {{ col.author.name }}</div>
+            <div class="text-xs text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-silver)] mb-1">
               Items: <span class="font-semibold">{{ col.walorInstance?.length ?? 0 }}</span>
             </div>
-            <div v-if="col.category" class="text-xs text-gray-400">Category: {{ col.category }}</div>
+            <div v-if="col.category" class="text-xs text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-silver)]">Category: {{ col.category }}</div>
           </div>
         </div>
       </div>

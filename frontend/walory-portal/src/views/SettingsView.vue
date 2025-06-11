@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">Settings</h1>
       <span class="text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
@@ -9,7 +9,7 @@
     </div>
     <!-- Settings Card -->
     <div class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-walory-silver/80 rounded-2xl shadow-lg border border-gray-300 px-16 py-14 flex flex-row gap-16 w-[90vw] max-w-6xl">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-gray-300 dark:border-[var(--color-walory-dark-gold)] px-16 py-14 flex flex-row gap-16 w-[90vw] max-w-6xl">
         <!-- Left: Avatar and name -->
         <div class="flex flex-col items-center justify-center flex-1 min-w-[300px]">
           <div class="text-4xl font-roboto font-normal mb-6">{{ username }}</div>
@@ -17,9 +17,9 @@
             v-if="avatarUrl"
             :src="avatarUrl"
             alt="Your avatar"
-            class="w-64 h-64 rounded-full object-cover mb-8 border-2 border-walory-gold"
+            class="w-64 h-64 rounded-full object-cover mb-8 border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
           />
-          <div v-else class="w-64 h-64 rounded-full border-2 border-walory-gold mb-8 flex items-center justify-center bg-gray-100 text-gray-400 text-2xl">
+          <div v-else class="w-64 h-64 rounded-full border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] mb-8 flex items-center justify-center bg-gray-100 dark:bg-[var(--color-walory-dark-gold-light)] text-gray-400 text-2xl">
             No Avatar
           </div>
           <!-- Change picture button -->
@@ -33,21 +33,21 @@
             />
             <label
               for="avatar-upload"
-              class="cursor-pointer bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold py-3 px-10 rounded-full shadow text-center text-lg mb-3"
+              class="cursor-pointer bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-3 px-10 rounded-full shadow text-center text-lg mb-3 dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
             >
               Change picture
             </label>
-            <span v-if="selectedFile" class="text-base text-gray-700 font-roboto mb-3">{{ selectedFile.name }}</span>
+            <span v-if="selectedFile" class="text-base text-gray-700 dark:text-[var(--color-walory-silver)] font-roboto mb-3">{{ selectedFile.name }}</span>
             <button
               v-if="selectedFile"
               type="submit"
-              class="bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold py-3 px-10 rounded-full shadow text-center text-lg"
+              class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-3 px-10 rounded-full shadow text-center text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
             >
               Upload
             </button>
           </form>
-          <div v-if="message" class="mt-3 text-center text-walory-green font-roboto text-base">{{ message }}</div>
-          <div v-if="error" class="mt-3 text-center text-walory-red font-roboto text-base">{{ error }}</div>
+          <div v-if="message" class="mt-3 text-center text-[var(--color-walory-green)] font-roboto text-base">{{ message }}</div>
+          <div v-if="error" class="mt-3 text-center text-[var(--color-walory-red)] font-roboto text-base">{{ error }}</div>
         </div>
         <!-- Right: Account actions -->
         <div class="flex flex-col items-center justify-center flex-1 min-w-[320px]">
@@ -59,18 +59,18 @@
                 id="username-input"
                 v-model="newUsername"
                 type="text"
-                class="flex-1 border border-gray-300 rounded px-3 py-2 text-lg font-roboto"
+                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
                 placeholder="New username"
               />
               <button
                 @click="changeUsername"
-                class="bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold px-6 rounded transition text-lg"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
               >
                 Save
               </button>
             </div>
-            <div v-if="usernameMsg" class="mt-2 text-walory-green text-sm">{{ usernameMsg }}</div>
-            <div v-if="usernameErr" class="mt-2 text-walory-red text-sm">{{ usernameErr }}</div>
+            <div v-if="usernameMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ usernameMsg }}</div>
+            <div v-if="usernameErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ usernameErr }}</div>
           </div>
           <!-- Description -->
           <div class="w-full mb-8">
@@ -79,30 +79,30 @@
               id="desc-input"
               v-model="description"
               rows="3"
-              class="w-full border border-gray-300 rounded px-3 py-2 text-lg font-roboto resize-none"
+              class="w-full border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto resize-none bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
               placeholder="Add a short description..."
             ></textarea>
             <div class="flex justify-end mt-2">
               <button
                 @click="saveDescription"
-                class="bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold px-6 rounded transition text-lg"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
               >
                 Save
               </button>
             </div>
-            <div v-if="descMsg" class="mt-2 text-walory-green text-sm">{{ descMsg }}</div>
-            <div v-if="descErr" class="mt-2 text-walory-red text-sm">{{ descErr }}</div>
+            <div v-if="descMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ descMsg }}</div>
+            <div v-if="descErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ descErr }}</div>
           </div>
           <!-- Delete account -->
           <div class="w-full flex flex-col items-center mt-8">
             <button
               @click="deleteAccount"
-              class="bg-walory-red hover:bg-red-700 text-white font-bold px-8 py-2 rounded-full transition text-lg"
+              class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-8 py-2 rounded-full transition text-lg"
             >
               Delete account
             </button>
-            <div v-if="deleteMsg" class="mt-2 text-walory-green text-sm">{{ deleteMsg }}</div>
-            <div v-if="deleteErr" class="mt-2 text-walory-red text-sm">{{ deleteErr }}</div>
+            <div v-if="deleteMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ deleteMsg }}</div>
+            <div v-if="deleteErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ deleteErr }}</div>
           </div>
         </div>
       </div>

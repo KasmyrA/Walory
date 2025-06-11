@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80 font-roboto">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80 font-roboto">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">My Collection</h1>
       <span class="text-xl font-roboto">
         Today is <span class="font-bold font-roboto">{{ formattedDate }}</span>
@@ -9,9 +9,9 @@
     </div>
     <div class="flex flex-col gap-12 px-10 py-10 max-w-6xl mx-auto w-full font-roboto">
       <!-- Templates Management -->
-      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 mb-8 font-roboto">
         <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Templates</h2>
-        <button @click="openTemplateModal" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition mb-4">
+        <button @click="openTemplateModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
           Create Template
         </button>
         <!-- Modal for template creation -->
@@ -21,50 +21,50 @@
           style="background: transparent;"
         >
           <div
-            class="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
+            class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
             style="max-height: 90vh; overflow-y: auto;"
           >
             <h2 class="text-xl font-bold mb-4 font-roboto">Create Template</h2>
             <!-- Category input -->
             <div class="mb-4">
               <label class="block font-bold mb-1 font-roboto">Category</label>
-              <input v-model="templateForm.category" placeholder="Template category" class="border rounded px-3 py-2 w-full font-roboto" required />
+              <input v-model="templateForm.category" placeholder="Template category" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
             </div>
             <!-- Visibility dropdown -->
             <div class="mb-4">
               <label class="block font-bold mb-1 font-roboto">Visibility</label>
-              <select v-model="templateForm.visibility" class="border rounded px-3 py-2 w-full font-roboto">
+              <select v-model="templateForm.visibility" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option :value="0">Public</option>
                 <option :value="1">Private</option>
                 <option :value="2">Friends</option>
               </select>
             </div>
             <form @submit.prevent="addField" class="flex flex-wrap gap-2 mb-4 font-roboto">
-              <input v-model="newField.name" placeholder="Field name" class="border rounded px-2 py-1 flex-1 min-w-[120px] font-roboto" required />
-              <select v-model="newField.type" class="border rounded px-2 py-1 min-w-[100px] font-roboto">
+              <input v-model="newField.name" placeholder="Field name" class="border rounded px-2 py-1 flex-1 min-w-[120px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
+              <select v-model="newField.type" class="border rounded px-2 py-1 min-w-[100px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option value="string">string</option>
                 <option value="number">number</option>
                 <option value="boolean">boolean</option>
                 <option value="date">date</option>
               </select>
-              <input v-model="newField.format" placeholder="Format (optional)" class="border rounded px-2 py-1 min-w-[120px] font-roboto" />
+              <input v-model="newField.format" placeholder="Format (optional)" class="border rounded px-2 py-1 min-w-[120px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" />
               <label class="flex items-center ml-2 font-roboto">
                 <input type="checkbox" v-model="newField.required" class="mr-1" /> Required
               </label>
-              <button type="submit" class="bg-walory-gold px-2 py-1 rounded font-bold font-roboto">Add</button>
+              <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-2 py-1 rounded font-bold font-roboto">Add</button>
             </form>
             <ul>
               <li v-for="(field, idx) in newTemplateFields" :key="field.name" class="flex items-center gap-2 mb-1 font-roboto">
                 <span class="font-mono">{{ field.type }}</span>
                 <span class="font-bold font-roboto">{{ field.name }}</span>
                 <span v-if="field.format" class="italic text-gray-400 font-roboto">({{ field.format }})</span>
-                <span v-if="field.required" class="text-walory-red font-bold ml-2 font-roboto">required</span>
-                <button @click="removeField(idx)" class="ml-2 text-walory-red font-roboto">Remove</button>
+                <span v-if="field.required" class="text-[var(--color-walory-red)] font-bold ml-2 font-roboto">required</span>
+                <button @click="removeField(idx)" class="ml-2 text-[var(--color-walory-red)] font-roboto">Remove</button>
               </li>
             </ul>
             <div class="flex gap-2 mt-4 font-roboto">
-              <button @click="submitTemplateForm" class="bg-walory-gold px-4 py-2 rounded font-bold font-roboto">Create Template</button>
-              <button @click="closeTemplateModal" class="bg-gray-300 px-4 py-2 rounded font-roboto">Cancel</button>
+              <button @click="submitTemplateForm" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-4 py-2 rounded font-bold font-roboto">Create Template</button>
+              <button @click="closeTemplateModal" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded font-roboto">Cancel</button>
             </div>
           </div>
         </div>
@@ -76,86 +76,86 @@
           style="background: transparent;"
         >
           <div
-            class="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
+            class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
             style="max-height: 90vh; overflow-y: auto;"
           >
             <h2 class="text-xl font-bold mb-4 font-roboto">Edit Template</h2>
             <!-- Category input -->
             <div class="mb-4">
               <label class="block font-bold mb-1 font-roboto">Category</label>
-              <input v-model="templateForm.category" placeholder="Template category" class="border rounded px-3 py-2 w-full font-roboto" required />
+              <input v-model="templateForm.category" placeholder="Template category" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
             </div>
             <!-- Visibility dropdown -->
             <div class="mb-4">
               <label class="block font-bold mb-1 font-roboto">Visibility</label>
-              <select v-model="templateForm.visibility" class="border rounded px-3 py-2 w-full font-roboto">
+              <select v-model="templateForm.visibility" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option :value="0">Public</option>
                 <option :value="1">Private</option>
                 <option :value="2">Friends</option>
               </select>
             </div>
             <form @submit.prevent="addEditField" class="flex flex-wrap gap-2 mb-4 font-roboto">
-              <input v-model="editField.name" placeholder="Field name" class="border rounded px-2 py-1 flex-1 min-w-[120px] font-roboto" required />
-              <select v-model="editField.type" class="border rounded px-2 py-1 min-w-[100px] font-roboto">
+              <input v-model="editField.name" placeholder="Field name" class="border rounded px-2 py-1 flex-1 min-w-[120px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
+              <select v-model="editField.type" class="border rounded px-2 py-1 min-w-[100px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option value="string">string</option>
                 <option value="number">number</option>
                 <option value="boolean">boolean</option>
                 <option value="date">date</option>
               </select>
-              <input v-model="editField.format" placeholder="Format (optional)" class="border rounded px-2 py-1 min-w-[120px] font-roboto" />
+              <input v-model="editField.format" placeholder="Format (optional)" class="border rounded px-2 py-1 min-w-[120px] font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" />
               <label class="flex items-center ml-2 font-roboto">
                 <input type="checkbox" v-model="editField.required" class="mr-1" /> Required
               </label>
-              <button type="submit" class="bg-walory-gold px-2 py-1 rounded font-bold font-roboto">Add</button>
+              <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-2 py-1 rounded font-bold font-roboto">Add</button>
             </form>
             <ul>
               <li v-for="(field, idx) in editTemplateFields" :key="field.name" class="flex items-center gap-2 mb-1 font-roboto">
                 <span class="font-mono">{{ field.type }}</span>
                 <span class="font-bold font-roboto">{{ field.name }}</span>
                 <span v-if="field.format" class="italic text-gray-400 font-roboto">({{ field.format }})</span>
-                <span v-if="field.required" class="text-walory-red font-bold ml-2 font-roboto">required</span>
-                <button @click="removeEditField(idx)" class="ml-2 text-walory-red font-roboto">Remove</button>
+                <span v-if="field.required" class="text-[var(--color-walory-red)] font-bold ml-2 font-roboto">required</span>
+                <button @click="removeEditField(idx)" class="ml-2 text-[var(--color-walory-red)] font-roboto">Remove</button>
               </li>
             </ul>
             <div class="flex gap-2 mt-4 font-roboto">
-              <button @click="submitEditTemplateForm" class="bg-walory-gold px-4 py-2 rounded font-bold font-roboto">Update</button>
-              <button @click="closeEditTemplateModal" class="bg-gray-300 px-4 py-2 rounded font-roboto">Cancel</button>
+              <button @click="submitEditTemplateForm" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-4 py-2 rounded font-bold font-roboto">Update</button>
+              <button @click="closeEditTemplateModal" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded font-roboto">Cancel</button>
             </div>
           </div>
         </div>
-        <div v-if="templates.length === 0" class="text-gray-500 font-roboto">No templates yet.</div>
+        <div v-if="templates.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No templates yet.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6 font-roboto">
-          <div v-for="tpl in templates" :key="tpl.templateId" class="bg-white/60 rounded-xl shadow border border-walory-gold p-4 flex flex-col justify-between font-roboto">
+          <div v-for="tpl in templates" :key="tpl.templateId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex items-center justify-between mb-2">
                 <div class="font-bold text-lg font-roboto">{{ tpl.category }}</div>
                 <span class="text-xs px-3 py-1 rounded-full font-roboto"
                   :class="{
-                    'bg-walory-gold text-walory-black': tpl.visibility === 0,
-                    'bg-gray-300 text-gray-700': tpl.visibility === 1,
-                    'bg-blue-200 text-blue-900': tpl.visibility === 2
+                    'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': tpl.visibility === 0,
+                    'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': tpl.visibility === 1,
+                    'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': tpl.visibility === 2
                   }"
                 >
                   {{ visibilityLabel(tpl.visibility) }}
                 </span>
               </div>
-              <div class="text-xs text-gray-500 mb-1 break-all font-roboto">ID: {{ tpl.templateId }}</div>
-              <div class="text-xs text-gray-500 mb-1 font-roboto">
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 break-all font-roboto">ID: {{ tpl.templateId }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">
                 <div class="font-bold font-roboto">Fields:</div>
                 <ul>
                   <li v-for="field in parseTemplateContent(tpl.content)" :key="field.name" class="font-roboto">
                     <span class="font-mono">{{ field.type }}</span>
                     <span class="font-bold font-roboto">{{ field.name }}</span>
                     <span v-if="field.format" class="italic text-gray-400 font-roboto">({{ field.format }})</span>
-                    <span v-if="field.required" class="text-walory-red font-bold ml-2 font-roboto">required</span>
+                    <span v-if="field.required" class="text-[var(--color-walory-red)] font-bold ml-2 font-roboto">required</span>
                   </li>
                 </ul>
               </div>
             </div>
             <div class="flex gap-2 mt-4 font-roboto">
-              <button @click="openEditTemplateModal(tpl)" class="bg-walory-gold px-3 py-1 rounded font-bold font-roboto shadow hover:bg-walory-gold-dark transition">Edit</button>
-              <button @click="deleteTemplate(tpl.templateId)" class="bg-walory-red text-white px-3 py-1 rounded font-bold font-roboto shadow hover:bg-red-700 transition">Delete</button>
-              <button @click="importTemplate(tpl.templateId)" class="bg-blue-200 text-blue-900 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 transition">Import</button>
+              <button @click="openEditTemplateModal(tpl)" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">Edit</button>
+              <button @click="deleteTemplate(tpl.templateId)" class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-3 py-1 rounded font-roboto shadow transition">Delete</button>
+              <button @click="importTemplate(tpl.templateId)" class="bg-blue-200 dark:bg-blue-900 text-blue-900 dark:text-blue-200 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 dark:hover:bg-blue-800 transition">Clone</button>
             </div>
           </div>
         </div>
@@ -168,22 +168,22 @@
         style="background: transparent;"
       >
         <div
-          class="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
+          class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
           style="max-height: 90vh; overflow-y: auto;"
         >
           <h2 class="text-xl font-bold mb-4 font-roboto">{{ editingCollection ? 'Edit Collection' : 'Create New Collection' }}</h2>
           <form @submit.prevent="editingCollection ? updateCollection() : createCollection()" class="grid grid-cols-1 md:grid-cols-2 gap-6 font-roboto">
             <div>
               <label class="block font-bold mb-1 font-roboto">Title</label>
-              <input v-model="collectionForm.title" class="border rounded px-3 py-2 w-full font-roboto" required />
+              <input v-model="collectionForm.title" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
             </div>
             <div>
               <label class="block font-bold mb-1 font-roboto">Category</label>
-              <input v-model="collectionForm.category" class="border rounded px-3 py-2 w-full font-roboto" />
+              <input v-model="collectionForm.category" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" />
             </div>
             <div>
               <label class="block font-bold mb-1 font-roboto">Template</label>
-              <select v-model="collectionForm.walorTemplateId" class="border rounded px-3 py-2 w-full font-roboto">
+              <select v-model="collectionForm.walorTemplateId" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option value="">None</option>
                 <option v-for="tpl in templates" :key="tpl.templateId" :value="tpl.templateId">
                   {{ tpl.category }} ({{ tpl.templateId.slice(0, 8) }})
@@ -192,7 +192,7 @@
             </div>
             <div>
               <label class="block font-bold mb-1 font-roboto">Visibility</label>
-              <select v-model="collectionForm.visibility" class="border rounded px-3 py-2 w-full font-roboto">
+              <select v-model="collectionForm.visibility" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                 <option :value="0">Public</option>
                 <option :value="1">Private</option>
                 <option :value="2">Friends</option>
@@ -200,48 +200,48 @@
             </div>
             <div class="md:col-span-2">
               <label class="block font-bold mb-1 font-roboto">Description</label>
-              <textarea v-model="collectionForm.description" class="border rounded px-3 py-2 w-full font-roboto" required />
+              <textarea v-model="collectionForm.description" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
             </div>
             <div class="flex gap-2 items-end md:col-span-2 font-roboto">
-              <button type="submit" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition">
+              <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
                 {{ editingCollection ? 'Update' : 'Create' }}
               </button>
-              <button @click="closeCollectionModal" type="button" class="bg-gray-300 px-4 py-2 rounded shadow font-roboto">Cancel</button>
+              <button @click="closeCollectionModal" type="button" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded shadow font-roboto">Cancel</button>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8 mb-8 font-roboto">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 mb-8 font-roboto">
         <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Your Collections</h2>
-        <button @click="openCollectionModal" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition mb-4">
+        <button @click="openCollectionModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
           Create Collection
         </button>
-        <div v-if="collections.length === 0" class="text-gray-500 font-roboto">No collections yet.</div>
+        <div v-if="collections.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No collections yet.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 font-roboto">
-          <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 rounded-2xl shadow border border-walory-gold p-6 flex flex-col justify-between font-roboto">
+          <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex items-center justify-between mb-2">
                 <div class="font-bold text-xl font-roboto">{{ col.title }}</div>
                 <span class="text-xs px-3 py-1 rounded-full font-roboto"
                   :class="{
-                    'bg-walory-gold text-walory-black': col.visibility === 0,
-                    'bg-gray-300 text-gray-700': col.visibility === 1,
-                    'bg-blue-200 text-blue-900': col.visibility === 2
+                    'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': col.visibility === 0,
+                    'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': col.visibility === 1,
+                    'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': col.visibility === 2
                   }"
                 >
                   {{ visibilityLabel(col.visibility) }}
                 </span>
               </div>
-              <div class="text-gray-700 mb-1 font-roboto">{{ col.description }}</div>
-              <div class="text-xs text-gray-500 mb-1 font-roboto">Category: {{ col.category }}</div>
-              <div class="text-xs text-gray-500 mb-1 font-roboto">Template: {{ col.walorTemplateId || 'None' }}</div>
-              <div class="text-xs text-gray-500 mb-1 font-roboto">Items: {{ col.walorInstance?.length ?? 0 }}</div>
+              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">{{ col.description }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Category: {{ col.category }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Template: {{ col.walorTemplateId || 'None' }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Items: {{ col.walorInstance?.length ?? 0 }}</div>
             </div>
             <div class="flex gap-2 mt-4 font-roboto">
-              <button @click="openEditCollectionModal(col)" class="bg-walory-gold px-3 py-1 rounded font-bold font-roboto shadow hover:bg-walory-gold-dark transition">Edit</button>
-              <button @click="deleteCollection(col.collectionId)" class="bg-walory-red text-white px-3 py-1 rounded font-bold font-roboto shadow hover:bg-red-700 transition">Delete</button>
-              <button @click="openItemsModal(col)" class="bg-blue-200 text-blue-900 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 transition">Manage Items</button>
+              <button @click="openEditCollectionModal(col)" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">Edit</button>
+              <button @click="deleteCollection(col.collectionId)" class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-3 py-1 rounded font-roboto shadow transition">Delete</button>
+              <button @click="openItemsModal(col)" class="bg-blue-200 dark:bg-blue-900 text-blue-900 dark:text-blue-200 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 dark:hover:bg-blue-800 transition">Manage Items</button>
             </div>
           </div>
         </div>
@@ -254,31 +254,31 @@
         style="background: transparent;"
       >
         <div
-          class="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
+          class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
           style="max-height: 90vh; overflow-y: auto;"
         >
           <div class="flex justify-between items-center mb-4 font-roboto">
             <h2 class="text-xl font-bold font-roboto">Manage Items in "{{ itemsModalCollection.title }}"</h2>
-            <button @click="closeItemsModal" class="text-walory-red font-bold text-lg hover:underline font-roboto">Close</button>
+            <button @click="closeItemsModal" class="text-[var(--color-walory-red)] font-bold text-lg hover:underline font-roboto">Close</button>
           </div>
           <form @submit.prevent="submitItemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 font-roboto">
             <div v-for="field in itemFields" :key="field.name" class="font-roboto">
-              <label class="block font-bold mb-1 font-roboto">{{ field.name }} <span v-if="field.required" class="text-walory-red">*</span></label>
+              <label class="block font-bold mb-1 font-roboto">{{ field.name }} <span v-if="field.required" class="text-[var(--color-walory-red)]">*</span></label>
               <input
                 v-model="itemForm[field.name]"
                 :type="field.type === 'number' ? 'number' : 'text'"
                 :required="field.required"
-                class="border rounded px-3 py-2 w-full font-roboto"
+                class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
               />
             </div>
             <div class="md:col-span-2 flex gap-2 mt-2 font-roboto">
-              <button type="submit" class="bg-walory-gold text-walory-black font-bold font-roboto px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition">
+              <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
                 {{ editingItemId ? 'Update' : 'Add Item' }}
               </button>
-              <button v-if="editingItemId" @click="() => { editingItemId = null; resetItemForm(); }" type="button" class="bg-gray-300 px-4 py-2 rounded font-roboto">Cancel Edit</button>
+              <button v-if="editingItemId" @click="() => { editingItemId = null; resetItemForm(); }" type="button" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded font-roboto">Cancel Edit</button>
             </div>
           </form>
-          <div v-if="!itemsModalCollection.walorInstance || itemsModalCollection.walorInstance.length === 0" class="text-gray-500 font-roboto">No items yet.</div>
+          <div v-if="!itemsModalCollection.walorInstance || itemsModalCollection.walorInstance.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No items yet.</div>
           <ul>
             <li v-for="item in itemsModalCollection.walorInstance" :key="item.id" class="flex items-center justify-between border-b py-2 font-roboto">
               <div>
@@ -291,8 +291,8 @@
                 <span v-else class="font-mono text-sm">{{ item.data }}</span>
               </div>
               <div class="flex gap-2 font-roboto">
-                <button @click="startEditItem(item)" class="bg-walory-gold px-2 py-1 rounded text-xs font-bold font-roboto shadow hover:bg-walory-gold-dark transition">Edit</button>
-                <button @click="deleteItem(item.id)" class="bg-walory-red text-white px-2 py-1 rounded text-xs font-bold font-roboto shadow hover:bg-red-700 transition">Delete</button>
+                <button @click="startEditItem(item)" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-2 py-1 rounded text-xs font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">Edit</button>
+                <button @click="deleteItem(item.id)" class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-2 py-1 rounded text-xs font-roboto shadow transition">Delete</button>
               </div>
             </li>
           </ul>

@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">Friends</h1>
       <span class="text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
@@ -9,21 +9,21 @@
     </div>
     <!-- Friends Card -->
     <div class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-walory-silver/80 rounded-2xl shadow-lg border border-gray-300 px-20 py-14 flex flex-row gap-24 w-[110vw] max-w-7xl min-h-[540px]">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-20 py-14 flex flex-row gap-24 w-[110vw] max-w-7xl min-h-[540px]">
         <!-- Left: Friends list -->
         <div class="flex flex-col flex-1 min-w-[320px] max-w-[420px]">
-          <h2 class="text-2xl font-bold mb-4 font-roboto text-walory-black">Your Friends</h2>
-          <div v-if="friends.length === 0" class="text-gray-500">You have no friends yet.</div>
+          <h2 class="text-2xl font-bold mb-4 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Your Friends</h2>
+          <div v-if="friends.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)]">You have no friends yet.</div>
           <ul>
             <li
               v-for="friend in friends"
               :key="friend.id"
-              class="flex items-center justify-between border-b py-3"
+              class="flex items-center justify-between border-b border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] py-3"
             >
-              <span class="font-roboto text-lg text-walory-black">{{ friend.username }} <span class="text-gray-500 text-sm">({{ friend.email }})</span></span>
+              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">{{ friend.username }} <span class="text-gray-500 dark:text-[var(--color-walory-silver)] text-sm">({{ friend.email }})</span></span>
               <button
                 @click="removeFriend(friend.id)"
-                class="bg-walory-red hover:bg-red-700 text-white font-bold px-4 py-1 rounded transition"
+                class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-4 py-1 rounded transition"
               >
                 Remove
               </button>
@@ -32,24 +32,24 @@
         </div>
         <!-- Right: Add friend -->
         <div class="flex flex-col flex-1 min-w-[320px] max-w-[420px] items-center justify-center">
-          <h2 class="text-2xl font-bold mb-6 font-roboto text-walory-black">Add Friend</h2>
+          <h2 class="text-2xl font-bold mb-6 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Add Friend</h2>
           <form @submit.prevent="sendInvite" class="flex flex-col gap-4 w-full">
             <input
               v-model="inviteEmail"
               type="email"
               placeholder="Friend's email"
-              class="border border-gray-300 rounded px-4 py-2 font-roboto text-lg"
+              class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded px-4 py-2 font-roboto text-lg bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
               required
             />
             <button
               type="submit"
-              class="bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold py-2 rounded transition text-lg"
+              class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-2 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
             >
               Send Invite
             </button>
           </form>
-          <div v-if="inviteMsg" class="mt-4 text-walory-green">{{ inviteMsg }}</div>
-          <div v-if="inviteErr" class="mt-4 text-walory-red">{{ inviteErr }}</div>
+          <div v-if="inviteMsg" class="mt-4 text-[var(--color-walory-green)]">{{ inviteMsg }}</div>
+          <div v-if="inviteErr" class="mt-4 text-[var(--color-walory-red)]">{{ inviteErr }}</div>
         </div>
       </div>
     </div>

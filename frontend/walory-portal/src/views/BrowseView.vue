@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">
         Browse {{ viewMode === 'collections' ? 'Collections' : 'Templates' }}
       </h1>
@@ -16,9 +16,9 @@
         :class="[
           'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
           viewMode === 'collections'
-            ? 'bg-walory-gold text-walory-black border-walory-gold-dark shadow'
-            : 'bg-walory-silver text-gray-600 border-transparent hover:bg-walory-gold-light hover:text-walory-black hover:border-walory-gold-dark'
-        ]"
+              ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
+              : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
+          ]"
         style="transition: background 0.2s, color 0.2s, border 0.2s;"
       >
         Collections
@@ -28,8 +28,8 @@
         :class="[
           'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
           viewMode === 'templates'
-            ? 'bg-walory-gold text-walory-black border-walory-gold-dark shadow'
-            : 'bg-walory-silver text-gray-600 border-transparent hover:bg-walory-gold-light hover:text-walory-black hover:border-walory-gold-dark'
+            ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
+            : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
         ]"
         style="transition: background 0.2s, color 0.2s, border 0.2s;"
       >
@@ -39,7 +39,7 @@
 
     <!-- Collections View -->
     <div v-if="viewMode === 'collections'" class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-walory-silver/80 rounded-2xl shadow-lg border border-gray-300 px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
         <div class="flex justify-center gap-8 mb-8">
           <button
             v-for="f in filters"
@@ -48,69 +48,70 @@
             :class="[
               'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
               filter === f
-                ? 'bg-walory-gold text-walory-black border-walory-gold-dark shadow'
-                : 'bg-walory-silver text-gray-600 border-transparent hover:bg-walory-gold-light hover:text-walory-black hover:border-walory-gold-dark'
+                ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
+                : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
             ]"
             style="transition: background 0.2s, color 0.2s, border 0.2s;"
           >
             {{ f }}
           </button>
         </div>
-        <div v-if="loading" class="text-center text-xl text-gray-500">Loading...</div>
-        <div v-else-if="collections.length === 0" class="text-center text-xl text-gray-500">No collections found.</div>
+        <div v-if="loading" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading...</div>
+        <div v-else-if="collections.length === 0" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-silver)]">No collections found.</div>
         <div v-else>
           <div v-if="!selectedCollection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             <div
               v-for="col in collections"
               :key="col.collectionId"
-              class="bg-white rounded-xl shadow border border-walory-gold p-6 flex flex-col cursor-pointer hover:shadow-lg transition"
+              class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col cursor-pointer hover:shadow-lg transition"
               @click="openCollection(col)"
             >
               <div class="flex items-center justify-between mb-2">
                 <h2 class="text-xl font-bold font-roboto">{{ col.title }}</h2>
                 <span class="text-xs px-3 py-1 rounded-full"
                   :class="{
-                    'bg-walory-gold text-walory-black': col.visibility === 0,
-                    'bg-gray-300 text-gray-700': col.visibility === 1,
-                    'bg-blue-200 text-blue-900': col.visibility === 2
+                    'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': col.visibility === 0,
+                    'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': col.visibility === 1,
+                    'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': col.visibility === 2
                   }"
                 >
                   {{ visibilityLabel(col.visibility) }}
                 </span>
               </div>
-              <div class="text-gray-700 mb-2">{{ col.description }}</div>
-              <div class="text-sm text-gray-500 mb-2">Category: {{ col.category }}</div>
-              <div class="text-sm text-gray-500 mb-2">By: {{ col.author.name }} ({{ col.author.email }})</div>
+              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-2">{{ col.description }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">Category: {{ col.category }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">By: {{ col.author.name }} ({{ col.author.email }})</div>
             </div>
           </div>
           <!-- Collection Details Modal/Card -->
           <div v-else class="relative">
-            <button @click="selectedCollection = null" class="absolute top-0 right-0 mt-2 mr-2 bg-walory-gold hover:bg-walory-gold-dark text-walory-black px-4 py-1 rounded-full font-bold shadow">Back</button>
-            <div class="bg-white rounded-xl shadow border border-walory-gold p-8 max-w-2xl mx-auto">
+            <button @click="selectedCollection = null" class="absolute top-0 right-0 mt-2 mr-2 bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] px-4 py-1 rounded-full font-bold shadow dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]">Back</button>
+            <div class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 max-w-2xl mx-auto">
               <div class="flex items-center justify-between mb-2">
                 <h2 class="text-2xl font-bold font-roboto">{{ selectedCollection.title }}</h2>
                 <span class="text-xs px-3 py-1 rounded-full"
                   :class="{
-                    'bg-walory-gold text-walory-black': selectedCollection.visibility === 0,
-                    'bg-gray-300 text-gray-700': selectedCollection.visibility === 1,
-                    'bg-blue-200 text-blue-900': selectedCollection.visibility === 2
+                    'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': selectedCollection.visibility === 0,
+                    'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': selectedCollection.visibility === 1,
+                    'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': selectedCollection.visibility === 2
                   }"
                 >
                   {{ visibilityLabel(selectedCollection.visibility) }}
                 </span>
               </div>
-              <div class="text-gray-700 mb-2">{{ selectedCollection.description }}</div>
-              <div class="text-sm text-gray-500 mb-2">Category: {{ selectedCollection.category }}</div>
-              <div class="text-sm text-gray-500 mb-2">By: {{ selectedCollection.author.name }} ({{ selectedCollection.author.email }})</div>
+              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-2">{{ selectedCollection.description }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">Category: {{ selectedCollection.category }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">By: {{ selectedCollection.author.name }} ({{ selectedCollection.author.email }})</div>
               <!-- Likes and Comments -->
               <div class="flex items-center gap-6 mt-4 mb-4">
                 <button
                   @click="toggleLike(selectedCollection.collectionId)"
                   class="flex items-center gap-2 px-4 py-1 rounded-full font-bold transition border-2 cursor-pointer
-                    focus:outline-none focus:ring-2 focus:ring-walory-gold-dark"
+                    focus:outline-none focus:ring-2 focus:ring-[var(--color-walory-gold-dark)] dark:focus:ring-[var(--color-walory-dark-gold-dark)]"
                   :class="isLiked
-                    ? 'bg-walory-gold text-walory-black border-walory-gold-dark shadow'
-                    : 'bg-walory-silver text-gray-600 border-transparent hover:bg-walory-gold-light hover:text-walory-black hover:border-walory-gold-dark'"
+                    ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
+                    : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)]'
+                  "
                   style="transition: background 0.2s, color 0.2s, border 0.2s;"
                   title="Like this collection"
                 >
@@ -123,7 +124,7 @@
                 <div class="font-bold mb-2">Items:</div>
                 <ul class="pl-4 list-disc">
                   <li v-for="item in selectedCollection.walorInstance" :key="item.id" class="mb-2">
-                    <span class="inline-block w-12 h-12 bg-gray-200 rounded mr-3 align-middle"></span>
+                    <span class="inline-block w-12 h-12 bg-gray-200 dark:bg-[var(--color-walory-dark-gold)] rounded mr-3 align-middle"></span>
                     <span v-for="(val, key) in item.data" :key="key" class="mr-2 align-middle">
                       <span class="font-semibold">{{ key }}:</span> {{ val }}
                     </span>
@@ -138,12 +139,12 @@
                     v-model="newComment"
                     type="text"
                     placeholder="Add a comment..."
-                    class="flex-1 border border-gray-300 rounded px-4 py-2 font-roboto text-lg"
+                    class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-4 py-2 font-roboto text-lg bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
                     required
                   />
                   <button
                     type="submit"
-                    class="bg-walory-gold hover:bg-walory-gold-dark text-walory-black font-bold px-6 rounded transition text-lg cursor-pointer border-2 border-transparent hover:border-walory-gold-dark focus:outline-none focus:ring-2 focus:ring-walory-gold-dark"
+                    class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg cursor-pointer border-2 border-transparent hover:border-[var(--color-walory-gold-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)] dark:focus:ring-[var(--color-walory-dark-gold-dark)]"
                     style="transition: background 0.2s, color 0.2s, border 0.2s;"
                     title="Post comment"
                   >
@@ -153,17 +154,17 @@
                 <ul>
                   <li v-for="comment in comments" :key="comment.commentId" class="mb-3 flex items-start gap-2">
                     <div class="flex-1">
-                      <div class="font-bold text-walory-black">
+                      <div class="font-bold text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
                         {{ comment.author.name }}
-                        <span class="text-xs text-gray-500">({{ comment.author.email }})</span>
+                        <span class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)]">({{ comment.author.email }})</span>
                       </div>
-                      <div class="text-gray-700">{{ comment.content }}</div>
-                      <div class="text-xs text-gray-500">{{ formatDate(comment.createdAt) }}</div>
+                      <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)]">{{ comment.content }}</div>
+                      <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)]">{{ formatDate(comment.createdAt) }}</div>
                     </div>
                     <button
                       v-if="comment.author.id === currentUserId"
                       @click="deleteComment(comment.commentId)"
-                      class="text-walory-red font-bold ml-2 rounded-full px-2 py-1 transition cursor-pointer border-2 border-transparent hover:bg-walory-red hover:text-white hover:border-walory-red focus:outline-none focus:ring-2 focus:ring-walory-red"
+                      class="text-[var(--color-walory-red)] font-bold ml-2 rounded-full px-2 py-1 transition cursor-pointer border-2 border-transparent hover:bg-[var(--color-walory-red)] hover:text-white hover:border-[var(--color-walory-red)] focus:outline-none focus:ring-2 focus:ring-[var(--color-walory-red)]"
                       style="transition: background 0.2s, color 0.2s, border 0.2s;"
                       title="Delete"
                     >✕</button>
@@ -178,7 +179,7 @@
 
     <!-- Templates View -->
     <div v-else class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-walory-silver/80 rounded-2xl shadow-lg border border-gray-300 px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
         <div class="flex justify-center gap-8 mb-8">
           <button
             v-for="cat in templateCategories"
@@ -187,43 +188,43 @@
             :class="[
               'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
               templateCategory === cat
-                ? 'bg-walory-gold text-walory-black border-walory-gold-dark shadow'
-                : 'bg-walory-silver text-gray-600 border-transparent hover:bg-walory-gold-light hover:text-walory-black hover:border-walory-gold-dark'
+                ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
+                : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
             ]"
             style="transition: background 0.2s, color 0.2s, border 0.2s;"
           >
             {{ cat }}
           </button>
         </div>
-        <div v-if="templatesLoading" class="text-center text-xl text-gray-500">Loading templates...</div>
-        <div v-else-if="templates.length === 0" class="text-center text-xl text-gray-500">No templates found.</div>
+        <div v-if="templatesLoading" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading templates...</div>
+        <div v-else-if="templates.length === 0" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">No templates found.</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div
             v-for="tpl in templates"
             :key="tpl.id"
-            class="border border-walory-gold rounded-xl p-6 bg-white/60 shadow"
+            class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded-xl p-6 bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] shadow"
           >
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-lg font-bold">{{ tpl.id.slice(0, 8) }}...</h3>
               <span class="text-xs px-3 py-1 rounded-full"
                 :class="{
-                  'bg-walory-gold text-walory-black': tpl.visibility === 0,
-                  'bg-gray-300 text-gray-700': tpl.visibility === 1,
-                  'bg-blue-200 text-blue-900': tpl.visibility === 2
+                  'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': tpl.visibility === 0,
+                  'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': tpl.visibility === 1,
+                  'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-200': tpl.visibility === 2
                 }"
               >
                 {{ visibilityLabel(tpl.visibility) }}
               </span>
             </div>
-            <div class="mb-1 text-gray-700">Category: <span class="font-semibold">{{ tpl.category }}</span></div>
-            <div class="mb-1 text-gray-700">By: <span class="font-semibold">{{ tpl.author.name }}</span> ({{ tpl.author.email }})</div>
+            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)]">Category: <span class="font-semibold">{{ tpl.category }}</span></div>
+            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)]">By: <span class="font-semibold">{{ tpl.author.name }}</span> ({{ tpl.author.email }})</div>
             <div class="mt-2">
               <div class="font-bold mb-1">Fields:</div>
               <ul class="pl-4 list-disc text-sm">
                 <li v-for="(prop, key) in tpl.content.properties" :key="key">
                   <span class="font-semibold">{{ key }}</span>
-                  <span class="text-gray-500">({{ prop.type }})</span>
-                  <span v-if="tpl.content.required && tpl.content.required.includes(key)" class="text-walory-red ml-1">*</span>
+                  <span class="text-gray-500 dark:text-[var(--color-walory-dark-silver)]">({{ prop.type }})</span>
+                  <span v-if="tpl.content.required && tpl.content.required.includes(key)" class="text-[var(--color-walory-red)] ml-1">*</span>
                 </li>
               </ul>
             </div>

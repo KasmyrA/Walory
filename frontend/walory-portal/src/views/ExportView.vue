@@ -1,24 +1,24 @@
 <template>
-  <div class="min-h-screen w-full bg-walory-gold-light font-roboto flex flex-col text-walory-black">
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-walory-gold-dark shadow-sm bg-walory-gold-light/80">
+  <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
+    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
       <h1 class="text-3xl font-bold font-roboto tracking-tight">Export Collections</h1>
-        <span class="text-xl font-roboto">
+      <span class="text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <div class="flex flex-col gap-8 px-10 py-10 max-w-3xl mx-auto w-full">
-      <div class="bg-walory-silver rounded-2xl shadow-lg border border-walory-gold p-8">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8">
         <h2 class="text-2xl font-bold mb-4">Export Options</h2>
         <form @submit.prevent="exportPdf" class="flex flex-col gap-4">
           <div>
             <label class="block font-bold mb-1">Category (optional)</label>
-            <input v-model="category" class="border rounded px-3 py-2 w-full" placeholder="Leave empty to export all categories" />
+            <input v-model="category" class="border rounded px-3 py-2 w-full bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" placeholder="Leave empty to export all categories" />
           </div>
-          <button type="submit" class="bg-walory-gold text-walory-black font-bold px-6 py-2 rounded shadow hover:bg-walory-gold-dark transition">
+          <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
             Export PDF
           </button>
         </form>
-        <div v-if="exporting" class="mt-4 text-walory-gold-dark">Exporting...</div>
+        <div v-if="exporting" class="mt-4 text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">Exporting...</div>
       </div>
     </div>
   </div>

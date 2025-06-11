@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&display=swap');
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html, body, #app {
   height: 100%;
   min-height: 100vh;
@@ -30,6 +32,10 @@ html, body, #app {
   --color-walory-green: #84ce6b;
   --color-walory-yellow: #f5df52;
   --color-walory-black: #000000;
+  --color-walory-dark-gold: #2D3250;
+  --color-walory-dark-gold-dark: #1c1f33;
+  --color-walory-dark-gold-light: #424769;
+  --color-walory-dark-silver: #7077A1;
   --font-roboto: "Roboto", sans-serif; 
 }
 
