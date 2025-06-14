@@ -15,7 +15,7 @@ namespace Application.CQRS.Account
     {
         public class GetAvatarQuery : IRequest<byte[]?>
         {
-           
+            public Guid UserId { get; set; }
         }
         public class GetAvatarHandler : IRequestHandler<GetAvatarQuery, byte[]?>
         {

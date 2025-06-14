@@ -19,6 +19,9 @@ namespace Domain
         public Guid OwnerId { get; set; }
         public User Owner { get; set; }
 
+        public byte[]? Image { get; set; }
+
+
         public Guid WalorTemplateId { get; set; }
         public WalorTemplate WalorTemplate { get; set; }
         public ICollection<WalorInstance> Walors { get; set; } = new List<WalorInstance>();

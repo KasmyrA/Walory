@@ -40,6 +40,15 @@ namespace Walory_Backend.Controllers
 
             return File(avatarBytes, "image/jpeg");
         }
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserAvatar(Guid userId)
+        {
+            var avatarBytes = await _mediator.Send(new GetAvatarQuery { UserId = userId });
+            if (avatarBytes == null || avatarBytes.Length == 0)
+                return NotFound();
+
+            return File(avatarBytes, "image/jpeg");
+        }
     }
 
 }

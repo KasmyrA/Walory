@@ -19,6 +19,7 @@ namespace Domain
 
         public Guid CollectionId { get; set; }
         public Collection Collection { get; set; }
+        public byte[]? Image { get; set; }
     }
 
 }
