@@ -3,6 +3,7 @@ using Application.CQRS.Walor;
 using Cars.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static Application.CQRS.Account.UploadAvatar.UploadAvatarHandler;
 
 namespace Walory_Backend.Controllers
 {
@@ -34,9 +35,9 @@ namespace Walory_Backend.Controllers
         }
         [HttpPost("{id}/image")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Upload(Guid id, [FromForm] IFormFile image)
+        public async Task<IActionResult> Upload(Guid id, [FromForm] UploadAvatarDto dto)
         {
-            var result = await Mediator.Send(new UploadWalorImageCommand { WalorId = id, ImageFile = image });
+            var result = await Mediator.Send(new UploadWalorImageCommand { WalorId = id, ImageFile = dto.Avatar });
             return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
         [HttpGet("{id}/image")]

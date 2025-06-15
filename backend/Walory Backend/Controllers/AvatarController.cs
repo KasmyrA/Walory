@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.CQRS.Chat;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace Walory_Backend.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserAvatar(Guid userId)
         {
-            var avatarBytes = await _mediator.Send(new GetAvatarQuery { UserId = userId });
+            var avatarBytes = await _mediator.Send(new GetPhotoQuery { UserId = userId });
             if (avatarBytes == null || avatarBytes.Length == 0)
                 return NotFound();
 

@@ -4,6 +4,7 @@ using Cars.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Walory_Backend.Security;
+using static Application.CQRS.Account.UploadAvatar.UploadAvatarHandler;
 using static Application.CQRS.LikeAndSubscribe.AddComment;
 using static Application.CQRS.LikeAndSubscribe.AddLike;
 using static Application.CQRS.LikeAndSubscribe.ChecIfLiked;
@@ -77,9 +78,9 @@ namespace Walory_Backend.Controllers
             }
         [HttpPost("{id}/image")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Upload(Guid id, [FromForm] IFormFile image)
+        public async Task<IActionResult> Upload(Guid id, [FromForm] UploadAvatarDto dto)
         {
-            var result = await Mediator.Send(new UploadCollectionImageCommand { CollectionId = id, ImageFile = image });
+            var result = await Mediator.Send(new UploadCollectionImageCommand { CollectionId = id, ImageFile = dto.Avatar });
             return result.isSuccess ? Ok() : BadRequest(result.Error);
         }
 
