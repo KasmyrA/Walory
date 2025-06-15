@@ -18,9 +18,16 @@
             <li
               v-for="friend in friends"
               :key="friend.id"
-              class="flex items-center justify-between border-b border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] py-3"
+              class="flex items-center justify-between border-b border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] py-3 gap-3"
             >
-              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">{{ friend.username }} <span class="text-gray-500 dark:text-[var(--color-walory-silver)] text-sm">({{ friend.email }})</span></span>
+              <img
+                :src="friend.avatarUrl || defaultAvatar(friend)"
+                class="w-10 h-10 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
+                :alt="friend.username"
+              />
+              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] flex-1 truncate">
+                {{ friend.username }} <span class="text-gray-500 dark:text-[var(--color-walory-silver)] text-sm">({{ friend.email }})</span>
+              </span>
               <button
                 @click="removeFriend(friend.id)"
                 class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-4 py-1 rounded transition"
@@ -30,7 +37,7 @@
             </li>
           </ul>
         </div>
-        <!-- Right: Add friend -->
+        <!-- Right: Add friend and Invites -->
         <div class="flex flex-col flex-1 min-w-[320px] max-w-[420px] items-center justify-center">
           <h2 class="text-2xl font-bold mb-6 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Add Friend</h2>
           <form @submit.prevent="sendInvite" class="flex flex-col gap-4 w-full">
@@ -50,6 +57,25 @@
           </form>
           <div v-if="inviteMsg" class="mt-4 text-[var(--color-walory-green)]">{{ inviteMsg }}</div>
           <div v-if="inviteErr" class="mt-4 text-[var(--color-walory-red)]">{{ inviteErr }}</div>
+
+          <!-- Invites Section -->
+          <div v-if="invites.length" class="mt-8 w-full">
+            <h3 class="text-xl font-bold mb-2 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Invites</h3>
+            <ul>
+              <li v-for="invite in invites" :key="invite.referenceId" class="flex items-center justify-between mb-2">
+                <span class="font-roboto text-base">
+                  {{ invite.senderName }}
+                  <span class="text-gray-500 dark:text-[var(--color-walory-silver)]">({{ invite.message }})</span>
+                </span>
+                <button
+                  @click="acceptInvite(invite.referenceId)"
+                  class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-4 py-1 rounded transition text-base dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+                >
+                  Accept
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -59,11 +85,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+type Friend = { id: string, username: string, email: string, avatarUrl?: string | null }
+type Invite = { id: string, referenceId: string, message: string, senderName: string }
+
 const inviteEmail = ref('')
 const inviteMsg = ref('')
 const inviteErr = ref('')
 
-const friends = ref<{ id: string, username: string, email: string }[]>([])
+const friends = ref<Friend[]>([])
+const invites = ref<Invite[]>([])
 
 // Date formatting
 const now = new Date()
@@ -76,6 +106,21 @@ function getDaySuffix(day: number) {
     case 2: return 'nd'
     case 3: return 'rd'
     default: return 'th'
+  }
+}
+
+function defaultAvatar(friend: { username: string }) {
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(friend.username)}`
+}
+
+async function fetchAvatar(userId: string): Promise<string | null> {
+  try {
+    const res = await fetch(`http://localhost:8080/api/Avatar/${userId}`, { credentials: 'include' })
+    if (!res.ok) return null
+    const blob = await res.blob()
+    return URL.createObjectURL(blob)
+  } catch {
+    return null
   }
 }
 
@@ -103,9 +148,60 @@ async function fetchFriends() {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not fetch friends')
-    friends.value = await res.json()
+    const friendsArr = await res.json()
+    // Fetch avatars in parallel
+    const withAvatars: Friend[] = await Promise.all(
+      friendsArr.map(async (f: any) => {
+        const avatarUrl = await fetchAvatar(f.id)
+        return { ...f, avatarUrl }
+      })
+    )
+    friends.value = withAvatars
   } catch {
     friends.value = []
+  }
+}
+
+async function fetchInvites() {
+  try {
+    const res = await fetch('http://localhost:8080/notifcation', { credentials: 'include' })
+    if (!res.ok) throw new Error('Could not fetch notifications')
+    const data = await res.json()
+    const notifArr = Array.isArray(data.value) ? data.value : []
+      invites.value = notifArr
+        .filter((n: any) => typeof n.message === 'string' && n.message.includes('wysłał Ci zaproszenie'))
+        .map((n: any) => ({
+          id: n.id,
+          referenceId: n.referenceId,
+          message: n.message,
+          senderName: n.message.split(' ')[0]
+        }))
+  } catch {
+    invites.value = []
+  }
+}
+
+async function acceptInvite(requestId: string) {
+  try {
+    // Find the invite notification by referenceId
+    const invite = invites.value.find(i => i.referenceId === requestId)
+    // Accept the invite
+    const res = await fetch(`http://localhost:8080/friends/accept/${requestId}`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+    if (!res.ok) throw new Error('Could not accept invite')
+    // Delete the notification using its id (not referenceId)
+    if (invite && invite.id) {
+      await fetch(`http://localhost:8080/notifcation/${invite.id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+    }
+    await fetchFriends()
+    await fetchInvites()
+  } catch (e: any) {
+    alert(e.message || 'Error accepting invite')
   }
 }
 
@@ -123,7 +219,10 @@ async function removeFriend(friendId: string) {
   }
 }
 
-onMounted(fetchFriends)
+onMounted(() => {
+  fetchFriends()
+  fetchInvites()
+})
 </script>
 
 <style scoped>

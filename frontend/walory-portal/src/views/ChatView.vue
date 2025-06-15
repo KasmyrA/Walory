@@ -20,13 +20,18 @@
               :key="friend.id"
               @click="selectFriend(friend)"
               :class="[
-                'flex items-center justify-between py-3 px-2 rounded cursor-pointer transition',
+                'flex items-center justify-between py-3 px-2 rounded cursor-pointer transition gap-2',
                 selectedFriend && selectedFriend.id === friend.id
                   ? 'bg-[var(--color-walory-gold)]/60 font-bold dark:bg-[var(--color-walory-dark-gold)]/60'
                   : 'hover:bg-[var(--color-walory-gold)]/30 dark:hover:bg-[var(--color-walory-dark-gold)]/30'
               ]"
             >
-              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">{{ friend.fullName || friend.email }}</span>
+              <img
+                :src="friend.avatarUrl || defaultAvatar(friend)"
+                class="w-10 h-10 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
+                :alt="friend.fullName || friend.email"
+              />
+              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] truncate">{{ friend.fullName || friend.email }}</span>
             </li>
           </ul>
         </div>
@@ -37,9 +42,16 @@
           </div>
           <div v-else class="flex flex-col h-full">
             <!-- Chat header -->
-            <div class="flex items-center border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] pb-2 mb-2">
-              <span class="text-xl font-bold font-roboto">{{ selectedFriend.fullName || selectedFriend.email }}</span>
-              <span class="ml-2 text-gray-500 dark:text-[var(--color-walory-silver)] text-base">{{ selectedFriend.email }}</span>
+            <div class="flex items-center border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] pb-2 mb-2 gap-4">
+              <img
+                :src="selectedFriend.avatarUrl || defaultAvatar(selectedFriend)"
+                class="w-12 h-12 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
+                :alt="selectedFriend.fullName || selectedFriend.email"
+              />
+              <div>
+                <span class="text-xl font-bold font-roboto">{{ selectedFriend.fullName || selectedFriend.email }}</span>
+                <span class="ml-2 text-gray-500 dark:text-[var(--color-walory-silver)] text-base">{{ selectedFriend.email }}</span>
+              </div>
             </div>
             <!-- Messages -->
             <div ref="messagesEnd" class="flex-1 overflow-y-auto mb-4 px-2" style="scroll-behavior: smooth;">
@@ -94,11 +106,17 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
-// You need to know the current user's id. Let's fetch it once on mount.
-const currentUserId = ref<string>('')
+// Define a Friend type that allows avatarUrl to be string | null | undefined
+type Friend = {
+  id: string
+  email: string
+  fullName?: string
+  avatarUrl?: string | null
+}
 
-const friends = ref<{ id: string, email: string, fullName?: string }[]>([])
-const selectedFriend = ref<{ id: string, email: string, fullName?: string } | null>(null)
+const currentUserId = ref<string>('')
+const friends = ref<Friend[]>([])
+const selectedFriend = ref<Friend | null>(null)
 const messages = ref<{ id: string, content: string, isMine: boolean, timestamp: string }[]>([])
 const newMessage = ref('')
 const sending = ref(false)
@@ -106,7 +124,6 @@ const sendError = ref('')
 const messagesEnd = ref<HTMLElement | null>(null)
 const pollingInterval = ref<number | null>(null)
 
-// Date formatting
 const now = new Date()
 const formattedDate = `${now.getDate()}${getDaySuffix(now.getDate())} ${now.toLocaleString('default', { month: 'long' })}, ${now.getFullYear()}`
 
@@ -127,7 +144,24 @@ function formatTime(timestamp: string) {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
-// Fetch current user id from backend (assuming you have such endpoint)
+function defaultAvatar(friend: { fullName?: string, email: string }) {
+  // fallback avatar
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(friend.fullName || friend.email)}`
+}
+
+// Fetch avatar for a userId
+async function fetchAvatar(userId: string): Promise<string | null> {
+  try {
+    const res = await fetch(`http://localhost:8080/api/Avatar/${userId}`, { credentials: 'include' })
+    if (!res.ok) return null
+    const blob = await res.blob()
+    return URL.createObjectURL(blob)
+  } catch {
+    return null
+  }
+}
+
+// Fetch current user id from backend
 async function fetchCurrentUserId() {
   try {
     const res = await fetch('http://localhost:8080/api/chat/getID', {
@@ -145,13 +179,27 @@ async function fetchCurrentUserId() {
   }
 }
 
+// Fetch friends and their avatars
 async function fetchFriends() {
   try {
     const res = await fetch('http://localhost:8080/friends/list', {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not fetch friends')
-    friends.value = await res.json()
+    const friendsArr = await res.json()
+    // Fetch avatars in parallel
+    const withAvatars: Friend[] = await Promise.all(
+      friendsArr.map(async (f: any) => {
+        const avatarUrl = await fetchAvatar(f.id)
+        return { ...f, avatarUrl }
+      })
+    )
+    friends.value = withAvatars
+    // If selectedFriend is set, update its avatarUrl as well
+    if (selectedFriend.value) {
+      const updated = withAvatars.find(f => f.id === selectedFriend.value?.id)
+      if (updated) selectedFriend.value.avatarUrl = updated.avatarUrl
+    }
   } catch {
     friends.value = []
   }
@@ -173,9 +221,13 @@ function stopPolling() {
   }
 }
 
-// Update selectFriend to start polling
-async function selectFriend(friend: { id: string, email: string, fullName?: string }) {
-  selectedFriend.value = friend
+// Update selectFriend to start polling and fetch avatar
+async function selectFriend(friend: Friend) {
+  // Fetch avatar if not already loaded
+  if (!friend.avatarUrl) {
+    friend.avatarUrl = await fetchAvatar(friend.id)
+  }
+  selectedFriend.value = { ...friend }
   await fetchMessages(friend.id)
   await markAsRead(friend.id)
   await removeMessageNotifications(friend.id)
@@ -191,7 +243,6 @@ async function fetchMessages(friendId: string) {
     })
     if (!res.ok) throw new Error('Could not fetch messages')
     const data = await res.json()
-    // Map the API response to the format expected by the template
     messages.value = data.map((msg: any) => ({
       id: msg.id,
       content: msg.content,
@@ -229,6 +280,7 @@ async function sendMessage() {
   }
 }
 
+// New endpoints for mark-as-read and remove-message-notifications
 async function markAsRead(friendId: string) {
   try {
     await fetch(`http://localhost:8080/api/chat/mark-as-read/${friendId}`, {
@@ -272,21 +324,3 @@ watch(selectedFriend, (newVal) => {
   if (!newVal) stopPolling()
 })
 </script>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-.font-roboto {
-  font-family: var(--font-roboto), "Roboto", sans-serif;
-}
-
-/* Theme color classes (add to tailwind.config.js for full support) */
-.bg-walory-gold-light { background-color: var(--color-walory-gold-light); }
-.bg-walory-gold { background-color: var(--color-walory-gold); }
-.bg-walory-gold-dark { background-color: var(--color-walory-gold-dark); }
-.bg-walory-silver { background-color: var(--color-walory-silver); }
-.text-walory-gold-dark { color: var(--color-walory-gold-dark); }
-.text-walory-black { color: var(--color-walory-black); }
-.text-walory-green { color: var(--color-walory-green); }
-.text-walory-red { color: var(--color-walory-red); }
-</style>

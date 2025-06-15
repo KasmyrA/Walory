@@ -162,7 +162,7 @@
       </div>
 
       <!-- Modal for create/edit collection -->
-      <div
+            <div
         v-if="showCollectionModal"
         class="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto backdrop-blur-sm font-roboto"
         style="background: transparent;"
@@ -202,6 +202,45 @@
               <label class="block font-bold mb-1 font-roboto">Description</label>
               <textarea v-model="collectionForm.description" class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" required />
             </div>
+            <!-- Thumbnail upload only in edit mode -->
+            <div v-if="editingCollection" class="md:col-span-2 flex flex-col gap-2">
+              <label class="block font-bold mb-1 font-roboto">Thumbnail Image</label>
+              <div class="flex items-center gap-4">
+                <img
+                  v-if="editModalThumbnailUrl"
+                  :src="editModalThumbnailUrl"
+                  alt="Collection thumbnail"
+                  class="w-24 h-24 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
+                />
+                <div v-else class="w-24 h-24 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                  No Image
+                </div>
+                <form @submit.prevent="uploadEditModalThumbnail(collectionForm.collectionId)">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref="editModalFileInput"
+                    class="hidden"
+                    @change="onEditModalThumbnailFileChange"
+                  />
+                  <button
+                    type="button"
+                    @click="triggerEditModalFileInput"
+                    class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition"
+                  >
+                    Choose Image
+                  </button>
+                  <span class="text-sm text-gray-600 dark:text-[var(--color-walory-silver)]">{{ editModalThumbnailFileName }}</span>
+                  <button
+                    v-if="editModalThumbnailFile"
+                    type="submit"
+                    class="bg-blue-200 dark:bg-blue-900 text-blue-900 dark:text-blue-200 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 dark:hover:bg-blue-800 transition"
+                  >
+                    Upload
+                  </button>
+                </form>
+              </div>
+            </div>
             <div class="flex gap-2 items-end md:col-span-2 font-roboto">
               <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
                 {{ editingCollection ? 'Update' : 'Create' }}
@@ -221,6 +260,17 @@
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 font-roboto">
           <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col justify-between font-roboto">
             <div>
+              <div class="flex justify-center mb-4">
+                <img
+                  v-if="col.thumbnailUrl"
+                  :src="col.thumbnailUrl"
+                  alt="Collection thumbnail"
+                  class="w-32 h-32 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
+                />
+                <div v-else class="w-32 h-32 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                  No Image
+                </div>
+              </div>
               <div class="flex items-center justify-between mb-2">
                 <div class="font-bold text-xl font-roboto">{{ col.title }}</div>
                 <span class="text-xs px-3 py-1 rounded-full font-roboto"
@@ -263,19 +313,83 @@
           </div>
           <form @submit.prevent="submitItemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 font-roboto">
             <div v-for="field in itemFields" :key="field.name" class="font-roboto">
-              <label class="block font-bold mb-1 font-roboto">{{ field.name }} <span v-if="field.required" class="text-[var(--color-walory-red)]">*</span></label>
+              <label class="block font-bold mb-1 font-roboto">
+                {{ field.name }}
+                <span v-if="field.required" class="text-[var(--color-walory-red)]">*</span>
+              </label>
               <input
+                v-if="field.type === 'date'"
                 v-model="itemForm[field.name]"
-                :type="field.type === 'number' ? 'number' : 'text'"
+                type="date"
                 :required="field.required"
                 class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
               />
+              <input
+                v-else-if="field.type === 'number'"
+                v-model="itemForm[field.name]"
+                type="number"
+                :required="field.required"
+                class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+              />
+              <input
+                v-else-if="field.type === 'boolean'"
+                v-model="itemForm[field.name]"
+                type="checkbox"
+                :required="field.required"
+                class="mr-2"
+              />
+              <input
+                v-else
+                v-model="itemForm[field.name]"
+                type="text"
+                :required="field.required"
+                class="border rounded px-3 py-2 w-full font-roboto bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+              />
+            </div>
+            <!-- Item image upload and preview when editing an item -->
+            <div v-if="editingItemId" class="md:col-span-2 flex flex-col gap-2 mb-4">
+              <label class="block font-bold mb-1 font-roboto">Item Image</label>
+              <div class="flex items-center gap-4">
+                <img
+                  v-if="itemModalThumbnailUrl && itemModalImageItemId === editingItemId"
+                  :src="itemModalThumbnailUrl"
+                  alt="Item thumbnail"
+                  class="w-24 h-24 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
+                />
+                <div v-else class="w-24 h-24 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                  No Image
+                </div>
+                <form @submit.prevent="uploadItemModalThumbnail(editingItemId)">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref="itemModalFileInput"
+                    class="hidden"
+                    @change="onItemModalThumbnailFileChange"
+                  />
+                  <button
+                    type="button"
+                    @click="triggerItemModalFileInput"
+                    class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition"
+                  >
+                    Choose Image
+                  </button>
+                  <span class="text-sm text-gray-600 dark:text-[var(--color-walory-silver)]">{{ itemModalThumbnailFileName }}</span>
+                  <button
+                    v-if="itemModalThumbnailFile"
+                    type="submit"
+                    class="bg-blue-200 dark:bg-blue-900 text-blue-900 dark:text-blue-200 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 dark:hover:bg-blue-800 transition"
+                  >
+                    Upload
+                  </button>
+                </form>
+              </div>
             </div>
             <div class="md:col-span-2 flex gap-2 mt-2 font-roboto">
               <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
                 {{ editingItemId ? 'Update' : 'Add Item' }}
               </button>
-              <button v-if="editingItemId" @click="() => { editingItemId = null; resetItemForm(); }" type="button" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded font-roboto">Cancel Edit</button>
+              <button v-if="editingItemId" @click="() => { editingItemId = null; resetItemForm(); itemModalThumbnailUrl = null; itemModalImageItemId = null; }" type="button" class="bg-gray-300 dark:bg-[var(--color-walory-dark-silver)] text-black dark:text-[var(--color-walory-gold-light)] px-4 py-2 rounded font-roboto">Cancel Edit</button>
             </div>
           </form>
           <div v-if="!itemsModalCollection.walorInstance || itemsModalCollection.walorInstance.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No items yet.</div>
@@ -303,7 +417,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 
 // Date formatting
 const now = new Date()
@@ -361,6 +475,9 @@ function openEditCollectionModal(col: any) {
   Object.assign(collectionForm, col)
   editingCollection.value = true
   showCollectionModal.value = true
+  fetchEditModalThumbnail(col.collectionId)
+  editModalThumbnailFile.value = null
+  editModalThumbnailFileName.value = ''
 }
 function closeCollectionModal() {
   showCollectionModal.value = false
@@ -578,7 +695,7 @@ async function createCollection() {
 
   resetCollectionForm()
   showCollectionModal.value = false
-  fetchCollections()
+  await fetchCollectionsWithThumbnails()
 }
 
 function startEdit(col: any) {
@@ -599,7 +716,7 @@ async function updateCollection() {
   resetCollectionForm()
   editingCollection.value = false
   showCollectionModal.value = false
-  fetchCollections()
+  await fetchCollectionsWithThumbnails()
 }
 async function deleteCollection(id: string) {
   await fetch(`http://localhost:8080/collection/${id}`, {
@@ -629,6 +746,64 @@ const itemFields = ref<{ name: string; type: string; required: boolean; format?:
 const itemForm = reactive<{ [key: string]: any }>({})
 const editingItemId = ref<string | null>(null)
 
+// --- Item image upload state ---
+const itemModalFileInput = ref<HTMLInputElement | null>(null)
+const itemModalThumbnailFile = ref<File | null>(null)
+const itemModalThumbnailFileName = ref('')
+const itemModalThumbnailUrl = ref<string | null>(null)
+const itemModalImageItemId = ref<string | null>(null)
+
+function triggerItemModalFileInput() {
+  if (itemModalFileInput.value) itemModalFileInput.value.click()
+}
+function onItemModalThumbnailFileChange(e: Event) {
+  const files = (e.target as HTMLInputElement).files
+  if (files && files[0]) {
+    itemModalThumbnailFile.value = files[0]
+    itemModalThumbnailFileName.value = files[0].name
+  } else {
+    itemModalThumbnailFile.value = null
+    itemModalThumbnailFileName.value = ''
+  }
+}
+async function uploadItemModalThumbnail(itemId: string) {
+  const file = itemModalThumbnailFile.value
+  if (!file) return
+  const formData = new FormData()
+  formData.append('Avatar', file)
+  try {
+    await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData
+    })
+    itemModalThumbnailFile.value = null
+    itemModalThumbnailFileName.value = ''
+    await fetchItemModalThumbnail(itemId)
+    await fetchCollections()
+  } catch (e) {
+    alert('Failed to upload item image')
+  }
+}
+async function fetchItemModalThumbnail(itemId: string) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      const blob = await res.blob()
+      itemModalThumbnailUrl.value = URL.createObjectURL(blob)
+      itemModalImageItemId.value = itemId
+    } else {
+      itemModalThumbnailUrl.value = null
+      itemModalImageItemId.value = null
+    }
+  } catch {
+    itemModalThumbnailUrl.value = null
+    itemModalImageItemId.value = null
+  }
+}
+
 function openItemsModal(collection: any) {
   itemsModalCollection.value = collection
   showItemsModal.value = true
@@ -647,6 +822,8 @@ function closeItemsModal() {
   itemsModalCollection.value = null
   editingItemId.value = null
   resetItemForm()
+  itemModalThumbnailUrl.value = null
+  itemModalImageItemId.value = null
 }
 
 function resetItemForm() {
@@ -661,39 +838,57 @@ function startEditItem(item: any) {
   } catch {
     itemFields.value.forEach(f => itemForm[f.name] = '')
   }
+  fetchItemModalThumbnail(item.id)
 }
 
 async function submitItemForm() {
   const data: Record<string, any> = {}
-  itemFields.value.forEach(f => data[f.name] = itemForm[f.name])
+  let invalidDate = false
+  itemFields.value.forEach(f => {
+    let value = itemForm[f.name]
+    if (f.type === 'date' && value) {
+      // Accept only YYYY-MM-DD
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        invalidDate = true
+      }
+    }
+    data[f.name] = value
+  })
+  if (invalidDate) {
+    alert('Please enter the date in YYYY-MM-DD format.')
+    return
+  }
   if (editingItemId.value) {
-    // Update
+    const payload = {
+      walorInstanceId: editingItemId.value,
+      data: JSON.stringify(data)
+    }
+    console.log('PUT payload:', payload)
     await fetch('http://localhost:8080/api/WalorInstances', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({
-        walorInstanceId: editingItemId.value,
-        data: JSON.stringify(data)
-      })
+      body: JSON.stringify(payload)
     })
   } else {
-    // Create
+    const payload = {
+      collectionId: itemsModalCollection.value.collectionId,
+      data: JSON.stringify(data)
+    }
+    console.log('POST payload:', payload)
     await fetch('http://localhost:8080/api/WalorInstances', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({
-        collectionId: itemsModalCollection.value.collectionId,
-        data: JSON.stringify(data)
-      })
+      body: JSON.stringify(payload)
     })
   }
   await fetchCollections()
-  // Refresh collection in modal
   itemsModalCollection.value = collections.value.find(c => c.collectionId === itemsModalCollection.value.collectionId)
   resetItemForm()
   editingItemId.value = null
+  itemModalThumbnailUrl.value = null
+  itemModalImageItemId.value = null
 }
 
 async function deleteItem(id: string) {
@@ -703,6 +898,8 @@ async function deleteItem(id: string) {
   })
   await fetchCollections()
   itemsModalCollection.value = collections.value.find(c => c.collectionId === itemsModalCollection.value.collectionId)
+  itemModalThumbnailUrl.value = null
+  itemModalImageItemId.value = null
 }
 
 const editTemplateFields = ref<{ name: string; type: string; required: boolean; format?: string }[]>([])
@@ -767,6 +964,82 @@ async function submitEditTemplateForm() {
   closeEditTemplateModal()
 }
 
+const editModalFileInput = ref<HTMLInputElement | null>(null)
+const editModalThumbnailFile = ref<File | null>(null)
+const editModalThumbnailFileName = ref('')
+const editModalThumbnailUrl = ref<string | null>(null)
+
+function triggerEditModalFileInput() {
+  if (editModalFileInput.value) editModalFileInput.value.click()
+}
+function onEditModalThumbnailFileChange(e: Event) {
+  const files = (e.target as HTMLInputElement).files
+  if (files && files[0]) {
+    editModalThumbnailFile.value = files[0]
+    editModalThumbnailFileName.value = files[0].name
+  } else {
+    editModalThumbnailFile.value = null
+    editModalThumbnailFileName.value = ''
+  }
+}
+async function uploadEditModalThumbnail(collectionId: string) {
+  const file = editModalThumbnailFile.value
+  if (!file) return
+  const formData = new FormData()
+  formData.append('Avatar', file)
+  try {
+    await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData
+    })
+    editModalThumbnailFile.value = null
+    editModalThumbnailFileName.value = ''
+    await fetchEditModalThumbnail(collectionId)
+    await fetchCollections() // update list thumbnails if needed
+  } catch (e) {
+    alert('Failed to upload image')
+  }
+}
+async function fetchEditModalThumbnail(collectionId: string) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      const blob = await res.blob()
+      editModalThumbnailUrl.value = URL.createObjectURL(blob)
+    } else {
+      editModalThumbnailUrl.value = null
+    }
+  } catch {
+    editModalThumbnailUrl.value = null
+  }
+}
+
+// --- Thumbnails for collection list ---
+async function fetchCollectionThumbnail(collectionId: string) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const col = collections.value.find((c: any) => c.collectionId === collectionId)
+      if (col) col.thumbnailUrl = url
+    }
+  } catch {}
+}
+async function fetchCollectionsWithThumbnails() {
+  const res = await fetch('http://localhost:8080/api/Browse/collections/private', { credentials: 'include' })
+  collections.value = await res.json()
+  await nextTick()
+  for (const col of collections.value) {
+    await fetchCollectionThumbnail(col.collectionId)
+  }
+}
+
 // --- Helpers ---
 function visibilityLabel(val: number) {
   if (val === 0) return 'Public'
@@ -785,7 +1058,7 @@ function generateGUID() {
 }
 
 onMounted(() => {
-  fetchCollections()
+  fetchCollectionsWithThumbnails()
   fetchTemplates()
 })
 </script>

@@ -66,6 +66,19 @@
               class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col cursor-pointer hover:shadow-lg transition"
               @click="openCollection(col)"
             >
+              <!-- Collection thumbnail -->
+              <div class="flex justify-center mb-3">
+                <img
+                  v-if="col.thumbnailUrl"
+                  :src="col.thumbnailUrl"
+                  alt="Collection thumbnail"
+                  class="w-24 h-24 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] cursor-zoom-in"
+                  @click.stop="enlargeImage(col.thumbnailUrl)"
+                />
+                <div v-else class="w-24 h-24 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                  No Image
+                </div>
+              </div>
               <div class="flex items-center justify-between mb-2">
                 <h2 class="text-xl font-bold font-roboto">{{ col.title }}</h2>
                 <span class="text-xs px-3 py-1 rounded-full"
@@ -87,6 +100,19 @@
           <div v-else class="relative">
             <button @click="selectedCollection = null" class="absolute top-0 right-0 mt-2 mr-2 bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] px-4 py-1 rounded-full font-bold shadow dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]">Back</button>
             <div class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 max-w-2xl mx-auto">
+              <!-- Collection thumbnail -->
+              <div class="flex justify-center mb-4">
+                <img
+                  v-if="selectedCollection.thumbnailUrl"
+                  :src="selectedCollection.thumbnailUrl"
+                  alt="Collection thumbnail"
+                  class="w-32 h-32 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] cursor-zoom-in"
+                  @click="enlargeImage(selectedCollection.thumbnailUrl)"
+                />
+                <div v-else class="w-32 h-32 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                  No Image
+                </div>
+              </div>
               <div class="flex items-center justify-between mb-2">
                 <h2 class="text-2xl font-bold font-roboto">{{ selectedCollection.title }}</h2>
                 <span class="text-xs px-3 py-1 rounded-full"
@@ -123,8 +149,18 @@
               <div class="mt-6">
                 <div class="font-bold mb-2">Items:</div>
                 <ul class="pl-4 list-disc">
-                  <li v-for="item in selectedCollection.walorInstance" :key="item.id" class="mb-2">
-                    <span class="inline-block w-12 h-12 bg-gray-200 dark:bg-[var(--color-walory-dark-gold)] rounded mr-3 align-middle"></span>
+                  <li v-for="item in selectedCollection.walorInstance" :key="item.id" class="mb-2 flex items-center">
+                    <!-- Item image -->
+                    <span class="inline-block w-12 h-12 mr-3 align-middle">
+                      <img
+                        v-if="itemImages[item.id]"
+                        :src="itemImages[item.id]"
+                        alt="Item image"
+                        class="w-12 h-12 object-cover rounded border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] cursor-zoom-in"
+                        @click.stop="enlargeImage(itemImages[item.id])"
+                      />
+                      <span v-else class="w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold)] rounded text-gray-400">No Image</span>
+                    </span>
                     <span v-for="(val, key) in item.data" :key="key" class="mr-2 align-middle">
                       <span class="font-semibold">{{ key }}:</span> {{ val }}
                     </span>
@@ -233,11 +269,28 @@
       </div>
     </div>
     <!-- End Templates View -->
+
+    <!-- Enlarged Image Modal -->
+    <div
+      v-if="enlargedImageUrl"
+      class="fixed inset-0 z-50 flex items-center justify-center"
+      style="background: rgba(0,0,0,0.01); backdrop-filter: blur(2px);"
+      @click.self="closeEnlargedImage"
+    >
+      <button
+        @click="closeEnlargedImage"
+        class="absolute top-8 right-8 bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] rounded-full px-4 py-2 font-bold shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition text-2xl z-60"
+        style="border: none;"
+      >✕</button>
+      <div class="relative">
+        <img :src="enlargedImageUrl" class="max-h-[80vh] max-w-[90vw] rounded-xl shadow-2xl border-4 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 
 const filters = ['Public', 'Friends', 'Private']
 const filter = ref('Public')
@@ -250,6 +303,10 @@ const newComment = ref('')
 const likesCount = ref(0)
 const isLiked = ref(false)
 const currentUserId = ref('')
+
+// For thumbnails and item images
+const collectionThumbnails = ref<{ [id: string]: string }>({})
+const itemImages = ref<{ [id: string]: string }>({})
 
 // View mode: 'collections' or 'templates'
 const viewMode = ref<'collections' | 'templates'>('collections')
@@ -318,6 +375,8 @@ function openCollection(col: any) {
   fetchComments(col.collectionId)
   fetchLikes(col.collectionId)
   checkIfLiked(col.collectionId)
+  fetchCollectionThumbnail(col.collectionId)
+  fetchAllItemImages(col)
 }
 
 async function fetchCollections() {
@@ -330,10 +389,58 @@ async function fetchCollections() {
     const res = await fetch(url, { credentials: 'include' })
     if (!res.ok) throw new Error('Could not fetch collections')
     collections.value = await res.json()
+    await nextTick()
+    // Fetch thumbnails for all collections
+    for (const col of collections.value) {
+      fetchCollectionThumbnail(col.collectionId)
+    }
   } catch {
     collections.value = []
   } finally {
     loading.value = false
+  }
+}
+
+async function fetchCollectionThumbnail(collectionId: string) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      collectionThumbnails.value[collectionId] = url
+      // Attach to collection object for template
+      const col = collections.value.find((c: any) => c.collectionId === collectionId)
+      if (col) col.thumbnailUrl = url
+      if (selectedCollection.value && selectedCollection.value.collectionId === collectionId) {
+        selectedCollection.value.thumbnailUrl = url
+      }
+    }
+  } catch {}
+}
+
+async function fetchAllItemImages(col: any) {
+  if (!col || !col.walorInstance) return
+  for (const item of col.walorInstance) {
+    await fetchItemImage(item.id)
+  }
+}
+
+async function fetchItemImage(itemId: string) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      itemImages.value[itemId] = url
+    } else {
+      itemImages.value[itemId] = ''
+    }
+  } catch {
+    itemImages.value[itemId] = ''
   }
 }
 
@@ -452,6 +559,17 @@ watch(selectedCollection, (col) => {
     fetchComments(col.collectionId)
     fetchLikes(col.collectionId)
     checkIfLiked(col.collectionId)
+    fetchCollectionThumbnail(col.collectionId)
+    fetchAllItemImages(col)
   }
 })
+
+const enlargedImageUrl = ref<string | null>(null)
+
+function enlargeImage(url: string) {
+  enlargedImageUrl.value = url
+}
+function closeEnlargedImage() {
+  enlargedImageUrl.value = null
+}
 </script>

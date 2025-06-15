@@ -44,7 +44,7 @@ namespace Walory_Backend.Security
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var confirmationLink = $"localhost:5173/confirm-email?userId={user.Id}&code={user.EmailConfirmationCode}";
+            var confirmationLink = $"{Request.Scheme}://localhost:5173/confirm-email?userId={user.Id}&code={user.EmailConfirmationCode}";
 
             await _emailService.SendEmailAsync(dto.Email, "Confirm your email", confirmationLink);
 
@@ -112,7 +112,7 @@ namespace Walory_Backend.Security
 
             await _userManager.UpdateAsync(user);
 
-            var resetLink = $"{Request.Scheme}://{Request.Host}/auth/reset-password?userId={user.Id}&code={user.PasswordResetCode}";
+            var resetLink = $"{Request.Scheme}://localhost:5173/auth/reset-password?userId={user.Id}&code={user.PasswordResetCode}";
 
             await _emailService.SendEmailAsync(email, "Reset Password", resetLink);
 
@@ -170,7 +170,7 @@ namespace Walory_Backend.Security
             user.PendingNewEmail = newEmail;
             await _userManager.UpdateAsync(user);
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host}/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}";
+            var confirmationLink = $"{Request.Scheme}://localhost:5173/auth/confirm-email-change?userId={user.Id}&token={user.EmailChangeCode}";
 
             await _emailService.SendEmailAsync(newEmail, "Confirm email change", confirmationLink);
             return Ok("Link sent");

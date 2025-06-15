@@ -227,8 +227,24 @@ const handleRegister = async () => {
   }
 }
 
-const forgotPassword = () => {
-  alert('Forgot password clicked!')
-  // TODO: Implement forgot password logic
+const forgotPassword = async () => {
+  const userEmail = prompt('Enter your email to reset your password:')
+  if (!userEmail) return
+  console.log('Forgot password payload:', JSON.stringify(userEmail))
+  try {
+    const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userEmail)
+    })
+    if (!response.ok) {
+      const msg = await response.text()
+      alert(msg || 'Failed to send reset email.')
+      return
+    }
+    alert('If the email exists, a reset link has been sent.')
+  } catch (err) {
+    alert('Failed to send reset email.')
+  }
 }
 </script>

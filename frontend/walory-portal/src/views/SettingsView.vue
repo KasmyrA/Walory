@@ -72,6 +72,27 @@
             <div v-if="usernameMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ usernameMsg }}</div>
             <div v-if="usernameErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ usernameErr }}</div>
           </div>
+          <!-- Change email -->
+          <div class="w-full mb-8">
+            <label class="block text-lg mb-2 font-bold" for="email-input">Change email</label>
+            <div class="flex gap-2">
+              <input
+                id="email-input"
+                v-model="newEmail"
+                type="email"
+                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+                placeholder="New email"
+              />
+              <button
+                @click="requestEmailChange"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+              >
+                Request Change
+              </button>
+            </div>
+            <div v-if="emailMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ emailMsg }}</div>
+            <div v-if="emailErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ emailErr }}</div>
+          </div>
           <!-- Description -->
           <div class="w-full mb-8">
             <label class="block text-lg mb-2 font-bold" for="desc-input">Description</label>
@@ -268,6 +289,33 @@ async function deleteAccount() {
     }, 2000)
   } catch (e: any) {
     deleteErr.value = e.message || 'Error deleting account'
+  }
+}
+
+const newEmail = ref('')
+const emailMsg = ref('')
+const emailErr = ref('')
+
+async function requestEmailChange() {
+  emailMsg.value = ''
+  emailErr.value = ''
+  if (!newEmail.value) {
+    emailErr.value = 'Please enter a new email.'
+    return
+  }
+  try {
+    console.log('Request email change payload:', JSON.stringify(newEmail.value))
+    const res = await fetch('http://localhost:8080/api/auth/request-email-change', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(newEmail.value)
+    })
+    if (!res.ok) throw new Error(await res.text() || 'Could not request email change')
+    emailMsg.value = 'If the email is valid, a confirmation link has been sent.'
+    newEmail.value = ''
+  } catch (e: any) {
+    emailErr.value = e.message || 'Error requesting email change'
   }
 }
 

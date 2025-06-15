@@ -2,10 +2,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 
-// Persist dark mode preference in localStorage
 const darkMode = ref(localStorage.getItem('darkMode') === 'true')
 
-// Watch for changes and toggle the 'dark' class on <html>
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle('dark', !!val)
   localStorage.setItem('darkMode', val ? 'true' : 'false')
@@ -14,7 +12,6 @@ watch(darkMode, (val) => {
 const router = useRouter()
 const route = useRoute()
 
-// Avatar logic for sidebar
 const avatarUrl = ref<string | null>(null)
 const defaultAvatar = new URL('../assets/no-profile-picture.png', import.meta.url).href
 const sidebarUsername = ref('')
@@ -26,7 +23,7 @@ async function fetchSidebarAvatar() {
     })
     if (!response.ok) throw new Error()
     const blob = await response.blob()
-    // If the blob is empty, treat as no avatar
+
     if (blob.size === 0) {
       avatarUrl.value = defaultAvatar
     } else {
@@ -57,13 +54,12 @@ onMounted(() => {
 async function logout() {
   await fetch('http://localhost:8080/api/auth/logout', {
     method: 'POST',
-    credentials: 'include', // Important: send cookies
+    credentials: 'include',
   })
   localStorage.removeItem('authToken')
   router.push({ name: 'Login' })
 }
 
-// Sidebar links data
 const links = [
   { to: '/dashboard', icon: 'home', label: 'Dashboard' },
   { to: '/collection', icon: 'map', label: 'My collection' },
