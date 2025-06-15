@@ -16,6 +16,17 @@ services:
     depends_on:
       - db
       
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend/walory-portal
+      dockerfile: Dockerfile
+    image: walory.azurecr.io/walory-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+      
   db:
     container_name: postgreSQL
     image: postgres:15
