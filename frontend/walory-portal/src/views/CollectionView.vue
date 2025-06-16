@@ -1,17 +1,17 @@
 <template>
   <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80 font-roboto">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">My Collection</h1>
-      <span class="text-xl font-roboto">
+    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 pt-6 md:pt-12 pb-4 md:pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80 font-roboto">
+      <h1 class="text-2xl md:text-3xl font-bold font-roboto tracking-tight mb-2 md:mb-0">My Collection</h1>
+      <span class="text-base md:text-xl font-roboto">
         Today is <span class="font-bold font-roboto">{{ formattedDate }}</span>
       </span>
     </div>
-    <div class="flex flex-col gap-12 px-10 py-10 max-w-6xl mx-auto w-full font-roboto">
+    <div class="flex flex-col gap-8 md:gap-12 px-2 md:px-10 py-6 md:py-10 max-w-6xl mx-auto w-full font-roboto">
       <!-- Templates Management -->
-      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 mb-8 font-roboto">
-        <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Templates</h2>
-        <button @click="openTemplateModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 md:p-8 mb-8 font-roboto">
+        <h2 class="text-xl md:text-2xl font-bold mb-4 p-2 font-roboto">Templates</h2>
+        <button @click="openTemplateModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-4 md:px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
           Create Template
         </button>
         <!-- Modal for template creation -->
@@ -124,12 +124,12 @@
           </div>
         </div>
         <div v-if="templates.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No templates yet.</div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6 font-roboto">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 font-roboto">
           <div v-for="tpl in templates" :key="tpl.templateId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <div class="font-bold text-lg font-roboto">{{ tpl.category }}</div>
-                <span class="text-xs px-3 py-1 rounded-full font-roboto"
+                <div class="font-bold text-base md:text-lg font-roboto">{{ tpl.category }}</div>
+                <span class="text-xs px-2 md:px-3 py-1 rounded-full font-roboto whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
                   :class="{
                     'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': tpl.visibility === 0,
                     'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': tpl.visibility === 1,
@@ -251,29 +251,29 @@
         </div>
       </div>
 
-      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8 mb-8 font-roboto">
-        <h2 class="text-2xl font-bold mb-4 p-4 font-roboto">Your Collections</h2>
-        <button @click="openCollectionModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 md:p-8 mb-8 font-roboto">
+        <h2 class="text-xl md:text-2xl font-bold mb-4 p-2 font-roboto">Your Collections</h2>
+        <button @click="openCollectionModal" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold font-roboto px-4 md:px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition mb-4">
           Create Collection
         </button>
         <div v-if="collections.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)] font-roboto">No collections yet.</div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 font-roboto">
-          <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col justify-between font-roboto">
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 font-roboto">
+          <div v-for="col in collections" :key="col.collectionId" class="bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 flex flex-col justify-between font-roboto">
             <div>
               <div class="flex justify-center mb-4">
                 <img
                   v-if="col.thumbnailUrl"
                   :src="col.thumbnailUrl"
                   alt="Collection thumbnail"
-                  class="w-32 h-32 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
+                  class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
                 />
-                <div v-else class="w-32 h-32 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                <div v-else class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
                   No Image
                 </div>
               </div>
-              <div class="flex items-center justify-between mb-2">
-                <div class="font-bold text-xl font-roboto">{{ col.title }}</div>
-                <span class="text-xs px-3 py-1 rounded-full font-roboto"
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="font-bold text-base md:text-xl font-roboto break-words">{{ col.title }}</div>
+                <span class="text-xs px-2 md:px-3 py-1 rounded-full font-roboto whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
                   :class="{
                     'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': col.visibility === 0,
                     'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': col.visibility === 1,
@@ -283,13 +283,13 @@
                   {{ visibilityLabel(col.visibility) }}
                 </span>
               </div>
-              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">{{ col.description }}</div>
-              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Category: {{ col.category }}</div>
-              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Template: {{ col.walorTemplateId || 'None' }}</div>
+              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto break-words">{{ col.description }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto break-words">Category: {{ col.category }}</div>
+              <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto break-words">Template: {{ col.walorTemplateId || 'None' }}</div>
               <div class="text-xs text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-1 font-roboto">Items: {{ col.walorInstance?.length ?? 0 }}</div>
             </div>
-            <div class="flex gap-2 mt-4 font-roboto">
-              <button @click="openEditCollectionModal(col)" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">Edit</button>
+            <div class="flex flex-wrap gap-2 mt-4 font-roboto">
+              <button @click="openEditCollectionModal(col)" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black] dark:text-[var(--color-walory-silver)] px-3 py-1 rounded font-bold font-roboto shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">Edit</button>
               <button @click="deleteCollection(col.collectionId)" class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-3 py-1 rounded font-roboto shadow transition">Delete</button>
               <button @click="openItemsModal(col)" class="bg-blue-200 dark:bg-blue-900 text-blue-900 dark:text-blue-200 px-3 py-1 rounded font-bold font-roboto shadow hover:bg-blue-300 dark:hover:bg-blue-800 transition">Manage Items</button>
             </div>

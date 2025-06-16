@@ -1,14 +1,16 @@
 <template>
   <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">Export Collections</h1>
-      <span class="text-xl font-roboto">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 pt-6 md:pt-12 pb-4 md:pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
+      <h1 class="text-2xl md:text-3xl font-bold font-roboto tracking-tight mb-2 md:mb-0">Export Collections</h1>
+      <span class="text-base md:text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
-    <div class="flex flex-col gap-8 px-10 py-10 max-w-3xl mx-auto w-full">
-      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-8">
-        <h2 class="text-2xl font-bold mb-4">Export Options</h2>
+    <!-- Export Options Card -->
+    <div class="flex flex-1 items-center justify-center pb-10 md:pb-16">
+      <div class="bg-[var(--color-walory-silver)] dark:bg-[var(--color-walory-dark-silver)] rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-4 sm:px-8 md:px-12 py-8 md:py-14 w-full max-w-2xl">
+        <h2 class="text-xl md:text-2xl font-bold mb-4">Export Options</h2>
         <form @submit.prevent="exportPdf" class="flex flex-col gap-4">
           <div>
             <label class="block font-bold mb-1">Category (optional)</label>

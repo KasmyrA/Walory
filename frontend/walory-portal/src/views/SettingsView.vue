@@ -1,25 +1,25 @@
 <template>
   <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">Settings</h1>
-      <span class="text-xl font-roboto">
+    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 pt-6 md:pt-12 pb-4 md:pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
+      <h1 class="text-2xl md:text-3xl font-bold font-roboto tracking-tight mb-2 md:mb-0">Settings</h1>
+      <span class="text-base md:text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <!-- Settings Card -->
-    <div class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-gray-300 dark:border-[var(--color-walory-dark-gold)] px-16 py-14 flex flex-row gap-16 w-[90vw] max-w-6xl">
+    <div class="flex flex-1 items-center justify-center pb-10 md:pb-16">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-gray-300 dark:border-[var(--color-walory-dark-gold)] px-2 sm:px-6 md:px-12 lg:px-16 py-8 md:py-14 flex flex-col md:flex-row gap-8 md:gap-16 w-full max-w-6xl">
         <!-- Left: Avatar and name -->
-        <div class="flex flex-col items-center justify-center flex-1 min-w-[300px]">
-          <div class="text-4xl font-roboto font-normal mb-6">{{ username }}</div>
+        <div class="flex flex-col items-center justify-center flex-1 min-w-0 md:min-w-[260px] md:max-w-[400px]">
+          <div class="text-2xl md:text-4xl font-roboto font-normal mb-6 text-center break-words">{{ username }}</div>
           <img
             v-if="avatarUrl"
             :src="avatarUrl"
             alt="Your avatar"
-            class="w-64 h-64 rounded-full object-cover mb-8 border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
+            class="w-32 h-32 md:w-64 md:h-64 rounded-full object-cover mb-8 border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)]"
           />
-          <div v-else class="w-64 h-64 rounded-full border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] mb-8 flex items-center justify-center bg-gray-100 dark:bg-[var(--color-walory-dark-gold-light)] text-gray-400 text-2xl">
+          <div v-else class="w-32 h-32 md:w-64 md:h-64 rounded-full border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] mb-8 flex items-center justify-center bg-gray-100 dark:bg-[var(--color-walory-dark-gold-light)] text-gray-400 text-2xl">
             No Avatar
           </div>
           <!-- Change picture button -->
@@ -33,7 +33,7 @@
             />
             <label
               for="avatar-upload"
-              class="cursor-pointer bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-3 px-10 rounded-full shadow text-center text-lg mb-3 dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+              class="cursor-pointer bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-2 md:py-3 px-6 md:px-10 rounded-full shadow text-center text-base md:text-lg mb-3 dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
             >
               Change picture
             </label>
@@ -41,7 +41,7 @@
             <button
               v-if="selectedFile"
               type="submit"
-              class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-3 px-10 rounded-full shadow text-center text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+              class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold py-2 md:py-3 px-6 md:px-10 rounded-full shadow text-center text-base md:text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
             >
               Upload
             </button>
@@ -50,42 +50,42 @@
           <div v-if="error" class="mt-3 text-center text-[var(--color-walory-red)] font-roboto text-base">{{ error }}</div>
         </div>
         <!-- Right: Account actions -->
-        <div class="flex flex-col items-center justify-center flex-1 min-w-[320px]">
+        <div class="flex flex-col items-center justify-center flex-1 min-w-0 md:min-w-[260px] md:max-w-[400px]">
           <!-- Username change -->
           <div class="w-full mb-8">
-            <label class="block text-lg mb-2 font-bold" for="username-input">Change username</label>
-            <div class="flex gap-2">
+            <label class="block text-base md:text-lg mb-2 font-bold" for="username-input">Change username</label>
+            <div class="flex flex-col sm:flex-row gap-2">
               <input
                 id="username-input"
                 v-model="newUsername"
                 type="text"
-                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-base md:text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
                 placeholder="New username"
               />
               <button
                 @click="changeUsername"
-                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-4 md:px-6 rounded transition text-base md:text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
               >
                 Save
               </button>
             </div>
             <div v-if="usernameMsg" class="mt-2 text-[var(--color-walory-green)] text-sm">{{ usernameMsg }}</div>
-            <div v-if="usernameErr" class="mt-2 text-[var(--color-walory-red)] text-sm">{{ usernameErr }}</div>
+            <div v-if="usernameErr" class="mt-2 text-[var(--color-walory-red] text-sm">{{ usernameErr }}</div>
           </div>
           <!-- Change email -->
           <div class="w-full mb-8">
-            <label class="block text-lg mb-2 font-bold" for="email-input">Change email</label>
-            <div class="flex gap-2">
+            <label class="block text-base md:text-lg mb-2 font-bold" for="email-input">Change email</label>
+            <div class="flex flex-col sm:flex-row gap-2">
               <input
                 id="email-input"
                 v-model="newEmail"
                 type="email"
-                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-base md:text-lg font-roboto bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
                 placeholder="New email"
               />
               <button
                 @click="requestEmailChange"
-                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-4 md:px-6 rounded transition text-base md:text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
               >
                 Request Change
               </button>
@@ -95,18 +95,18 @@
           </div>
           <!-- Description -->
           <div class="w-full mb-8">
-            <label class="block text-lg mb-2 font-bold" for="desc-input">Description</label>
+            <label class="block text-base md:text-lg mb-2 font-bold" for="desc-input">Description</label>
             <textarea
               id="desc-input"
               v-model="description"
               rows="3"
-              class="w-full border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-lg font-roboto resize-none bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+              class="w-full border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-3 py-2 text-base md:text-lg font-roboto resize-none bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
               placeholder="Add a short description..."
             ></textarea>
             <div class="flex justify-end mt-2">
               <button
                 @click="saveDescription"
-                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-4 md:px-6 rounded transition text-base md:text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
               >
                 Save
               </button>
@@ -118,7 +118,7 @@
           <div class="w-full flex flex-col items-center mt-8">
             <button
               @click="deleteAccount"
-              class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-8 py-2 rounded-full transition text-lg"
+              class="bg-[var(--color-walory-red)] hover:bg-red-700 text-white font-bold px-6 md:px-8 py-2 rounded-full transition text-base md:text-lg"
             >
               Delete account
             </button>
@@ -215,6 +215,9 @@ async function uploadAvatar() {
     message.value = 'Avatar uploaded!'
     fetchAvatar()
     selectedFile.value = null
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   } catch (e: any) {
     error.value = e.message || 'Error uploading avatar'
   }

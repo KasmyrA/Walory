@@ -1,20 +1,20 @@
 <template>
   <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">
+    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 pt-6 md:pt-12 pb-4 md:pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
+      <h1 class="text-2xl md:text-3xl font-bold font-roboto tracking-tight mb-2 md:mb-0">
         Browse {{ viewMode === 'collections' ? 'Collections' : 'Templates' }}
       </h1>
-      <span class="text-xl font-roboto">
+      <span class="text-base md:text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <!-- Switch View Buttons -->
-    <div class="flex justify-center gap-8 mt-10 mb-8">
+    <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mt-6 md:mt-10 mb-6 md:mb-8">
       <button
         @click="viewMode = 'collections'"
         :class="[
-          'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
+          'px-6 md:px-8 py-2 rounded-full font-bold text-base md:text-lg transition cursor-pointer border-2',
           viewMode === 'collections'
               ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
               : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
@@ -26,7 +26,7 @@
       <button
         @click="viewMode = 'templates'"
         :class="[
-          'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
+          'px-6 md:px-8 py-2 rounded-full font-bold text-base md:text-lg transition cursor-pointer border-2',
           viewMode === 'templates'
             ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
             : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
@@ -38,15 +38,15 @@
     </div>
 
     <!-- Collections View -->
-    <div v-if="viewMode === 'collections'" class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
-        <div class="flex justify-center gap-8 mb-8">
+    <div v-if="viewMode === 'collections'" class="flex flex-1 items-center justify-center pb-10 md:pb-16">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-2 sm:px-6 md:px-16 py-8 md:py-14 w-full max-w-7xl min-h-[400px] md:min-h-[600px]">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mb-6 md:mb-8">
           <button
             v-for="f in filters"
             :key="f"
             @click="setFilter(f)"
             :class="[
-              'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
+              'px-6 md:px-8 py-2 rounded-full font-bold text-base md:text-lg transition cursor-pointer border-2',
               filter === f
                 ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
                 : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
@@ -56,14 +56,14 @@
             {{ f }}
           </button>
         </div>
-        <div v-if="loading" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading...</div>
-        <div v-else-if="collections.length === 0" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-silver)]">No collections found.</div>
+        <div v-if="loading" class="text-center text-lg md:text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading...</div>
+        <div v-else-if="collections.length === 0" class="text-center text-lg md:text-xl text-gray-500 dark:text-[var(--color-walory-silver)]">No collections found.</div>
         <div v-else>
-          <div v-if="!selectedCollection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div v-if="!selectedCollection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
             <div
               v-for="col in collections"
               :key="col.collectionId"
-              class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-6 flex flex-col cursor-pointer hover:shadow-lg transition"
+              class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl shadow border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] p-4 md:p-6 flex flex-col cursor-pointer hover:shadow-lg transition"
               @click="openCollection(col)"
             >
               <!-- Collection thumbnail -->
@@ -72,16 +72,16 @@
                   v-if="col.thumbnailUrl"
                   :src="col.thumbnailUrl"
                   alt="Collection thumbnail"
-                  class="w-24 h-24 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] cursor-zoom-in"
+                  class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-xl border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] cursor-zoom-in"
                   @click.stop="enlargeImage(col.thumbnailUrl)"
                 />
-                <div v-else class="w-24 h-24 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
+                <div v-else class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-gray-200 dark:bg-[var(--color-walory-dark-gold-light)] rounded-xl text-gray-400">
                   No Image
                 </div>
               </div>
-              <div class="flex items-center justify-between mb-2">
-                <h2 class="text-xl font-bold font-roboto">{{ col.title }}</h2>
-                <span class="text-xs px-3 py-1 rounded-full"
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <h2 class="text-base md:text-xl font-bold font-roboto break-words">{{ col.title }}</h2>
+                <span class="text-xs px-2 md:px-3 py-1 rounded-full whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
                   :class="{
                     'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': col.visibility === 0,
                     'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': col.visibility === 1,
@@ -91,9 +91,9 @@
                   {{ visibilityLabel(col.visibility) }}
                 </span>
               </div>
-              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-2">{{ col.description }}</div>
-              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">Category: {{ col.category }}</div>
-              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2">By: {{ col.author.name }} ({{ col.author.email }})</div>
+              <div class="text-gray-700 dark:text-[var(--color-walory-dark-silver)] mb-2 break-words">{{ col.description }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2 break-words">Category: {{ col.category }}</div>
+              <div class="text-sm text-gray-500 dark:text-[var(--color-walory-dark-silver)] mb-2 break-words">By: {{ col.author.name }} ({{ col.author.email }})</div>
             </div>
           </div>
           <!-- Collection Details Modal/Card -->
@@ -214,15 +214,15 @@
     </div>
 
     <!-- Templates View -->
-    <div v-else class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-16 py-14 w-[90vw] max-w-7xl min-h-[600px]">
-        <div class="flex justify-center gap-8 mb-8">
+    <div v-else class="flex flex-1 items-center justify-center pb-10 md:pb-16">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-2 sm:px-6 md:px-16 py-8 md:py-14 w-full max-w-7xl min-h-[400px] md:min-h-[600px]">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mb-6 md:mb-8">
           <button
             v-for="cat in templateCategories"
             :key="cat"
             @click="setTemplateCategory(cat)"
             :class="[
-              'px-8 py-2 rounded-full font-bold text-lg transition cursor-pointer border-2',
+              'px-6 md:px-8 py-2 rounded-full font-bold text-base md:text-lg transition cursor-pointer border-2',
               templateCategory === cat
                 ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] border-[var(--color-walory-gold-dark)] shadow dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold-dark)]'
                 : 'bg-[var(--color-walory-silver)] text-gray-600 border-transparent hover:bg-[var(--color-walory-gold-light)] hover:text-[var(--color-walory-black)] hover:border-[var(--color-walory-gold-dark)] dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)] dark:hover:bg-[var(--color-walory-dark-gold-light)] dark:hover:text-[var(--color-walory-silver)] dark:hover:border-[var(--color-walory-dark-gold-dark)]'
@@ -232,17 +232,17 @@
             {{ cat }}
           </button>
         </div>
-        <div v-if="templatesLoading" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading templates...</div>
-        <div v-else-if="templates.length === 0" class="text-center text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">No templates found.</div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-if="templatesLoading" class="text-center text-lg md:text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">Loading templates...</div>
+        <div v-else-if="templates.length === 0" class="text-center text-lg md:text-xl text-gray-500 dark:text-[var(--color-walory-dark-silver)]">No templates found.</div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <div
             v-for="tpl in templates"
             :key="tpl.id"
-            class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded-xl p-6 bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] shadow"
+            class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded-xl p-4 md:p-6 bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] shadow"
           >
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="text-lg font-bold">{{ tpl.id.slice(0, 8) }}...</h3>
-              <span class="text-xs px-3 py-1 rounded-full"
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <h3 class="text-base md:text-lg font-bold break-words">{{ tpl.id.slice(0, 8) }}...</h3>
+              <span class="text-xs px-2 md:px-3 py-1 rounded-full whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
                 :class="{
                   'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]': tpl.visibility === 0,
                   'bg-gray-300 text-gray-700 dark:bg-[var(--color-walory-dark-silver)] dark:text-[var(--color-walory-gold-light)]': tpl.visibility === 1,
@@ -252,8 +252,8 @@
                 {{ visibilityLabel(tpl.visibility) }}
               </span>
             </div>
-            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)]">Category: <span class="font-semibold">{{ tpl.category }}</span></div>
-            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)]">By: <span class="font-semibold">{{ tpl.author.name }}</span> ({{ tpl.author.email }})</div>
+            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)] break-words">Category: <span class="font-semibold">{{ tpl.category }}</span></div>
+            <div class="mb-1 text-gray-700 dark:text-[var(--color-walory-dark-silver)] break-words">By: <span class="font-semibold">{{ tpl.author.name }}</span> ({{ tpl.author.email }})</div>
             <div class="mt-2">
               <div class="font-bold mb-1">Fields:</div>
               <ul class="pl-4 list-disc text-sm">
@@ -268,8 +268,6 @@
         </div>
       </div>
     </div>
-    <!-- End Templates View -->
-
     <!-- Enlarged Image Modal -->
     <div
       v-if="enlargedImageUrl"

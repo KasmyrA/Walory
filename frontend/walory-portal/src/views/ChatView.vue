@@ -1,18 +1,18 @@
 <template>
   <div class="min-h-screen w-full bg-[var(--color-walory-gold-light)] dark:bg-[var(--color-walory-dark-gold-light)] font-roboto flex flex-col text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">
     <!-- Header -->
-    <div class="flex justify-between items-center px-20 pt-12 pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
-      <h1 class="text-3xl font-bold font-roboto tracking-tight">Chat</h1>
-      <span class="text-xl font-roboto">
+    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 pt-6 md:pt-12 pb-4 md:pb-6 border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] shadow-sm bg-[var(--color-walory-gold-light)]/80 dark:bg-[var(--color-walory-dark-gold-light)]/80">
+      <h1 class="text-2xl md:text-3xl font-bold font-roboto tracking-tight mb-2 md:mb-0">Chat</h1>
+      <span class="text-base md:text-xl font-roboto">
         Today is <span class="font-bold">{{ formattedDate }}</span>
       </span>
     </div>
     <!-- Chat Card -->
-    <div class="flex flex-1 items-center justify-center pb-16">
-      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-16 py-14 flex flex-row gap-16 w-[90vw] max-w-6xl min-h-[600px]">
+    <div class="flex flex-1 items-center justify-center pb-10 md:pb-16">
+      <div class="bg-[var(--color-walory-silver)]/80 dark:bg-[var(--color-walory-dark-silver)]/80 rounded-2xl shadow-lg border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] px-2 sm:px-6 md:px-16 py-8 md:py-14 w-full max-w-6xl min-h-[400px] md:min-h-[600px] flex flex-col md:flex-row gap-8 md:gap-16">
         <!-- Left: Friends list -->
-        <div class="flex flex-col flex-1 min-w-[260px] max-w-[340px] border-r border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] pr-8">
-          <h2 class="text-2xl font-bold mb-4 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Friends</h2>
+        <div class="flex flex-col flex-1 min-w-0 max-w-full md:min-w-[260px] md:max-w-[340px] border-b md:border-b-0 md:border-r border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] pb-6 md:pb-0 md:pr-8">
+          <h2 class="text-xl md:text-2xl font-bold mb-4 font-roboto text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]">Friends</h2>
           <div v-if="friends.length === 0" class="text-gray-500 dark:text-[var(--color-walory-dark-silver)]">No friends to chat with.</div>
           <ul>
             <li
@@ -31,13 +31,13 @@
                 class="w-10 h-10 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
                 :alt="friend.fullName || friend.email"
               />
-              <span class="font-roboto text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] truncate">{{ friend.fullName || friend.email }}</span>
+              <span class="font-roboto text-base md:text-lg text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] truncate">{{ friend.fullName || friend.email }}</span>
             </li>
           </ul>
         </div>
         <!-- Right: Chat window -->
-        <div class="flex flex-col flex-1 min-w-[320px] max-w-[600px] h-[480px]">
-          <div v-if="!selectedFriend" class="flex flex-1 items-center justify-center text-gray-400 dark:text-[var(--color-walory-silver)] text-xl">
+        <div class="flex flex-col flex-1 min-w-0 max-w-full md:min-w-[320px] md:max-w-[600px] h-[400px] md:h-[480px]">
+          <div v-if="!selectedFriend" class="flex flex-1 items-center justify-center text-gray-400 dark:text-[var(--color-walory-silver)] text-lg md:text-xl">
             Select a friend to start chatting.
           </div>
           <div v-else class="flex flex-col h-full">
@@ -45,12 +45,12 @@
             <div class="flex items-center border-b border-[var(--color-walory-gold-dark)] dark:border-[var(--color-walory-dark-gold-dark)] pb-2 mb-2 gap-4">
               <img
                 :src="selectedFriend.avatarUrl || defaultAvatar(selectedFriend)"
-                class="w-12 h-12 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
+                class="w-10 md:w-12 h-10 md:h-12 rounded-full object-cover border-2 border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] bg-white dark:bg-[var(--color-walory-dark-gold-light)]"
                 :alt="selectedFriend.fullName || selectedFriend.email"
               />
               <div>
-                <span class="text-xl font-bold font-roboto">{{ selectedFriend.fullName || selectedFriend.email }}</span>
-                <span class="ml-2 text-gray-500 dark:text-[var(--color-walory-silver)] text-base">{{ selectedFriend.email }}</span>
+                <span class="text-base md:text-xl font-bold font-roboto">{{ selectedFriend.fullName || selectedFriend.email }}</span>
+                <span class="ml-2 text-gray-500 dark:text-[var(--color-walory-silver)] text-xs md:text-base">{{ selectedFriend.email }}</span>
               </div>
             </div>
             <!-- Messages -->
@@ -65,7 +65,7 @@
               >
                 <div
                   :class="[
-                    'px-4 py-2 rounded-lg max-w-[70%] break-words',
+                    'px-4 py-2 rounded-lg max-w-[85%] md:max-w-[70%] break-words',
                     msg.isMine
                       ? 'bg-[var(--color-walory-gold)] text-[var(--color-walory-black)] dark:bg-[var(--color-walory-dark-gold)] dark:text-[var(--color-walory-silver)]'
                       : 'bg-white text-[var(--color-walory-black)] border border-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold-light)] dark:text-[var(--color-walory-silver)] dark:border-[var(--color-walory-dark-gold)]'
@@ -82,14 +82,14 @@
                 v-model="newMessage"
                 type="text"
                 placeholder="Type your message..."
-                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-4 py-2 font-roboto text-lg bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+                class="flex-1 border border-gray-300 dark:border-[var(--color-walory-dark-gold)] rounded px-4 py-2 font-roboto text-base md:text-lg bg-white dark:bg-[var(--color-walory-dark-gold-light)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
                 :disabled="sending"
                 required
                 autocomplete="off"
               />
               <button
                 type="submit"
-                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-6 rounded transition text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+                class="bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black)] font-bold px-4 md:px-6 rounded transition text-base md:text-lg dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
                 :disabled="sending || !newMessage.trim()"
               >
                 Send
