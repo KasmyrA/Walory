@@ -1,4 +1,5 @@
-﻿using Cars.API.Controllers;
+﻿using Application.CQRS.PDF;
+using Cars.API.Controllers;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,16 @@ namespace Walory_Backend.Controllers
             });
 
             return File(pdfBytes, "application/pdf", "collections_export.pdf");
+        }
+
+        [HttpGet("categories")]
+        [Authorize]
+        public async Task<IActionResult> Categories()
+        {
+
+            var query = await Mediator.Send(new GetCategoryList.Query());
+            return Ok(query);
+
         }
     }
 
