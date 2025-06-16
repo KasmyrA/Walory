@@ -238,7 +238,7 @@
           <div
             v-for="tpl in templates"
             :key="tpl.id"
-            class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded-xl p-4 md:p-6 bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] shadow"
+            class="border border-[var(--color-walory-gold)] dark:border-[var(--color-walory-dark-gold)] rounded-xl p-4 md:p-6 bg-white/60 dark:bg-[var(--color-walory-dark-gold-light)] shadow flex flex-col"
           >
             <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
               <h3 class="text-base md:text-lg font-bold break-words">{{ tpl.id.slice(0, 8) }}...</h3>
@@ -264,6 +264,16 @@
                 </li>
               </ul>
             </div>
+            <!-- Import button for Accessible templates -->
+            <button
+              v-if="templateCategory === 'Accessible'"
+              @click="importTemplate(tpl.id)"
+              class="mt-4 bg-[var(--color-walory-gold)] hover:bg-[var(--color-walory-gold-dark)] text-[var(--color-walory-black] font-bold px-4 py-2 rounded shadow transition dark:bg-[var(--color-walory-dark-gold)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] dark:text-[var(--color-walory-silver)]"
+            >
+              Import
+            </button>
+            <div v-if="importedTemplateId === tpl.id" class="mt-2 text-green-600 text-sm font-bold">Template imported!</div>
+            <div v-if="importErrorId === tpl.id" class="mt-2 text-red-600 text-sm font-bold">{{ importErrorMsg }}</div>
           </div>
         </div>
       </div>
@@ -315,6 +325,10 @@ const templateCategory = ref('Accessible')
 const templates = ref<any[]>([])
 const templatesLoading = ref(false)
 
+const importedTemplateId = ref<string | null>(null)
+const importErrorId = ref<string | null>(null)
+const importErrorMsg = ref('')
+
 function setTemplateCategory(cat: string) {
   templateCategory.value = cat
   fetchTemplates()
@@ -333,6 +347,29 @@ async function fetchTemplates() {
     templates.value = []
   } finally {
     templatesLoading.value = false
+  }
+}
+
+async function importTemplate(templateId: string) {
+  importedTemplateId.value = null
+  importErrorId.value = null
+  importErrorMsg.value = ''
+  try {
+    const res = await fetch(`http://localhost:8080/WalorTemplates/${templateId}/import`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+    if (!res.ok) {
+      const msg = await res.text()
+      importErrorId.value = templateId
+      importErrorMsg.value = msg || 'Import failed'
+      return
+    }
+    importedTemplateId.value = templateId
+    // Optionally, refresh user's templates here if needed
+  } catch (e: any) {
+    importErrorId.value = templateId
+    importErrorMsg.value = 'Import failed'
   }
 }
 
