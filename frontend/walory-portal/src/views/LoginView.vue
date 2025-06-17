@@ -8,6 +8,7 @@
         <img src="../assets/logo.png" alt="Logo" class="h-24" />
       </div>
 
+      <!-- Login Form -->
       <form v-if="!showRegister" @submit.prevent="handleLogin" class="w-full flex flex-col gap-4">
         <input
           v-model="email"
@@ -44,6 +45,9 @@
             Forgot password?
           </button>
         </div>
+
+        <!-- Login error message -->
+        <div v-if="loginError" class="text-red-600 text-sm font-roboto text-center">{{ loginError }}</div>
 
         <button
           type="submit"
@@ -90,6 +94,23 @@
           class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-walory-gold bg-white/80 placeholder-gray-500 font-roboto text-gray-900"
           required
         />
+        <!-- Password strength meter -->
+        <div v-if="registerPassword" class="w-full mt-1">
+          <div class="h-2 rounded bg-gray-200 overflow-hidden">
+            <div
+              :class="passwordStrength.color"
+              class="h-2 transition-all duration-300"
+              :style="{ width: passwordStrength.percent + '%' }"
+            ></div>
+          </div>
+          <div class="text-xs mt-1 font-bold" :class="{
+            'text-red-600': passwordStrength.label === 'Weak',
+            'text-yellow-600': passwordStrength.label === 'Fair' || passwordStrength.label === 'Good',
+            'text-green-700': passwordStrength.label === 'Strong' || passwordStrength.label === 'Very strong'
+          }">
+            {{ passwordStrength.label }}
+          </div>
+        </div>
         <input
           v-model="registerConfirmPassword"
           type="password"
@@ -97,6 +118,13 @@
           class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-walory-gold bg-white/80 placeholder-gray-500 font-roboto text-gray-900"
           required
         />
+
+        <!-- Registration error messages -->
+        <div v-if="registerErrors.length" class="text-red-600 text-sm font-roboto text-center flex flex-col gap-1">
+          <div v-for="err in registerErrors" :key="err" class="break-words">{{ err }}</div>
+        </div>
+        <div v-if="registerSuccess" class="text-green-700 text-sm font-roboto text-center">{{ registerSuccess }}</div>
+
         <button
           type="submit"
           class="w-full bg-walory-gold hover:bg-walory-gold-dark text-gray-900 font-bold py-3 rounded-xl transition duration-200 text-lg font-roboto"
@@ -116,27 +144,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import backgroundImage from '../assets/logo-bg.png'
 import showPwdIcon from '../assets/showpwd.png'
 import hidePwdIcon from '../assets/hidepwd.png'
 
-const router = useRouter() // <-- Add this line
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const showRegister = ref(false)
+const loginError = ref('')
 
 const registerName = ref('')
 const registerEmail = ref('')
 const registerPassword = ref('')
 const registerConfirmPassword = ref('')
+const registerErrors = ref<string[]>([])
+const registerSuccess = ref('')
 
-const API_BASE = 'http://localhost:8080' // Change to your API base URL
+const API_BASE = 'http://localhost:8080'
 
 const handleLogin = async () => {
+  loginError.value = ''
   try {
     const response = await fetch(`${API_BASE}/api/auth/login`, {
       method: 'POST',
@@ -151,7 +183,6 @@ const handleLogin = async () => {
     let responseBody: any
     let isJson = false
 
-    // Try to parse as JSON, fallback to text
     try {
       responseBody = await response.clone().json()
       isJson = true
@@ -163,26 +194,21 @@ const handleLogin = async () => {
       const errorMsg = isJson
         ? (responseBody.message || 'Login failed')
         : (responseBody || 'Login failed')
-      console.error('Login error:', errorMsg)
-      alert(errorMsg)
+      loginError.value = errorMsg
       return
     }
 
-    const successMsg = isJson
-      ? (responseBody.message || 'Login successful!')
-      : (responseBody || 'Login successful!')
-
-    alert(successMsg)
-    router.push({ name: 'Home' }) // Redirect to HomeView
+    router.push({ name: 'Home' })
   } catch (err) {
-    console.error('Login exception:', err)
-    alert('Login error')
+    loginError.value = 'Login error'
   }
 }
 
 const handleRegister = async () => {
+  registerErrors.value = []
+  registerSuccess.value = ''
   if (registerPassword.value !== registerConfirmPassword.value) {
-    alert('Passwords do not match')
+    registerErrors.value.push('Passwords do not match')
     return
   }
   try {
@@ -198,7 +224,6 @@ const handleRegister = async () => {
     let responseBody: any
     let isJson = false
 
-    // Try to parse as JSON, fallback to text
     try {
       responseBody = await response.clone().json()
       isJson = true
@@ -207,30 +232,36 @@ const handleRegister = async () => {
     }
 
     if (!response.ok) {
-      const errorMsg = isJson
-        ? (responseBody.message || 'Registration failed')
-        : (responseBody || 'Registration failed')
-      console.error('Registration error:', errorMsg)
-      alert(errorMsg)
+      // If backend returns an array of errors
+      if (isJson && Array.isArray(responseBody)) {
+        registerErrors.value = responseBody.map((err: any) => err.description || err.message || 'Registration failed')
+      } else if (isJson && responseBody.message) {
+        registerErrors.value = [responseBody.message]
+      } else if (typeof responseBody === 'string') {
+        registerErrors.value = [responseBody]
+      } else {
+        registerErrors.value = ['Registration failed']
+      }
       return
     }
 
-    const successMsg = isJson
+    registerSuccess.value = isJson
       ? (responseBody.message || 'Registration successful! Check your email to confirm the registration.')
       : (responseBody || 'Registration successful! Check your email to confirm the registration.')
 
-    alert(successMsg)
-    showRegister.value = false
+    // Optionally, clear form fields
+    registerName.value = ''
+    registerEmail.value = ''
+    registerPassword.value = ''
+    registerConfirmPassword.value = ''
   } catch (err) {
-    console.error('Registration exception:', err)
-    alert('Registration error')
+    registerErrors.value = ['Registration error']
   }
 }
 
 const forgotPassword = async () => {
   const userEmail = prompt('Enter your email to reset your password:')
   if (!userEmail) return
-  console.log('Forgot password payload:', JSON.stringify(userEmail))
   try {
     const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
       method: 'POST',
@@ -247,4 +278,20 @@ const forgotPassword = async () => {
     alert('Failed to send reset email.')
   }
 }
+
+const passwordStrength = computed(() => {
+  const pwd = registerPassword.value
+  let score = 0
+  if (pwd.length >= 8) score++
+  if (/[A-Z]/.test(pwd)) score++
+  if (/[0-9]/.test(pwd)) score++
+  if (/[^A-Za-z0-9]/.test(pwd)) score++
+  if (pwd.length >= 12) score++ // bonus for long passwords
+
+  if (score <= 1) return { label: 'Weak', color: 'bg-red-400', percent: 20 }
+  if (score === 2) return { label: 'Fair', color: 'bg-yellow-400', percent: 40 }
+  if (score === 3) return { label: 'Good', color: 'bg-yellow-500', percent: 60 }
+  if (score === 4) return { label: 'Strong', color: 'bg-green-500', percent: 80 }
+  return { label: 'Very strong', color: 'bg-green-700', percent: 100 }
+})
 </script>

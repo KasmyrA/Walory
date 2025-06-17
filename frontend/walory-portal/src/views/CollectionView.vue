@@ -162,6 +162,7 @@
       </div>
 
       <!-- Modal for create/edit collection -->
+
             <div
         v-if="showCollectionModal"
         class="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto backdrop-blur-sm font-roboto"
@@ -171,6 +172,9 @@
           class="bg-white dark:bg-[var(--color-walory-dark-gold-light)] rounded-2xl p-8 w-full max-w-2xl shadow-lg relative font-roboto"
           style="max-height: 90vh; overflow-y: auto;"
         >
+               <div v-if="collectionFormErrors.length" class="mb-2 text-red-600 text-sm font-bold flex flex-col gap-1">
+                <div v-for="err in collectionFormErrors" :key="err">{{ err }}</div>
+              </div>
           <h2 class="text-xl font-bold mb-4 font-roboto">{{ editingCollection ? 'Edit Collection' : 'Create New Collection' }}</h2>
           <form @submit.prevent="editingCollection ? updateCollection() : createCollection()" class="grid grid-cols-1 md:grid-cols-2 gap-6 font-roboto">
             <div>
@@ -438,6 +442,7 @@ function formatDate(dateStr: string) {
 }
 
 // --- State ---
+const collectionFormErrors = ref<string[]>([])
 const collections = ref<any[]>([])
 const templates = ref<any[]>([])
 const selectedCollection = ref<any | null>(null)
@@ -470,6 +475,7 @@ function openCollectionModal() {
   resetCollectionForm()
   editingCollection.value = false
   showCollectionModal.value = true
+  collectionFormErrors.value = []
 }
 function openEditCollectionModal(col: any) {
   Object.assign(collectionForm, col)
@@ -483,6 +489,7 @@ function closeCollectionModal() {
   showCollectionModal.value = false
   resetCollectionForm()
   editingCollection.value = false
+  collectionFormErrors.value = []
 }
 
 // --- Template Modal State ---
@@ -677,8 +684,6 @@ async function createCollection() {
   }
 
   // Print the payload for backend testing
-  console.log('Collection payload:', JSON.stringify(payload, null, 2))
-
   const res = await fetch('http://localhost:8080/collection', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -686,13 +691,27 @@ async function createCollection() {
     body: JSON.stringify(payload)
   })
 
+  collectionFormErrors.value = []
+
   if (!res.ok) {
-    const errText = await res.text()
-    console.error('Backend response:', res.status, errText)
-    alert('Failed to create collection: ' + errText)
+    let errText = await res.text()
+    try {
+      const errObj = JSON.parse(errText)
+      if (errObj.errors) {
+        // Flatten errors object to array of messages
+        collectionFormErrors.value = Object.values(errObj.errors).flat() as string[]
+      } else if (errObj.title) {
+        collectionFormErrors.value = [errObj.title]
+      } else {
+        collectionFormErrors.value = [errText]
+      }
+    } catch {
+      collectionFormErrors.value = [errText]
+    }
     return
   }
 
+  collectionFormErrors.value = []
   resetCollectionForm()
   showCollectionModal.value = false
   await fetchCollectionsWithThumbnails()

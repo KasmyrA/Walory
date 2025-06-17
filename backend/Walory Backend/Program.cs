@@ -38,17 +38,7 @@ builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssembly(typeof(SendFriendRequest.Handler).Assembly));
 builder.Services.AddSignalR();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost", "http://localhost:80", "http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
-});
+
 
 builder.Services.AddControllers();
 

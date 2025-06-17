@@ -14,20 +14,27 @@
         <form @submit.prevent="exportPdf" class="flex flex-col gap-4">
           <div>
             <label class="block font-bold mb-1">Category (optional)</label>
-            <input v-model="category" class="border rounded px-3 py-2 w-full bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]" placeholder="Leave empty to export all categories" />
+            <select
+              v-model="category"
+              class="border rounded px-3 py-2 w-full bg-white dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)]"
+            >
+              <option value="">All categories</option>
+              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
           </div>
           <button type="submit" class="bg-[var(--color-walory-gold)] dark:bg-[var(--color-walory-dark-gold)] text-[var(--color-walory-black)] dark:text-[var(--color-walory-silver)] font-bold px-6 py-2 rounded shadow hover:bg-[var(--color-walory-gold-dark)] dark:hover:bg-[var(--color-walory-dark-gold-dark)] transition">
             Export PDF
           </button>
         </form>
         <div v-if="exporting" class="mt-4 text-[var(--color-walory-gold-dark)] dark:text-[var(--color-walory-dark-gold-dark)]">Exporting...</div>
+        <div v-if="errorMsg" class="mt-4 text-red-600">{{ errorMsg }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // Date formatting
 const now = new Date()
@@ -42,16 +49,28 @@ function getDaySuffix(day: number) {
     default: return 'th'
   }
 }
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr)
-  return date.toLocaleString()
-}
 
 const category = ref('')
+const categories = ref<string[]>([])
 const exporting = ref(false)
+const errorMsg = ref('')
+
+onMounted(async () => {
+  try {
+    const res = await fetch('http://localhost:8080/api/pdf/categories', {
+      credentials: 'include'
+    })
+    if (res.ok) {
+      categories.value = await res.json()
+    }
+  } catch {
+    // ignore error, just don't show categories
+  }
+})
 
 async function exportPdf() {
   exporting.value = true
+  errorMsg.value = ''
   let url = 'http://localhost:8080/api/pdf/export-pdf'
   if (category.value.trim() !== '') {
     url += `?category=${encodeURIComponent(category.value.trim())}`
@@ -63,7 +82,7 @@ async function exportPdf() {
     })
     if (!res.ok) {
       const errText = await res.text()
-      alert('Failed to export PDF: ' + errText)
+      errorMsg.value = 'Failed to export PDF: ' + errText
       exporting.value = false
       return
     }
@@ -86,7 +105,7 @@ async function exportPdf() {
       document.body.removeChild(link)
     }, 100)
   } catch (e) {
-    alert('Error exporting PDF.')
+    errorMsg.value = 'Error exporting PDF.'
   }
   exporting.value = false
 }
