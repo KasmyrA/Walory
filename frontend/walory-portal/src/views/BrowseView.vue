@@ -337,8 +337,8 @@ function setTemplateCategory(cat: string) {
 async function fetchTemplates() {
   templatesLoading.value = true
   let url = ''
-  if (templateCategory.value === 'Accessible') url = 'http://localhost:8080/api/Browse/templates/accessible'
-  else if (templateCategory.value === 'Private') url = 'http://localhost:8080/api/Browse/templates/private'
+  if (templateCategory.value === 'Accessible') url = `${window.API_BASE_URL}/api/Browse/templates/accessible`
+  else if (templateCategory.value === 'Private') url = `${window.API_BASE_URL}/api/Browse/templates/private`
   try {
     const res = await fetch(url, { credentials: 'include' })
     if (!res.ok) throw new Error('Could not fetch templates')
@@ -355,7 +355,7 @@ async function importTemplate(templateId: string) {
   importErrorId.value = null
   importErrorMsg.value = ''
   try {
-    const res = await fetch(`http://localhost:8080/WalorTemplates/${templateId}/import`, {
+    const res = await fetch(`${window.API_BASE_URL}/WalorTemplates/${templateId}/import`, {
       method: 'POST',
       credentials: 'include'
     })
@@ -417,9 +417,9 @@ function openCollection(col: any) {
 async function fetchCollections() {
   loading.value = true
   let url = ''
-  if (filter.value === 'Public') url = 'http://localhost:8080/api/Browse/collections/public'
-  else if (filter.value === 'Friends') url = 'http://localhost:8080/api/Browse/collections/friends'
-  else if (filter.value === 'Private') url = 'http://localhost:8080/api/Browse/collections/private'
+  if (filter.value === 'Public') url = `${window.API_BASE_URL}/api/Browse/collections/public`
+  else if (filter.value === 'Friends') url = `${window.API_BASE_URL}/api/Browse/collections/friends`
+  else if (filter.value === 'Private') url = `${window.API_BASE_URL}/api/Browse/collections/private`
   try {
     const res = await fetch(url, { credentials: 'include' })
     if (!res.ok) throw new Error('Could not fetch collections')
@@ -438,7 +438,7 @@ async function fetchCollections() {
 
 async function fetchCollectionThumbnail(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/${collectionId}/image`, {
       credentials: 'include'
     })
     if (res.ok) {
@@ -464,7 +464,7 @@ async function fetchAllItemImages(col: any) {
 
 async function fetchItemImage(itemId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/WalorInstances/${itemId}/image`, {
       credentials: 'include'
     })
     if (res.ok) {
@@ -481,7 +481,7 @@ async function fetchItemImage(itemId: string) {
 
 async function fetchComments(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/comments`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/comments`, {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not fetch comments')
@@ -494,7 +494,7 @@ async function fetchComments(collectionId: string) {
 async function addComment() {
   if (!selectedCollection.value || !newComment.value.trim()) return
   try {
-    await fetch(`http://localhost:8080/api/collections/${selectedCollection.value.collectionId}/interactions/comments`, {
+    await fetch(`${window.API_BASE_URL}/api/collections/${selectedCollection.value.collectionId}/interactions/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -511,7 +511,7 @@ async function addComment() {
 async function deleteComment(commentId: string) {
   if (!selectedCollection.value) return
   try {
-    await fetch(`http://localhost:8080/api/collections/${selectedCollection.value.collectionId}/interactions/comments/${commentId}`, {
+    await fetch(`${window.API_BASE_URL}/api/collections/${selectedCollection.value.collectionId}/interactions/comments/${commentId}`, {
       method: 'DELETE',
       credentials: 'include'
     })
@@ -521,7 +521,7 @@ async function deleteComment(commentId: string) {
 
 async function fetchLikes(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/likes/count`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/likes/count`, {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not fetch likes')
@@ -533,7 +533,7 @@ async function fetchLikes(collectionId: string) {
 
 async function checkIfLiked(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/check-if-liked`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/check-if-liked`, {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not check like')
@@ -547,12 +547,12 @@ async function checkIfLiked(collectionId: string) {
 async function toggleLike(collectionId: string) {
   try {
     if (isLiked.value) {
-      await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/likes`, {
+      await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/likes`, {
         method: 'DELETE',
         credentials: 'include'
       })
     } else {
-      await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/likes`, {
+      await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/likes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -567,7 +567,7 @@ async function toggleLike(collectionId: string) {
 // Fetch current user id for comment delete button
 async function fetchCurrentUserId() {
   try {
-    const res = await fetch('http://localhost:8080/api/chat/getID', {
+    const res = await fetch(`${window.API_BASE_URL}/api/chat/getID`, {
       credentials: 'include'
     })
     if (!res.ok) throw new Error('Could not fetch user id')

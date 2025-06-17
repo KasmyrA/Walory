@@ -35,7 +35,7 @@ const isDesktop = computed(() => windowWidth.value >= 768)
 
 async function fetchSidebarAvatar() {
   try {
-    const response = await fetch('http://localhost:8080/api/Avatar/me', {
+    const response = await fetch(`${window.API_BASE_URL}/api/Avatar/me`, {
       credentials: 'include'
     })
     if (!response.ok) throw new Error()
@@ -53,7 +53,7 @@ async function fetchSidebarAvatar() {
 
 async function fetchSidebarUsername() {
   try {
-    const res = await fetch('http://localhost:8080/api/account/username', {
+    const res = await fetch(`${window.API_BASE_URL}/api/account/username`, {
       credentials: 'include'
     })
     if (!res.ok) throw new Error()
@@ -64,7 +64,7 @@ async function fetchSidebarUsername() {
 }
 
 async function logout() {
-  await fetch('http://localhost:8080/api/auth/logout', {
+  await fetch(`${window.API_BASE_URL}/api/auth/logout`, {
     method: 'POST',
     credentials: 'include',
   })
