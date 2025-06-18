@@ -43,7 +43,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost", "http://localhost:80", "http://localhost:5173", "http://20.67.251.224/")
+            policy.WithOrigins("http://localhost", "http://localhost:80", "http://localhost:5173", "http://20.67.251.224/","http://walory.northeurope.cloudapp.azure.com")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
