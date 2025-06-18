@@ -556,12 +556,12 @@ function parseTemplateContent(content: string) {
 
 // --- Fetch Collections & Templates ---
 async function fetchCollections() {
-  const res = await fetch('http://localhost:8080/api/Browse/collections/private', { credentials: 'include' })
+  const res = await fetch(`${window.API_BASE_URL}/api/Browse/collections/private`, { credentials: 'include' })
   collections.value = await res.json()
 }
 async function fetchTemplates() {
   // Fetch only private templates (created by the user)
-  const res = await fetch('http://localhost:8080/api/Browse/templates/private', { credentials: 'include' })
+  const res = await fetch(`${window.API_BASE_URL}/api/Browse/templates/private`, { credentials: 'include' })
   const data = await res.json()
   // Normalize to match the rest of the code (id -> templateId)
   templates.value = data.map((tpl: any) => ({
@@ -573,7 +573,7 @@ async function fetchTemplates() {
 
 // --- Template CRUD ---
 async function createTemplate() {
-  await fetch('http://localhost:8080/WalorTemplates', {
+  await fetch(`${window.API_BASE_URL}/WalorTemplates`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -594,7 +594,7 @@ function startEditTemplate(tpl: any) {
   templateForm.visibility = tpl.visibility
 }
 async function updateTemplate() {
-  await fetch('http://localhost:8080/WalorTemplates', {
+  await fetch(`${window.API_BASE_URL}/WalorTemplates`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -610,14 +610,14 @@ async function updateTemplate() {
   fetchTemplates()
 }
 async function deleteTemplate(id: string) {
-  await fetch(`http://localhost:8080/WalorTemplates/${id}`, {
+  await fetch(`${window.API_BASE_URL}/WalorTemplates/${id}`, {
     method: 'DELETE',
     credentials: 'include'
   })
   fetchTemplates()
 }
 async function importTemplate(id: string) {
-  await fetch(`http://localhost:8080/WalorTemplates/${id}/import`, {
+  await fetch(`${window.API_BASE_URL}/WalorTemplates/${id}/import`, {
     method: 'POST',
     credentials: 'include'
   })
@@ -641,11 +641,11 @@ async function createCollection() {
   let userId = ''
   let userEmail = ''
   try {
-    const idRes = await fetch('http://localhost:8080/api/chat/getID', { credentials: 'include' })
+    const idRes = await fetch(`${window.API_BASE_URL}/api/chat/getID`, { credentials: 'include' })
     const idJson = await idRes.json()
     userId = idJson.value // <-- Use .value from the JSON response
     console.log('Fetched userId:', userId)
-    const emailRes = await fetch('http://localhost:8080/api/account/username', { credentials: 'include' })
+    const emailRes = await fetch(`${window.API_BASE_URL}/api/account/username`, { credentials: 'include' })
     userEmail = await emailRes.text()
   } catch (e) {
     alert('Could not fetch user ID or email. Cannot create collection.')
@@ -684,7 +684,7 @@ async function createCollection() {
   }
 
   // Print the payload for backend testing
-  const res = await fetch('http://localhost:8080/collection', {
+  const res = await fetch(`${window.API_BASE_URL}/collection`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -721,7 +721,7 @@ function startEdit(col: any) {
   openEditCollectionModal(col)
 }
 async function updateCollection() {
-  await fetch('http://localhost:8080/collection', {
+  await fetch(`${window.API_BASE_URL}/collection`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -738,7 +738,7 @@ async function updateCollection() {
   await fetchCollectionsWithThumbnails()
 }
 async function deleteCollection(id: string) {
-  await fetch(`http://localhost:8080/collection/${id}`, {
+  await fetch(`${window.API_BASE_URL}/collection/${id}`, {
     method: 'DELETE',
     credentials: 'include'
   })
@@ -791,7 +791,7 @@ async function uploadItemModalThumbnail(itemId: string) {
   const formData = new FormData()
   formData.append('Avatar', file)
   try {
-    await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+    await fetch(`${window.API_BASE_URL}/api/WalorInstances/${itemId}/image`, {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -806,7 +806,7 @@ async function uploadItemModalThumbnail(itemId: string) {
 }
 async function fetchItemModalThumbnail(itemId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/WalorInstances/${itemId}/image`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/WalorInstances/${itemId}/image`, {
       credentials: 'include'
     })
     if (res.ok) {
@@ -883,7 +883,7 @@ async function submitItemForm() {
       data: JSON.stringify(data)
     }
     console.log('PUT payload:', payload)
-    await fetch('http://localhost:8080/api/WalorInstances', {
+    await fetch(`${window.API_BASE_URL}/api/WalorInstances`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -895,7 +895,7 @@ async function submitItemForm() {
       data: JSON.stringify(data)
     }
     console.log('POST payload:', payload)
-    await fetch('http://localhost:8080/api/WalorInstances', {
+    await fetch(`${window.API_BASE_URL}/api/WalorInstances`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -911,7 +911,7 @@ async function submitItemForm() {
 }
 
 async function deleteItem(id: string) {
-  await fetch(`http://localhost:8080/api/WalorInstances/${id}`, {
+  await fetch(`${window.API_BASE_URL}/api/WalorInstances/${id}`, {
     method: 'DELETE',
     credentials: 'include'
   })
@@ -1007,7 +1007,7 @@ async function uploadEditModalThumbnail(collectionId: string) {
   const formData = new FormData()
   formData.append('Avatar', file)
   try {
-    await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+    await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/${collectionId}/image`, {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -1022,7 +1022,7 @@ async function uploadEditModalThumbnail(collectionId: string) {
 }
 async function fetchEditModalThumbnail(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/${collectionId}/image`, {
       credentials: 'include'
     })
     if (res.ok) {
@@ -1039,7 +1039,7 @@ async function fetchEditModalThumbnail(collectionId: string) {
 // --- Thumbnails for collection list ---
 async function fetchCollectionThumbnail(collectionId: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/collections/${collectionId}/interactions/${collectionId}/image`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/collections/${collectionId}/interactions/${collectionId}/image`, {
       credentials: 'include'
     })
     if (res.ok) {
@@ -1051,7 +1051,7 @@ async function fetchCollectionThumbnail(collectionId: string) {
   } catch {}
 }
 async function fetchCollectionsWithThumbnails() {
-  const res = await fetch('http://localhost:8080/api/Browse/collections/private', { credentials: 'include' })
+  const res = await fetch(`${window.API_BASE_URL}/api/Browse/collections/private`, { credentials: 'include' })
   collections.value = await res.json()
   await nextTick()
   for (const col of collections.value) {
