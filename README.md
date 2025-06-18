@@ -1,5 +1,7 @@
 # Walory
 
+For some time form 18.06.2025 avalable at [Walory Portal](http://walory.northeurope.cloudapp.azure.com/)
+
 ## How to run
 
 ### Walory – Backend
