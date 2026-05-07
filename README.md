@@ -1,4 +1,4 @@
-# Walory
+# Walory - zarządzaj kolekcją
 
 For some time form 18.06.2025 avalable at [Walory Portal](http://walory.northeurope.cloudapp.azure.com/)
 
@@ -10,15 +10,15 @@ Walory is an application designed for managing and analyzing investment data. Th
 
 ---
 
-#### 🛠️ 1. Install Docker
+#### 1. Install Docker
 
 To run the backend locally, you'll need [Docker Desktop](https://www.docker.com/products/docker-desktop):
 
-👉 [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+[Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ---
 
-#### 📦 2. Clone the repository
+#### 2. Clone the repository
 
 ```bash
 git clone https://github.com/KasmyrA/Walory.git
@@ -27,7 +27,7 @@ cd Walory
 
 ---
 
-#### 🔐 3. Configure environment variables
+#### 3. Configure environment variables
 
 In the root of the repository:
 
@@ -46,11 +46,11 @@ POSTGRES_PASSWORD=your_password
 CONNECTION_STRING=Host=db;Port=5432;Database=walorydb;Username=user;Password=your_password
 ```
 
-⚠️ **Important:** Never commit your `.env` file. It's excluded via `.gitignore`.
+**Important:** Never commit your `.env` file. It's excluded via `.gitignore`.
 
 ---
 
-#### 🚀 4. Run the backend with Docker Compose
+#### 4. Run the backend with Docker Compose
 
 Navigate to the root folder and run:
 
@@ -66,11 +66,11 @@ docker compose -f "Walory Backend/docker-compose.yml" up --build
 
 ---
 
-#### 📘 5. Open the API in Swagger UI
+#### 5. Open the API in Swagger UI
 
 Once the backend is running, open your browser:
 
-👉 http://localhost:8080/swagger/index.html
+http://localhost:8080/swagger/index.html
 
 ---
 
@@ -110,7 +110,7 @@ docker compose -f "Walory Backend/docker-compose.yml" down -v
 
 ---
 
-### 📝 Notes
+### Notes
 
 - Make sure Docker Desktop is running before executing any commands
 - The application will be available at `http://localhost:8080`
