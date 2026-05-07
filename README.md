@@ -74,7 +74,7 @@ http://localhost:8080/swagger/index.html
 
 ---
 
-#### 🗄️ 6. (Optional) Connect to PostgreSQL via pgAdmin or any SQL client
+#### 6. (Optional) Connect to PostgreSQL via pgAdmin or any SQL client
 
 Use the following connection details:
 
@@ -88,7 +88,7 @@ Use the following connection details:
 
 ---
 
-### 🔧 Additional Commands
+### Additional Commands
 
 ##### Stop the containers
 
